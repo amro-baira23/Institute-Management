@@ -1,0 +1,104 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\StockRequest;
+use App\Models\Stock;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+
+class StockController extends Controller
+{
+    //Add Item To Stock Function
+    public function addItemToStock(StockRequest $request)
+    {
+        $items = Stock::get();
+        if ($request->amount == 0) {
+            return error('Item amount should be greater than 0', 'Item amount should be greater than 0', 502);
+        }
+
+        foreach ($items as $item) {
+            if ($item->name === $request->name) {
+                $item->update([
+                    'amount' => $item->amount + $request->amount
+                ]);
+                return success(null, 'this item added to stock successfully');
+            }
+        }
+
+        Stock::create([
+            'name' => $request->name,
+            'amount' => $request->amount
+        ]);
+
+        return success(null, 'this item added to stock successfully', 201);
+    }
+
+    //Edit Item Stock Function
+    public function editStockItem(Stock $item, StockRequest $request)
+    {
+        $item->update([
+            'name' => $request->name,
+            'amount' => $request->amount
+        ]);
+
+        return success(null, 'this item updated successfully');
+    }
+
+    //Import Item To Stock
+    public function importItem(Stock $item, Request $request)
+    {
+        $request->validate([
+            'amount' => 'required'
+        ]);
+
+        if ($request->amount == 0) {
+            return error('Item amount should be greater than 0', 'Item amount should be greater than 0', 502);
+        }
+
+        $item->update([
+            'amount' => $item->amount + $request->amount
+        ]);
+
+        return success(null, 'imported successfully');
+    }
+
+    //Export Item From Stock
+    public function exportItem(Stock $item, Request $request)
+    {
+        $request->validate([
+            'amount' => 'required'
+        ]);
+
+        if ($request->amount == 0) {
+            return error('Item amount should be greater than 0', 'Item amount should be greater than 0', 502);
+        }
+
+        $item->update([
+            'amount' => $item->amount - $request->amount
+        ]);
+
+        return success(null, 'exported successfully');
+    }
+
+    //Get Stock Items Function
+    public function getStockItems()
+    {
+        $items = Stock::get();
+
+        return success($items, null);
+    }
+
+    //Get Stock Item Information Function
+    public function getStockItemInformation(Stock $item)
+    {
+        return success($item, null);
+    }
+
+    //Delete Stock Item Function
+    public function deleteStockItem(Stock $item){
+        $item->delete();
+
+        return success(null,'this item deleted successfully');
+    }
+}
