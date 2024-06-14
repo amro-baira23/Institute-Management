@@ -25,8 +25,6 @@ class TeacherRequest extends FormRequest
     {
         return [
             'credentials' => 'required',
-            'salary_type' => 'required',
-            'salary_amount' => 'required|integer',
         ];
     }
 }

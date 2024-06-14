@@ -27,8 +27,6 @@ class TeacherController extends Controller
         Teacher::create([
             'person_id' => $person->id,
             'credentials' => $teacherRequest->credentials,
-            'salary_type' => $teacherRequest->salary_type,
-            'salary_amount' => $teacherRequest->salary_amount,
         ]);
 
         return success(null, 'this teacher added successfully', 201);
@@ -49,8 +47,6 @@ class TeacherController extends Controller
 
         $teacher->update([
             'credentials' => $teacherRequest->credentials,
-            'salary_type' => $teacherRequest->salary_type,
-            'salary_amount' => $teacherRequest->salary_amount,
         ]);
 
         return success(null, 'this teacher edited successfully');

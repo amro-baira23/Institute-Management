@@ -17,8 +17,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('person_id');
             $table->mediumText('credentials');
-            $table->string('salary_type');
-            $table->integer('salary_amount');
 
             $table->foreign('person_id')->references('id')->on('persons')->onDelete('cascade');
             $table->timestamps();

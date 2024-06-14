@@ -18,7 +18,10 @@ class CourseController extends Controller
     //Add Course Function
     public function addCourse(CourseRequest $request)
     {
-        $schedule = Schedule::create();
+        $schedule = Schedule::create([
+            'start' => $request->start,
+            'end' => $request->end,
+        ]);
 
         $days = explode(',', $request->days);
 
@@ -27,18 +30,18 @@ class CourseController extends Controller
         foreach ($courses as $course) {
             foreach ($course->schedule->days as $course_day) {
                 foreach ($days as $day) {
-                    if ($day == $course_day->day && $request->start >= $course->schedule->time->start && $request->start < $course->schedule->time->end && $request->start_at >= $course->start_at && $request->start_at <= $course->end_at && $course->room_id == $request->room_id) {
+                    if ($day == $course_day->day && $request->start >= $course->schedule->time->start && $request->start < $course->schedule->time->end && $request->start_at >= $course->start_at && $request->start_at <= $course->end_at && ($course->room_id == $request->room_id || $course->teacher_id == $request->teacher_id)) {
                         return error('You cannot set course time in this days', 'You cannot set course time in this days', 502);
                     }
                 }
             }
         }
 
-        CourseTime::create([
-            'schedule_id' => $schedule->id,
-            'start' => $request->start,
-            'end' => $request->end,
-        ]);
+        // CourseTime::create([
+        //     'schedule_id' => $schedule->id,
+            // 'start' => $request->start,
+            // 'end' => $request->end,
+        // ]);
 
         foreach ($days as $day)
             DayOfWeek::create([
@@ -54,6 +57,9 @@ class CourseController extends Controller
             'start_at' => $request->start_at,
             'end_at' => $request->end_at,
             'minimum_students' => $request->minimum_students,
+            'salary_type' => $request->salary_type,
+            'salary_amount' => $request->salary_amount,
+            'cost' => $request->cost,
             'status' => $request->status,
         ]);
 
@@ -63,8 +69,11 @@ class CourseController extends Controller
     //Edit Course Function
     public function editCourse(Course $course, CourseRequest $request)
     {
-        $schedule = Schedule::create();
-
+        $schedule = $course->schedule;
+        $schedule->update([
+            'start' => $request->start,
+            'end' => $request->end,
+        ]);
         $days = explode(',', $request->days);
 
         $courses = Course::whereNot('id', $course->id)->get();
@@ -72,18 +81,18 @@ class CourseController extends Controller
         foreach ($courses as $c) {
             foreach ($c->schedule->days as $course_day) {
                 foreach ($days as $day) {
-                    if ($day == $course_day->day && $request->start >= $c->schedule->time->start && $request->start < $c->schedule->time->end && $request->start_at >= $c->start_at && $request->start_at <= $c->end_at && $c->room_id == $request->room_id) {
+                    if ($day == $course_day->day && $request->start >= $c->schedule->time->start && $request->start < $c->schedule->time->end && $request->start_at >= $c->start_at && $request->start_at <= $c->end_at && ($c->room_id == $request->room_id || $c->teacher_id == $request->teacher_id)) {
                         return error('You cannot set course time in this days', 'You cannot set course time in this days', 502);
                     }
                 }
             }
         }
 
-        $course->schedule->time->update([
-            'schedule_id' => $schedule->id,
-            'start' => $request->start,
-            'end' => $request->end,
-        ]);
+        // $course->schedule->time->update([
+        //     'schedule_id' => $schedule->id,
+        //     'start' => $request->start,
+        //     'end' => $request->end,
+        // ]);
 
         foreach ($course->schedule->days as $day)
             $day->delete();
@@ -102,6 +111,9 @@ class CourseController extends Controller
             'start_at' => $request->start_at,
             'end_at' => $request->end_at,
             'minimum_students' => $request->minimum_students,
+            'salary_type' => $request->salary_type,
+            'salary_amount' => $request->salary_amount,
+            'cost' => $request->cost,
             'status' => $request->status,
         ]);
 
@@ -119,7 +131,7 @@ class CourseController extends Controller
     public function getCourseInformation(Course $course)
     {
         $course = $course->with('subject', 'schedule', 'teacher', 'room')->find($course->id);
-        $course->schedule->time;
+        // $course->schedule->time;
         $course->schedule->days;
         return success($course, null);
     }

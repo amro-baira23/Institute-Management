@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StockDetailRequest;
 use App\Http\Requests\StockRequest;
 use App\Models\Stock;
+use App\Models\StockDetail;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -28,7 +30,9 @@ class StockController extends Controller
 
         Stock::create([
             'name' => $request->name,
-            'amount' => $request->amount
+            'amount' => $request->amount,
+            'source' => $request->source,
+            'note' => $request->note,
         ]);
 
         return success(null, 'this item added to stock successfully', 201);
@@ -39,19 +43,17 @@ class StockController extends Controller
     {
         $item->update([
             'name' => $request->name,
-            'amount' => $request->amount
+            'amount' => $request->amount,
+            'source' => $request->source,
+            'note' => $request->note,
         ]);
 
         return success(null, 'this item updated successfully');
     }
 
     //Import Item To Stock
-    public function importItem(Stock $item, Request $request)
+    public function importItem(Stock $item, StockDetailRequest $request)
     {
-        $request->validate([
-            'amount' => 'required'
-        ]);
-
         if ($request->amount == 0) {
             return error('Item amount should be greater than 0', 'Item amount should be greater than 0', 502);
         }
@@ -60,11 +62,18 @@ class StockController extends Controller
             'amount' => $item->amount + $request->amount
         ]);
 
+        StockDetail::create([
+            'item_id' => $item->id,
+            'amount' => $request->amount,
+            'type' => 'import',
+            'date' => $request->date,
+        ]);
+
         return success(null, 'imported successfully');
     }
 
     //Export Item From Stock
-    public function exportItem(Stock $item, Request $request)
+    public function exportItem(Stock $item, StockDetailRequest $request)
     {
         $request->validate([
             'amount' => 'required'
@@ -77,6 +86,14 @@ class StockController extends Controller
         $item->update([
             'amount' => $item->amount - $request->amount
         ]);
+
+        StockDetail::create([
+            'item_id' => $item->id,
+            'amount' => $request->amount,
+            'type' => 'export',
+            'date' => $request->date,
+        ]);
+
 
         return success(null, 'exported successfully');
     }
@@ -96,9 +113,24 @@ class StockController extends Controller
     }
 
     //Delete Stock Item Function
-    public function deleteStockItem(Stock $item){
+    public function deleteStockItem(Stock $item)
+    {
         $item->delete();
 
-        return success(null,'this item deleted successfully');
+        return success(null, 'this item deleted successfully');
+    }
+
+    //Get Stock Details Function
+    public function getStockDetails()
+    {
+        $details = StockDetail::with('item')->get();
+
+        return success($details, null);
+    }
+
+    //Get Stock Detail Information Function
+    public function getStockDetailInformation(StockDetail $detail)
+    {
+        return success($detail->with('item')->find($detail->id), null);
     }
 }

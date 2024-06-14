@@ -63,6 +63,17 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'admin-auth' => \App\Http\Middleware\AdminAuthentication::class,
+        'user-auth' => \App\Http\Middleware\UserAuthentication::class,
+        'employee-auth' => \App\Http\Middleware\EmployeeAuthentication::class,
+        'manage-student' => \App\Http\Middleware\ManageStudentAuthentication::class,
+        'manage-room' => \App\Http\Middleware\ManageRoomAuthentication::class,
+        'manage-subject' => \App\Http\Middleware\ManageRoomAuthentication::class,
+        'manage-category' => \App\Http\Middleware\ManageCategoryAuthentication::class,
+        'manage-stock' => \App\Http\Middleware\ManageStockAuthentication::class,
+        'manage-sub-account' => \App\Http\Middleware\ManageSubAccountAuthentication::class,
+        'manage-teacher' => \App\Http\Middleware\ManageTeacherAuthentication::class,
+        'manage-course' => \App\Http\Middleware\ManageCourseAuthentication::class,
+        'manage-role' => \App\Http\Middleware\ManageRoleAuthentication::class,
+        'manage-employee' => \App\Http\Middleware\ManageEmployeeAuthentication::class,
     ];
 }

@@ -10,7 +10,10 @@ class Schedule extends Model
     use HasFactory;
 
     protected $table = 'schedules';
-    protected $fillable = [];
+    protected $fillable = [
+        'start',
+        'end'
+    ];
 
     public function time()
     {

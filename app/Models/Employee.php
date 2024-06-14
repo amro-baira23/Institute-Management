@@ -17,4 +17,23 @@ class Employee extends Model
         'credentials',
         'salary_amount',
     ];
+
+    public function person()
+    {
+        return $this->belongsTo(Person::class, 'person_id', 'id');
+    }
+
+    public function user(){
+        return $this->belongsTo(User::class,'person_id','person_id');
+    }
+
+    public function schedule()
+    {
+        return $this->belongsTo(Schedule::class, 'schedule_id', 'id');
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'role_id', 'id');
+    }
 }

@@ -16,17 +16,11 @@ return new class extends Migration
         Schema::create('students', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('person_id');
-            $table->string('name_ar');
             $table->string('name_en');
-            $table->string('father_name_ar');
             $table->string('father_name_en');
-            $table->string('mobile_phone_number');
             $table->string('line_phone_number');
-            $table->string('mother_name_ar');
             $table->string('mother_name_en');
             $table->string('national_number');
-            $table->string('gender');
-            $table->date('birth_date');
             $table->string('nationality');
             $table->string('education_level');
 

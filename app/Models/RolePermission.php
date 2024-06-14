@@ -5,15 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Stock extends Model
+class RolePermission extends Model
 {
     use HasFactory;
 
-    protected $table = 'stocks';
+    protected $table = 'role_permissions';
     protected $fillable = [
-        'name',
-        'amount',
-        'source',
-        'note',
+        'role_id',
+        'permission_id',
     ];
 }

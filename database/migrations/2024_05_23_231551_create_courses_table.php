@@ -22,6 +22,9 @@ return new class extends Migration
             $table->integer('minimum_students');
             $table->date('start_at');
             $table->date('end_at');
+            $table->string('salary_type');
+            $table->integer('salary_amount');
+            $table->integer('cost');
             $table->string('status');
 
             $table->foreign('subject_id')->references('id')->on('subjects')->onDelete('cascade');

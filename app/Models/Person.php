@@ -22,9 +22,18 @@ class Person extends Model
         'type',
     ];
 
-    public function account($type){
-        if($type == 'T'){
-            return $this->hasOne(Teacher::class,'person_id','id');
-        }
+    public function teacher()
+    {
+        return $this->hasOne(Teacher::class, 'person_id', 'id');
+    }
+
+    public function employee()
+    {
+        return $this->hasOne(Employee::class, 'person_id', 'id');
+    }
+
+    public function user()
+    {
+        return $this->hasOne(User::class, 'person_id', 'id');
     }
 }

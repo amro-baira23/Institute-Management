@@ -18,6 +18,9 @@ class Course extends Model
         'minimum_students',
         'start_at',
         'end_at',
+        'salary_type',
+        'salary_amount',
+        'cost',
         'status',
     ];
 

@@ -9,12 +9,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-class AdminController extends Controller
+class UserController extends Controller
 {
     //Login Function
     public function login(LoginRequest $request)
     {
-        $user = User::where(['is_admin' => 1, 'username' => $request->username])->first();
+        $user = User::where(['username' => $request->username])->first();
 
         if (!$user) {
             return error("This User Not Found", null, 404);
@@ -22,7 +22,6 @@ class AdminController extends Controller
 
         if (Hash::check($request->password, $user->password)) {
             $token = $user->createToken('admin')->plainTextToken;
-
 
             return success($token, 'login successfully');
         }
@@ -33,9 +32,12 @@ class AdminController extends Controller
     //Profile Function
     public function profile()
     {
-        $admin = Auth::guard('user')->user();
-
-        return success($admin, null, 200);
+        $user = Auth::guard('user')->user();
+        $user->person;
+        if(!$user->is_admin){
+            $user->person->employee;
+        }
+        return success($user, null, 200);
     }
 
     //Edit Profile Fuction

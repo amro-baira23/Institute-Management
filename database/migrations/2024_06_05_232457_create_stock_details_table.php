@@ -13,10 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('schedules', function (Blueprint $table) {
+        Schema::create('stock_details', function (Blueprint $table) {
             $table->id();
-            $table->time('start');
-            $table->time('end');
+            $table->unsignedBigInteger('item_id');
+            $table->integer('amount');
+            $table->string('type');
+            $table->date('date');
+
+            $table->foreign('item_id')->references('id')->on('stocks')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -28,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('schedules');
+        Schema::dropIfExists('stock_details');
     }
 };

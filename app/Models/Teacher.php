@@ -14,8 +14,6 @@ class Teacher extends Model
     protected $fillable = [
         'person_id',
         'credentials',
-        'salary_type',
-        'salary_amount',
     ];
 
     public function person()

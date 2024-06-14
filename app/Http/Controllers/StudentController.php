@@ -2,57 +2,64 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PersonRequest;
 use App\Http\Requests\StudentRequest;
+use App\Models\Person;
 use App\Models\Student;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
     //Add Student Function
-    public function addStudent(StudentRequest $request)
+    public function addStudent(StudentRequest $studentRequest, PersonRequest $personRequest)
     {
-        $request->validate([
-            'national_number'=>'unique:students,national_number'
+
+        $person = Person::create([
+            'name' => $personRequest->name,
+            'father_name' => $personRequest->father_name,
+            'phone_number' => $personRequest->phone_number,
+            'mother_name' => $personRequest->mother_name,
+            'gender' => $personRequest->gender,
+            'birth_date' => $personRequest->birth_date,
+            'last_name' => $personRequest->last_name
         ]);
+
         Student::create([
-            'name_ar' => $request->name_ar,
-            'name_en' => $request->name_en,
-            'father_name_ar' => $request->father_name_ar,
-            'father_name_en' => $request->father_name_en,
-            'mobile_phone_number' => $request->mobile_phone_number,
-            'line_phone_number' => $request->line_phone_number,
-            'mother_name_ar' => $request->mother_name_ar,
-            'mother_name_en' => $request->mother_name_en,
-            'national_number' => $request->national_number,
-            'gender' => $request->gender,
-            'birth_date' => $request->birth_date,
-            'nationality' => $request->nationality,
-            'education_level' => $request->education_level,
+            'person_id' => $person->id,
+            'name_en' => $studentRequest->name_en,
+            'father_name_en' => $studentRequest->father_name_en,
+            'line_phone_number' => $studentRequest->line_phone_number,
+            'mother_name_en' => $studentRequest->mother_name_en,
+            'national_number' => $studentRequest->national_number,
+            'nationality' => $studentRequest->nationality,
+            'education_level' => $studentRequest->education_level,
         ]);
 
         return success(null, 'this student added successfully', 201);
     }
 
     //Edit Student Function
-    public function editStudent(Student $student, StudentRequest $request)
+    public function editStudent(Student $student, StudentRequest $studentRequest, PersonRequest $personRequest)
     {
-        $request->validate([
-            'national_number' => 'required|unique:students,national_number,'.$student->id,
+        $studentRequest->validate([
+            'national_number' => 'required|unique:students,national_number,' . $student->id,
+        ]);
+        $student->person()->update([
+            'name' => $personRequest->name,
+            'father_name' => $personRequest->father_name,
+            'phone_number' => $personRequest->phone_number,
+            'mother_name' => $personRequest->mother_name,
+            'gender' => $personRequest->gender,
+            'birth_date' => $personRequest->birth_date,
         ]);
         $student->update([
-            'name_ar' => $request->name_ar,
-            'name_en' => $request->name_en,
-            'father_name_ar' => $request->father_name_ar,
-            'father_name_en' => $request->father_name_en,
-            'mobile_phone_number' => $request->mobile_phone_number,
-            'line_phone_number' => $request->line_phone_number,
-            'mother_name_ar' => $request->mother_name_ar,
-            'mother_name_en' => $request->mother_name_en,
-            'national_number' => $request->national_number,
-            'gender' => $request->gender,
-            'birth_date' => $request->birth_date,
-            'nationality' => $request->nationality,
-            'education_level' => $request->education_level,
+            'name_en' => $studentRequest->name_en,
+            'father_name_en' => $studentRequest->father_name_en,
+            'line_phone_number' => $studentRequest->line_phone_number,
+            'mother_name_en' => $studentRequest->mother_name_en,
+            'national_number' => $studentRequest->national_number,
+            'nationality' => $studentRequest->nationality,
+            'education_level' => $studentRequest->education_level,
         ]);
 
         return success(null, 'this student updated successfully');
@@ -61,7 +68,7 @@ class StudentController extends Controller
     //Get Students Function
     public function getStudents()
     {
-        $students = Student::get();
+        $students = Student::with('person')->get();
 
         return success($students, null);
     }
@@ -69,13 +76,15 @@ class StudentController extends Controller
     //Get Student Information Function
     public function getStudentInformation(Student $student)
     {
-        return success($student, null);
+        return success($student->with('person')->find($student->id), null);
     }
 
     //Delete Student Function
-    public function deleteStudent(Student $student){
+    public function deleteStudent(Student $student)
+    {
+        $student->person->delete();
         $student->delete();
 
-        return success(null,'this student deleted successfully');
+        return success(null, 'this student deleted successfully');
     }
 }
