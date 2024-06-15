@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('father_name');
             $table->string('mother_name');
-            $table->string('gernder');
+            $table->string('gender');
             $table->string('phone_number');
             $table->date('birth_date');
             $table->enum('type',['T','E','S']);

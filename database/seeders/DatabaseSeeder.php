@@ -39,7 +39,7 @@ class DatabaseSeeder extends Seeder
             'gender' => 'Male',
             'phone_number' => '0988745545',
             'birth_date' => '1990-06-02',
-            'type' => 'M',
+            'type' => 'S',
         ]);
 
         User::create([
