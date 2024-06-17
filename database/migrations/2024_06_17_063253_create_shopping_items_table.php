@@ -13,14 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('stock_details', function (Blueprint $table) {
+        Schema::create('shopping_items', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('item_id');
-            $table->integer('amount');
-            $table->string('type');
-            $table->date('date');
-
-            $table->foreign('item_id')->references('id')->on('stocks')->onDelete('cascade');
+            $table->integer("amount",unsigned: true);
+            $table->foreignId("item_id")->constrained(table: "stocks");
+            $table->boolean("per_student")->default(false);
             $table->timestamps();
         });
     }
@@ -32,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('stock_details');
+        Schema::dropIfExists('shopping_items');
     }
 };

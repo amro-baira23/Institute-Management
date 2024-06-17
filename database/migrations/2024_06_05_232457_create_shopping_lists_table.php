@@ -13,16 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('accounts', function (Blueprint $table) {
+        Schema::create('stock_details', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('person_id')->nullable();
-            $table->unsignedBigInteger('sub_account_id');
             $table->date('date');
-            $table->integer('price');
-            $table->string('operation');
-            $table->string('description');
-
-            $table->foreign('sub_account_id')->references('id')->on('sub_accounts')->onDelete('cascade');
+            $table->foreignId("course_id")->constrained(table: "courses");
             $table->timestamps();
         });
     }
@@ -34,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('accounts');
+        Schema::dropIfExists('stock_details');
     }
 };

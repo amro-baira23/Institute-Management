@@ -13,7 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-      
+        Schema::create("enrollments",function (Blueprint $table){
+            $table->id();
+            $table->foreignId("student_id")->constrained(table: "students");
+            $table->foreignId("course_id")->constrained(table:"courses");
+            $table->boolean("with_diploma")->default(false);
+        });
     }
 
     /**
@@ -23,5 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
+        //
     }
 };

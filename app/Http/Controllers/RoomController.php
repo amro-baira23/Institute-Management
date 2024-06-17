@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RoomRequest;
+use App\Http\Resources\SimpleListResource;
 use App\Models\Room;
 use Illuminate\Http\Request;
 
@@ -31,9 +32,11 @@ class RoomController extends Controller
     //Get Rooms Function
     public function getRooms()
     {
-        $rooms = Room::get();
+        $rooms = Room::query()->when(request("name"),function($query,$name){
+            return $query->where("name",$name);
+        })->get();
 
-        return success($rooms, null);
+        return success(SimpleListResource::collection($rooms), null);
     }
 
     //Get Room Information Function

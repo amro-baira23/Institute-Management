@@ -27,15 +27,15 @@ class CourseController extends Controller
 
         $courses = Course::get();
 
-        foreach ($courses as $course) {
-            foreach ($course->schedule->days as $course_day) {
-                foreach ($days as $day) {
-                    if ($day == $course_day->day && $request->start >= $course->schedule->time->start && $request->start < $course->schedule->time->end && $request->start_at >= $course->start_at && $request->start_at <= $course->end_at && ($course->room_id == $request->room_id || $course->teacher_id == $request->teacher_id)) {
-                        return error('You cannot set course time in this days', 'You cannot set course time in this days', 502);
-                    }
-                }
-            }
-        }
+        // foreach ($courses as $course) {
+        //     foreach ($course->schedule->days as $course_day) {
+        //         foreach ($days as $day) {
+        //             if ($day == $course_day->day && $request->start >= $course->schedule->time->start && $request->start < $course->schedule->time->end && $request->start_at >= $course->start_at && $request->start_at <= $course->end_at && ($course->room_id == $request->room_id || $course->teacher_id == $request->teacher_id)) {
+        //                 return error('You cannot set course time in this days', 'You cannot set course time in this days', 502);
+        //             }
+        //         }
+        //     }
+        // }
 
         // CourseTime::create([
         //     'schedule_id' => $schedule->id,

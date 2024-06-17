@@ -18,12 +18,11 @@ return new class extends Migration
             $table->unsignedBigInteger('person_id');
             $table->string('name_en');
             $table->string('father_name_en');
-            $table->string('line_phone_number');
             $table->string('mother_name_en');
+            $table->string('line_phone_number');
             $table->string('national_number');
             $table->string('nationality');
             $table->string('education_level');
-
             $table->foreign('person_id')->references('id')->on('persons')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();

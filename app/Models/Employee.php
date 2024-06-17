@@ -24,16 +24,16 @@ class Employee extends Model
     }
 
     public function user(){
-        return $this->belongsTo(User::class,'person_id','person_id');
+        return $this->belongsTo(User::class,"account_id","id");
     }
 
-    public function schedule()
+    public function shift()
     {
-        return $this->belongsTo(Schedule::class, 'schedule_id', 'id');
+        return $this->belongsTo(Shift::class, 'schedule_id', 'id');
     }
 
-    public function role()
+    public function jobTitle()
     {
-        return $this->belongsTo(Role::class, 'role_id', 'id');
+        return $this->belongsTo(JobTitle::class, 'job_title_id', 'id');
     }
 }

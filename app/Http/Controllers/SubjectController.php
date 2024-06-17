@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SubjectRequest;
+use App\Http\Resources\SimpleListResource;
 use App\Models\Subject;
 use Illuminate\Http\Request;
 
@@ -31,17 +32,21 @@ class SubjectController extends Controller
     }
 
     //Get Subjects Function
-    public function getSubjects()
+    public function getSubjects(Request $request)
     {
-        $subjects = Subject::get();
+        $name = $request->query("name");
+        $subjects = Subject::query()->when(request("name"),function($query,$name){
+            return $query->where("name",$name);
+        });
 
-        return success($subjects, null);
+        return success($subjects->get(), null);
+    
     }
 
     //Get Subject Information Function
     public function getSubjectInformation(Subject $subject)
     {
-        return success($subject, null);
+        return success(SimpleListResource::collection($subject) , null);
     }
 
     //Delete Subject Function

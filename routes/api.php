@@ -4,10 +4,12 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\JobTitleController;
 use App\Http\Controllers\MainAccountController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SubAccountController;
@@ -32,7 +34,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::prefix('user')->group(function () {
     Route::post('/login', [UserController::class, 'login']);
     Route::middleware('user-auth')->group(function () {
         Route::prefix('/')->group(function () {
@@ -100,6 +101,20 @@ Route::prefix('user')->group(function () {
             Route::get('/{teacher}', [TeacherController::class, 'getTeacherInformation']);
             Route::delete('/{teacher}', [TeacherController::class, 'deleteTeacher']);
         });
+        Route::middleware('manage-teacher')->prefix('shifts')->group(function () {
+            Route::post('/', [ShiftController::class, 'storeShift']);
+            Route::post('/{shift}', [ShiftController::class, 'editShift']);
+            Route::get('/', [ShiftController::class, 'listShiftsa']);
+            Route::get('/{shift}', [ShiftController::class, 'getShift']);
+            Route::delete('/{shift}', [ShiftController::class, 'destroyShift']);
+        });
+        Route::middleware('manage-teacher')->prefix('job-titles')->group(function () {
+            Route::post('/', [JobTitleController::class, 'store']);
+            Route::post('/{jobTitle}', [JobTitleController::class, 'update']);
+            Route::get('/', [JobTitleController::class, 'index']);
+            Route::get('/{jobTitle}', [JobTitleController::class, 'show']);
+            Route::delete('/{jobTitle}', [JobTitleController::class, 'destroy']);
+        });
         Route::middleware('manage-course')->prefix('courses')->group(function () {
             Route::post('/', [CourseController::class, 'addCourse']);
             Route::post('/{course}', [CourseController::class, 'editCourse']);
@@ -126,7 +141,6 @@ Route::prefix('user')->group(function () {
             Route::delete('/{employee}', [EmployeeController::class, 'deleteEmployee']);
         });
     });
-});
 
 // Route::prefix('employee')->group(function () {
 //     Route::post('/login', [EmployeeController::class, 'login']);

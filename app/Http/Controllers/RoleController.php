@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RoleRequest;
+use App\Http\Resources\SimpleListResource;
 use App\Models\Role;
 use App\Models\RolePermission;
 use Illuminate\Http\Request;
@@ -51,8 +52,10 @@ class RoleController extends Controller
     //Get Roles Function
     public function getRoles()
     {
-        $roles = Role::with('permissions')->get();
-        return success($roles, null);
+        $roles = Role::with('permissions')->query()->when(request("name"),function($query,$name){
+            return $query->where("name",$name);
+        })->get();
+        return success(SimpleListResource::collection($roles), null);
     }
 
     //Get Role Information Function

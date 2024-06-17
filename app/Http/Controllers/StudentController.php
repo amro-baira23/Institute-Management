@@ -68,9 +68,12 @@ class StudentController extends Controller
     //Get Students Function
     public function getStudents()
     {
-        $students = Student::with('person')->get();
+        $students = Student::query()->when(request("name"),function($query,$name){
+            return $query->where("name",$name);
+        });
 
-        return success($students, null);
+        return success($students->get(), null);
+    
     }
 
     //Get Student Information Function

@@ -10,7 +10,9 @@ class MainAccountController extends Controller
     //Get Main Accounts Function
     public function getMainAccounts()
     {
-        $accounts = MainAccount::get();
+        $accounts = MainAccount::query()->when(request("name"),function($query,$name){
+            return $query->where("name",$name);
+        })->get();
         return success($accounts, null);
     }
 

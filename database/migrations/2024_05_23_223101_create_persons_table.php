@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('persons', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('last_name');
             $table->string('father_name');
             $table->string('mother_name');
             $table->string('gender');

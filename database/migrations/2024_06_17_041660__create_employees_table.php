@@ -15,16 +15,11 @@ return new class extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('person_id')->nullable();
-            $table->unsignedBigInteger('schedule_id');
-            $table->unsignedBigInteger('role_id');
-            $table->string('job_name');
             $table->string('credentials');
-            $table->integer('salary_amount');
-
-            $table->foreign('person_id')->references('id')->on('persons')->onDelete('cascade');
-            $table->foreign('schedule_id')->references('id')->on('schedules')->onDelete('cascade');
-            $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
+            $table->foreignId('person_id')->constrained(table: "persons");
+            $table->foreignId("shift_id")->constrained();
+            $table->foreignId("job_id")->constrained(table: "job_titles");
+            $table->foreignId("account_id")->nullable()->constrained(table: "users");
             $table->timestamps();
         });
     }

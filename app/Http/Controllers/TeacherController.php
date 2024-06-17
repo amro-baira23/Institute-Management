@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PersonRequest;
 use App\Http\Requests\TeacherRequest;
+use App\Http\Resources\SimpleListResource;
+use App\Http\Resources\TeacherCollection;
+use App\Http\Resources\TeacherRetrieveResource;
 use App\Models\Person;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
@@ -55,15 +58,21 @@ class TeacherController extends Controller
     //Get Teachers Function
     public function getTeachers()
     {
-        $teachers = Teacher::with('person')->get();
-
-        return success($teachers, null);
+        $teachers = Teacher::query()->when(request("name"),function($query,$name){
+            return $query->whereHas("person",function($query,) use($name){
+                return $query->where("name", $name);
+            });
+        })
+        ->with("person")->get();
+        
+      
+        return success(TeacherRetrieveResource::collection($teachers), null);
     }
 
     //Get Teacher Information Function
     public function getTeacherInformation(Teacher $teacher)
     {
-        return success($teacher->with('person')->find($teacher->id), null);
+        return success(new TeacherRetrieveResource($teacher), null);
     }
 
     //Delete Teacher Function

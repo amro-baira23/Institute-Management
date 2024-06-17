@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->integer('amount');
-            $table->string('source');
+            $table->string('source'); //??
             $table->text('note');
             $table->timestamps();
         });
