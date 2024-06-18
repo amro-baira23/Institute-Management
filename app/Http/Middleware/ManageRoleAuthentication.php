@@ -21,7 +21,7 @@ class ManageRoleAuthentication
             return $next($request);
         }
         foreach (Auth::guard('user')->user()->role->permissions as $permission) {
-            if ($permission->permission == 'إدارة الأدوار') {
+            if ($permission->name == 'إدارة الأدوار') {
                 return $next($request);
             }
         }

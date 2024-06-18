@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SubAccountRequest;
+use App\Http\Resources\SimpleListResource;
 use App\Models\SubAccount;
 use Illuminate\Http\Request;
 
@@ -33,9 +34,10 @@ class SubAccountController extends Controller
     //Get Sub Accounts Function
     public function getSubAccounts()
     {
-        $accounts = SubAccount::get();
-
-        return success($accounts, null);
+        $subAccounts = SubAccount::query()->when(request("name"),function($query,$name){
+            return $query->where("name","LIKE","%".$name."%");
+        })->get();
+        return success(SimpleListResource::collection($subAccounts), null);
     }
 
     //Get Sub Account Information Function

@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Routing\Route;
 
 class EmployeeResource extends JsonResource
 {
@@ -16,16 +17,20 @@ class EmployeeResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "name" => $this->person->name,
-            "credentials" => $this->credentials,
-            "birth_date" => $this->person->birthdate,
-            "phone_number" => $this->person->phone_number,
-            "job_title" => $this->job_title->name,
-            "base_salary" => $this->job_title->base_salary,
-            "account" => [
+            "name" => $this->person->name ?? null,
+            "job_title" => $this->jobTitle?->name,
+            "shift_name" => $this->shift->name,      
+            $this->mergeWhen($request->route()->getName()=="get",[
+                "salary" => $this->jobTitle->base_salary,
+                "credentials" => $this->credentials,
+                "gender" => $this->person->gender,
+                "birth_date" => $this->person->birth_date,
+                "phone_number" => $this->person->phone_number,
+                
+            ])
+        ] + ($this->user ? ["account" => [
                 "id" => $this->user->id,
                 "username" => $this->user->username,
-            ]
-        ];
+            ]] : []) ;
     }
 }

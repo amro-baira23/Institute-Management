@@ -12,10 +12,9 @@ class Employee extends Model
     protected $table = 'employees';
     protected $fillable = [
         'person_id',
-        'schedule_id',
-        'job_name',
+        'shift_id',
+        'job_id',
         'credentials',
-        'salary_amount',
     ];
 
     public function person()
@@ -29,11 +28,11 @@ class Employee extends Model
 
     public function shift()
     {
-        return $this->belongsTo(Shift::class, 'schedule_id', 'id');
+        return $this->belongsTo(Shift::class, 'shift_id', 'id');
     }
 
     public function jobTitle()
     {
-        return $this->belongsTo(JobTitle::class, 'job_title_id', 'id');
+        return $this->belongsTo(JobTitle::class, 'job_id',"id");
     }
 }

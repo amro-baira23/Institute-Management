@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\EmployeeRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\PersonRequest;
+use App\Http\Resources\EmployeeResource;
 use App\Models\DayOfWeek;
 use App\Models\Employee;
 use App\Models\Person;
@@ -53,44 +54,17 @@ class EmployeeController extends Controller
             'mother_name' => $personRequest->mother_name,
             'gender' => $personRequest->gender,
             'birth_date' => $personRequest->birth_date,
-            'last_name' => $personRequest->last_name
+            'type' => 'E',
         ]);
-
-        $schedule = Schedule::create([
-            'start' => $employeeRequest->start,
-            'end' => $employeeRequest->end,
-        ]);
-        $days = explode(',', $employeeRequest->days);
-
-        foreach ($days as $day) {
-            DayOfWeek::create([
-                'schedule_id' => $schedule->id,
-                'day' => $day
-            ]);
-        }
 
         $employee = Employee::create([
             'person_id' => $person->id,
-            'schedule_id' => $schedule->id,
-            'role_id' => $employeeRequest->role_id,
-            'job_name' => $employeeRequest->job_name,
+            'shift_id' => $employeeRequest->shift_id,
+            'job_id' => $employeeRequest->job_title_id,
+            'account_id' => $employeeRequest->user_id,
             'credentials' => $employeeRequest->credentials,
-            'salary_amount' => $employeeRequest->salary_amount
         ]);
-
-        if ($employeeRequest->role_id) {
-            $employeeRequest->validated([
-                'username' => 'required|unique:users,username',
-                'password' => 'required|min:8',
-            ]);
-
-            User::create([
-                'person_id' => $person->id,
-                'username' => $employeeRequest->username,
-                'password' => Hash::make($employeeRequest->password),
-            ]);
-        }
-
+     
         return success(null, 'this employee added successfully', 201);
     }
 
@@ -132,14 +106,15 @@ class EmployeeController extends Controller
     //Get Employees Function
     public function getEmployees()
     {
-        $employees = Employee::with('person', 'schedule', 'role')->get();
-        return success($employees, null);
+        $employees = Employee::with('person', 'shift', 'user',"jobTitle")->get();
+        return success(EmployeeResource::collection($employees), null);
     }
 
     //Get Employee Information Function
     public function getEmployeeInformation(Employee $employee)
     {
-        return success($employee->with(['person', 'user','schedule.days', 'role.permissions'])->find($employee->id), null);
+        $employee = $employee->with(['person', 'user','shift'])->find($employee->id);
+        return success(new EmployeeResource($employee), null);
     }
 
     //Delete Employee Function
@@ -151,6 +126,6 @@ class EmployeeController extends Controller
         
         $employee->person->delete();
         $employee->delete();
-        return success(null, 'this employee deleted successfully');
+        return success(null, 'this employee deleted successfully',204);
     }
 }

@@ -18,7 +18,6 @@ class TeacherController extends Controller
     {
         $person = Person::create([
             'name' => $personRequest->name,
-            'last_name' => $personRequest->last_name,
             'father_name' => $personRequest->father_name,
             'mother_name' => $personRequest->mother_name,
             'gender' => $personRequest->gender,
@@ -40,7 +39,6 @@ class TeacherController extends Controller
     {
         $teacher->person()->update([
             'name' => $personRequest->name,
-            'last_name' => $personRequest->last_name,
             'father_name' => $personRequest->father_name,
             'mother_name' => $personRequest->mother_name,
             'gender' => $personRequest->gender,
@@ -60,18 +58,21 @@ class TeacherController extends Controller
     {
         $teachers = Teacher::query()->when(request("name"),function($query,$name){
             return $query->whereHas("person",function($query,) use($name){
-                return $query->where("name", $name);
+                return $query->where("name","LIKE", '%'.$name.'%');
             });
         })
         ->with("person")->get();
         
       
-        return success(TeacherRetrieveResource::collection($teachers), null);
+        return success(SimpleListResource::collection($teachers), null);
     }
 
     //Get Teacher Information Function
     public function getTeacherInformation(Teacher $teacher)
     {
+        $teacher->load(["courses" => function($query){
+            $query->orderBy("id","desc")->take(3);
+        }],"courses.subject");
         return success(new TeacherRetrieveResource($teacher), null);
     }
 

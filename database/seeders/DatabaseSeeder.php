@@ -58,7 +58,7 @@ class DatabaseSeeder extends Seeder
 
         foreach ($permissions as $permission)
             Permission::create([
-                'permission' => $permission
+                'name' => $permission
             ]);
 
 

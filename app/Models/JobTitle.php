@@ -12,7 +12,8 @@ class JobTitle extends Model
 
    protected $guarded =[];
 
-   public function employees() : HasOneOrMany{
-        return $this->hasMany("employees", "id");
+   public function employee()
+   {
+       return $this->hasMany(Employee::class, 'job_title_id', 'id');
    }
 }

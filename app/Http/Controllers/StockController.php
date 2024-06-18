@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StockDetailRequest;
 use App\Http\Requests\StockRequest;
+use App\Http\Resources\SimpleListResource;
 use App\Models\Stock;
 use App\Models\StockDetail;
 use Illuminate\Http\Request;
@@ -101,9 +102,11 @@ class StockController extends Controller
     //Get Stock Items Function
     public function getStockItems()
     {
-        $items = Stock::get();
+        $stocks = Stock::query()->when(request("name"),function($query,$name){
+            return $query->where("name","LIKE","%".$name."%");
+        })->get();
 
-        return success($items, null);
+        return success(SimpleListResource::collection($stocks), null);
     }
 
     //Get Stock Item Information Function

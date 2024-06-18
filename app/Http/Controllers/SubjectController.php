@@ -14,7 +14,7 @@ class SubjectController extends Controller
     {
         Subject::create([
             'category_id' => $request->category_id,
-            'subject' => $request->subject
+            'name' => $request->subject
         ]);
 
         return success(null, 'this subject added successfully', 201);
@@ -25,7 +25,7 @@ class SubjectController extends Controller
     {
         $subject->update([
             'category_id' => $request->category_id,
-            'subject' => $request->subject
+            'name' => $request->subject
         ]);
 
         return success(null, 'this subject updated successfully');
@@ -34,13 +34,10 @@ class SubjectController extends Controller
     //Get Subjects Function
     public function getSubjects(Request $request)
     {
-        $name = $request->query("name");
         $subjects = Subject::query()->when(request("name"),function($query,$name){
-            return $query->where("name",$name);
-        });
-
-        return success($subjects->get(), null);
-    
+            return $query->where("name","LIKE","%".$name);
+        })->get();
+        return success(SimpleListResource::collection($subjects), null);
     }
 
     //Get Subject Information Function

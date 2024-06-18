@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\JobTitleRequest;
 use App\Http\Resources\JobTitleResource;
+use App\Http\Resources\SimpleListResource;
 use App\Models\JobTitle;
 use Illuminate\Http\Request;
 
@@ -16,10 +17,11 @@ class JobTitleController extends Controller
      */
     public function index()
     {
-        $jobTitles = JobTitle::query()->when(request("name"),function($query,$name){
-            return $query->where("name",$name);
+        $jobTitle = JobTitle::query()->when(request("name"),function($query,$name){
+            return $query->where("name","LIKE","%".$name."%");
         })->get();
-        return success(JobTitleResource::collection($jobTitles), null);
+
+        return success(SimpleListResource::collection($jobTitle), null);
     }
 
 

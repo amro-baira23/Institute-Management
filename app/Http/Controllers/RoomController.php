@@ -33,7 +33,7 @@ class RoomController extends Controller
     public function getRooms()
     {
         $rooms = Room::query()->when(request("name"),function($query,$name){
-            return $query->where("name",$name);
+            return $query->where("name","LIKE","%".$name."%");
         })->get();
 
         return success(SimpleListResource::collection($rooms), null);

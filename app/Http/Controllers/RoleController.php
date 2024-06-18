@@ -53,7 +53,7 @@ class RoleController extends Controller
     public function getRoles()
     {
         $roles = Role::with('permissions')->query()->when(request("name"),function($query,$name){
-            return $query->where("name",$name);
+            return $query->where("name","LIKE","%".$name."%");
         })->get();
         return success(SimpleListResource::collection($roles), null);
     }

@@ -16,7 +16,7 @@ class SimpleListResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "name" => $this->person->name,
+            "name" => $this->person?->name ?? $this->name,
             
         ];
     }

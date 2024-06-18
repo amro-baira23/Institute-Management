@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ShiftRequest;
 use App\Http\Resources\ShiftResource;
+use App\Http\Resources\SimpleListResource;
 use App\Models\DayOfWeek;
 use App\Models\Schedule;
 use App\Models\Shift;
@@ -14,9 +15,9 @@ class ShiftController extends Controller
     public function listShifts(Request $request)
     {
         $shifts = Shift::query()->when(request("name"),function($query,$name){
-            return $query->where("name",$name);
+            return $query->where("name","LIKE", '%'.$name.'%');
         })->get();
-        return success(ShiftResource::collection($shifts), null);
+        return success(SimpleListResource::collection($shifts), null);
     }
 
     public function getShift(Shift $shift){

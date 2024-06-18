@@ -21,7 +21,7 @@ class ManageStockAuthentication
             return $next($request);
         }
         foreach (Auth::guard('user')->user()->role->permissions as $permission) {
-            if ($permission->permission == 'إدارة المستودع') {
+            if ($permission->name == 'إدارة المستودع') {
                 return $next($request);
             }
         }

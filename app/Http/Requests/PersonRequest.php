@@ -25,7 +25,6 @@ class PersonRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'last_name' => 'required',
             'father_name' => 'required',
             'mother_name' => 'required',
             'gender' => 'required',

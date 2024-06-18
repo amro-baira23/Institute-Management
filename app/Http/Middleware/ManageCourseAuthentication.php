@@ -21,7 +21,7 @@ class ManageCourseAuthentication
             return $next($request);
         }
         foreach (Auth::guard('user')->user()->role->permissions as $permission) {
-            if ($permission->permission == 'إدارة الدورات') {
+            if ($permission->name == 'إدارة الدورات') {
                 return $next($request);
             }
         }

@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\JobTitle;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class EmployeeRequest extends FormRequest
 {
@@ -24,12 +26,10 @@ class EmployeeRequest extends FormRequest
     public function rules()
     {
         return [
-            'job_name',
-            'credentials',
-            'salary_amount',
-            'days' => 'required',
-            'start' => 'required',
-            'end' => 'required',
+            'credentials' => ["required", ],
+            'job_title_id' => ["required", "integer",Rule::exists("job_titles","id")],
+            'shift_id' => ["required", "integer",Rule::exists("shifts","id")],
+            'user_id' => ["integer"],
         ];
     }
 }

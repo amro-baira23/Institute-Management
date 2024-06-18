@@ -21,7 +21,7 @@ class ManageStudentAuthentication
             return $next($request);
         }
         foreach (Auth::guard('user')->user()->role->permissions as $permission) {
-            if ($permission->permission == 'إدارة الطلاب') {
+            if ($permission->name == 'إدارة الطلاب') {
                 return $next($request);
             }
         }

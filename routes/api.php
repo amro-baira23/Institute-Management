@@ -104,7 +104,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
         Route::middleware('manage-teacher')->prefix('shifts')->group(function () {
             Route::post('/', [ShiftController::class, 'storeShift']);
             Route::post('/{shift}', [ShiftController::class, 'editShift']);
-            Route::get('/', [ShiftController::class, 'listShiftsa']);
+            Route::get('/', [ShiftController::class, 'listShifts']);
             Route::get('/{shift}', [ShiftController::class, 'getShift']);
             Route::delete('/{shift}', [ShiftController::class, 'destroyShift']);
         });
@@ -136,8 +136,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
         Route::middleware('manage-employee')->prefix('employees')->group(function () {
             Route::post('/', [EmployeeController::class, 'addEmployee']);
             Route::post('/{employee}', [EmployeeController::class, 'editEmployee']);
-            Route::get('/', [EmployeeController::class, 'getEmployees']);
-            Route::get('/{employee}', [EmployeeController::class, 'getEmployeeInformation']);
+            Route::get('/', [EmployeeController::class, 'getEmployees'])->name("list");
+            Route::get('/{employee}', [EmployeeController::class, 'getEmployeeInformation'])->name("get");
             Route::delete('/{employee}', [EmployeeController::class, 'deleteEmployee']);
         });
     });

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CategoryRequest;
+use App\Http\Resources\SimpleListResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,7 @@ class CategoryController extends Controller
     public function addCategory(CategoryRequest $request)
     {
         Category::create([
-            'category' => $request->category,
+            'name' => $request->category,
         ]);
 
         return success(null, 'this category added successfully', 201);
@@ -22,7 +23,7 @@ class CategoryController extends Controller
     public function editCategory(Category $category, CategoryRequest $request)
     {
         $category->update([
-            'category' => $request->category,
+            'name' => $request->category,
         ]);
 
         return success(null, 'this category updated successfully');
@@ -31,9 +32,11 @@ class CategoryController extends Controller
     //Get Categories Function
     public function getCategories()
     {
-        $categories = Category::get();
+        $categories = Category::query()->when(request("name"),function($query,$name){
+            return $query->where("name","LIKE","%".$name."%");
+        })->get();
 
-        return success($categories, null);
+        return success(SimpleListResource::collection($categories), null);
     }
 
     //Get Category Information Function

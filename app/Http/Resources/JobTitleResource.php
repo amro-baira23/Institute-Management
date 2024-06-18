@@ -17,7 +17,7 @@ class JobTitleResource extends JsonResource
         return [
             "id" => $this->id,
             "name" => $this->name,
-            "base_salary" => $this->base_salray,
+            "base_salary" => $this->base_salary,
         ];
     }
 }
