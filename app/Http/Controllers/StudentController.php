@@ -21,7 +21,6 @@ class StudentController extends Controller
             'mother_name' => $personRequest->mother_name,
             'gender' => $personRequest->gender,
             'birth_date' => $personRequest->birth_date,
-            'last_name' => $personRequest->last_name
         ]);
 
         Student::create([
