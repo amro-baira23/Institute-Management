@@ -24,6 +24,9 @@ class StudentRequest extends FormRequest
     public function rules()
     {
         return [
+            'father_name' => 'required',
+            'mother_name' => 'required',
+            'gender' => 'required',
             'name_en' => 'required',
             'father_name_en' => 'required',
             'line_phone_number' => 'required',

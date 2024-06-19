@@ -34,9 +34,6 @@ class DatabaseSeeder extends Seeder
 
         $person = Person::create([
             'name' => 'أحمد',
-            'father_name' => 'عيسى',
-            'mother_name' => 'سلوى',
-            'gender' => 'Male',
             'phone_number' => '0988745545',
             'birth_date' => '1990-06-02',
             'type' => 'S',

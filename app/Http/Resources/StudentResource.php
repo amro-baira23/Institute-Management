@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TeacherRetrieveResource extends JsonResource
+class StudentResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,11 +17,15 @@ class TeacherRetrieveResource extends JsonResource
         return [
             "id" => $this->id,
             "name" => $this->person->name,
-            "credentials" => $this->credentials,
-            "birth_date" => $this->person->birth_date,
-            "phone_number" => $this->person->phone_number,            
+            $this->mergeWhen(
+                true,
+                $this->person->only("birth_date", "phone_number",),
+            ),
+            $this->mergeWhen($request->route()->getName() == "get", 
+            $this->only("gender","father_name","mother_name","line_number","national_number","educational_level")
+            ),
             "created_at" => $this->created_at->format("Y-m-d h:i"),
-            "recent_courses" => CourseSimpleListResource::collection($this->courses)  
+
         ];
     }
 }

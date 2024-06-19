@@ -18,19 +18,21 @@ class EmployeeResource extends JsonResource
         return [
             "id" => $this->id,
             "name" => $this->person->name ?? null,
-            "job_title" => $this->jobTitle?->name,
-            "shift_name" => $this->shift->name,      
-            $this->mergeWhen($request->route()->getName()=="get",[
+            $this->mergeWhen($request->route()->getName() == "get", [
                 "salary" => $this->jobTitle->base_salary,
                 "credentials" => $this->credentials,
-                "gender" => $this->person->gender,
                 "birth_date" => $this->person->birth_date,
                 "phone_number" => $this->person->phone_number,
-                
-            ])
-        ] + ($this->user ? ["account" => [
-                "id" => $this->user->id,
-                "username" => $this->user->username,
-            ]] : []) ;
+                "created_at" => $this->created_at->format("Y-m-d h:i")
+            ]),
+            "shift" => new SimpleListResource($this->shift),
+            "job_title" => new SimpleListResource($this->jobTitle),
+            $this->mergeWhen($this->user, [
+                "account" => [
+                    "id" => $this->user?->id,
+                    "username" => $this->user?->username,
+                ]
+            ]),
+        ];
     }
 }

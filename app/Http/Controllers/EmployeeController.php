@@ -49,10 +49,7 @@ class EmployeeController extends Controller
     {
         $person = Person::create([
             'name' => $personRequest->name,
-            'father_name' => $personRequest->father_name,
             'phone_number' => $personRequest->phone_number,
-            'mother_name' => $personRequest->mother_name,
-            'gender' => $personRequest->gender,
             'birth_date' => $personRequest->birth_date,
             'type' => 'E',
         ]);
@@ -73,10 +70,7 @@ class EmployeeController extends Controller
     {
         $employee->person()->update([
             'name' => $personRequest->name,
-            'father_name' => $personRequest->father_name,
             'phone_number' => $personRequest->phone_number,
-            'mother_name' => $personRequest->mother_name,
-            'gender' => $personRequest->gender,
             'birth_date' => $personRequest->birth_date,
         ]);
 

@@ -46,7 +46,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
             Route::post('/', [StudentController::class, 'addStudent']);
             Route::post('/{student}', [StudentController::class, 'editStudent']);
             Route::get('/', [StudentController::class, 'getStudents']);
-            Route::get('/{student}', [StudentController::class, 'getStudentInformation']);
+            Route::get('/{student}', [StudentController::class, 'getStudentInformation'])->name("get");
             Route::delete('/{student}', [StudentController::class, 'deleteStudent']);
         });
         Route::middleware('manage-room')->prefix('rooms')->group(function () {

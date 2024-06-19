@@ -18,7 +18,7 @@ class JobTitleController extends Controller
     public function index()
     {
         $jobTitle = JobTitle::query()->when(request("name"),function($query,$name){
-            return $query->where("name","LIKE","%".$name."%");
+            return $query->where("name","like","%".$name."%");
         })->get();
 
         return success(SimpleListResource::collection($jobTitle), null);

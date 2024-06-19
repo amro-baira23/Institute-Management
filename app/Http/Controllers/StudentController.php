@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PersonRequest;
 use App\Http\Requests\StudentRequest;
+use App\Http\Resources\StudentResource;
 use App\Models\Person;
 use App\Models\Student;
 use Illuminate\Http\Request;
@@ -16,15 +17,15 @@ class StudentController extends Controller
 
         $person = Person::create([
             'name' => $personRequest->name,
-            'father_name' => $personRequest->father_name,
             'phone_number' => $personRequest->phone_number,
-            'mother_name' => $personRequest->mother_name,
-            'gender' => $personRequest->gender,
             'birth_date' => $personRequest->birth_date,
         ]);
 
         Student::create([
             'person_id' => $person->id,
+            'father_name' => $personRequest->father_name,
+            'mother_name' => $personRequest->mother_name,
+            'gender' => $personRequest->gender,
             'name_en' => $studentRequest->name_en,
             'father_name_en' => $studentRequest->father_name_en,
             'line_phone_number' => $studentRequest->line_phone_number,
@@ -45,13 +46,13 @@ class StudentController extends Controller
         ]);
         $student->person()->update([
             'name' => $personRequest->name,
-            'father_name' => $personRequest->father_name,
             'phone_number' => $personRequest->phone_number,
-            'mother_name' => $personRequest->mother_name,
-            'gender' => $personRequest->gender,
             'birth_date' => $personRequest->birth_date,
         ]);
         $student->update([
+            'father_name' => $personRequest->father_name,
+            'mother_name' => $personRequest->mother_name,
+            'gender' => $personRequest->gender,
             'name_en' => $studentRequest->name_en,
             'father_name_en' => $studentRequest->father_name_en,
             'line_phone_number' => $studentRequest->line_phone_number,
@@ -69,9 +70,8 @@ class StudentController extends Controller
     {
         $students = Student::query()->when(request("name"),function($query,$name){
             return $query->where("name",$name);
-        });
-
-        return success($students->get(), null);
+        })->with("person")->get();
+        return success(StudentResource::collection($students), null);
     
     }
 

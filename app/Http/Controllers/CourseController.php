@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Date;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CurrentCoursesResource;
 
 class CourseController extends Controller
 {
@@ -65,6 +66,7 @@ class CourseController extends Controller
 
         return success(null, 'this course added successfully', 201);
     }
+
 
     //Edit Course Function
     public function editCourse(Course $course, CourseRequest $request)
@@ -123,17 +125,14 @@ class CourseController extends Controller
     //Get Courses Function
     public function getCourses()
     {
-        $courses = Course::with('subject', 'schedule', 'teacher', 'room')->get();
-        return success($courses, null);
+        $courses = Course::with('subject', 'schedule.days', 'teacher', 'room')->get();
+        return success(CurrentCoursesResource::collection($courses), null);
     }
 
     //Get Course Information Function
     public function getCourseInformation(Course $course)
     {
-        $course = $course->with('subject', 'schedule', 'teacher', 'room')->find($course->id);
-        // $course->schedule->time;
-        $course->schedule->days;
-        return success($course, null);
+        return success($course->dates, null);
     }
 
     //Delete Course Function

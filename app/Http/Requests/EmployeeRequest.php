@@ -26,10 +26,17 @@ class EmployeeRequest extends FormRequest
     public function rules()
     {
         return [
-            'credentials' => ["required", ],
-            'job_title_id' => ["required", "integer",Rule::exists("job_titles","id")],
-            'shift_id' => ["required", "integer",Rule::exists("shifts","id")],
+            'credentials' => ["required",],
+            'job_title_id' => ["required", "integer", Rule::exists("job_titles", "id")],
+            'shift_id' => ["required", "integer", Rule::exists("shifts", "id")],
             'user_id' => ["integer"],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'job_title_id.exists' => "معرف المناوبة المدخلة غير موجود في قاعدة البيانات" 
         ];
     }
 }

@@ -18,9 +18,6 @@ class TeacherController extends Controller
     {
         $person = Person::create([
             'name' => $personRequest->name,
-            'father_name' => $personRequest->father_name,
-            'mother_name' => $personRequest->mother_name,
-            'gender' => $personRequest->gender,
             'phone_number' => $personRequest->phone_number,
             'birth_date' => $personRequest->birth_date,
             'type' => 'T',
@@ -39,9 +36,6 @@ class TeacherController extends Controller
     {
         $teacher->person()->update([
             'name' => $personRequest->name,
-            'father_name' => $personRequest->father_name,
-            'mother_name' => $personRequest->mother_name,
-            'gender' => $personRequest->gender,
             'phone_number' => $personRequest->phone_number,
             'birth_date' => $personRequest->birth_date,
         ]);
