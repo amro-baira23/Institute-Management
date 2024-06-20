@@ -23,9 +23,29 @@ class StockRequest extends FormRequest
      */
     public function rules()
     {
+        if ($this->route()->getName() == "import")
         return [
-            'name' => 'required',
-            'amount' => 'required',
+            "amount" => ["integer"]
+        ];
+
+        else
+            return [
+                'name' => ['required','unique:stocks'],
+                'amount' => ['required',"integer","gt:0"],
+                "source" => ["required"],
+            ];
+     
+    }
+
+    public function messages()
+    {
+        return [
+            "name.required" => "هذا الحقل مطلوب",
+            "amount.required" => "هذا الحقل مطلوب",
+            "amount.gt" => "يجب ان يكون عدد المواد رقم موجب",
+            "amount.integer" => "يجب ان يكون عدد المواد رقم صحيح",
+            "source.required" => "هذا الحقل مطلوب",
+            "name.unique" => "يوجد مادة بهذا الاسم مسبقا",
         ];
     }
 }

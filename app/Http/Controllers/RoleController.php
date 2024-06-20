@@ -14,7 +14,7 @@ class RoleController extends Controller
     public function addRole(RoleRequest $request)
     {
         $role = Role::create([
-            'role' => $request->role,
+            'name' => $request->role,
         ]);
 
         $permissions = explode(',', $request->permissions);
@@ -32,7 +32,7 @@ class RoleController extends Controller
     public function editRole(Role $role, RoleRequest $request)
     {
         $role->update([
-            'role' => $request->role,
+            'name' => $request->role,
         ]);
 
         foreach ($role->role_permissions as $role_permission)
@@ -52,7 +52,7 @@ class RoleController extends Controller
     //Get Roles Function
     public function getRoles()
     {
-        $roles = Role::with('permissions')->query()->when(request("name"),function($query,$name){
+        $roles = Role::with('permissions')->when(request("name"),function($query,$name){
             return $query->where("name","LIKE","%".$name."%");
         })->get();
         return success(SimpleListResource::collection($roles), null);
@@ -61,7 +61,11 @@ class RoleController extends Controller
     //Get Role Information Function
     public function getRoleInformation(Role $role)
     {
-        return success($role->with('permissions')->find($role->id), null);
+        $role = $role->load("permissions");
+        $response = [];
+        $response["role"] = $role->only("id","name");
+        $response["permissions"] = $role->permissions->pluck("name");
+        return success($response, null);
     }
 
     //Delete Role Function

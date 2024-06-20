@@ -73,8 +73,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
         Route::middleware('manage-stock')->prefix('stocks')->group(function () {
             Route::post('/', [StockController::class, 'addItemToStock']);
             Route::post('/{item}', [StockController::class, 'editStockItem']);
-            Route::post('/import/{item}', [StockController::class, 'importItem']);
-            Route::post('/export/{item}', [StockController::class, 'exportItem']);
+            Route::post('/import/{item}', [StockController::class, 'importItem'])->name("import");
             Route::get('/', [StockController::class, 'getStockItems']);
             Route::get('/{item}', [StockController::class, 'getStockItemInformation']);
             Route::delete('/{item}', [StockController::class, 'deleteStockItem']);
@@ -128,6 +127,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
         });
         Route::middleware('manage-role')->prefix('roles')->group(function () {
             Route::post('/', [RoleController::class, 'addRole']);
+            Route::post('/{role}/permissions', [RoleController::class, 'attachPermission']);
             Route::post('/{role}', [RoleController::class, 'editRole']);
             Route::get('/', [RoleController::class, 'getRoles']);
             Route::get('/{role}', [RoleController::class, 'getRoleInformation']);

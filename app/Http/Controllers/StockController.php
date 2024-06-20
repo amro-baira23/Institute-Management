@@ -16,24 +16,12 @@ class StockController extends Controller
     public function addItemToStock(StockRequest $request)
     {
         $items = Stock::get();
-        if ($request->amount == 0) {
-            return error('Item amount should be greater than 0', 'Item amount should be greater than 0', 502);
-        }
-
-        foreach ($items as $item) {
-            if ($item->name === $request->name) {
-                $item->update([
-                    'amount' => $item->amount + $request->amount
-                ]);
-                return success(null, 'this item added to stock successfully');
-            }
-        }
+     
 
         Stock::create([
             'name' => $request->name,
             'amount' => $request->amount,
             'source' => $request->source,
-            'note' => $request->note,
         ]);
 
         return success(null, 'this item added to stock successfully', 201);
@@ -46,58 +34,23 @@ class StockController extends Controller
             'name' => $request->name,
             'amount' => $request->amount,
             'source' => $request->source,
-            'note' => $request->note,
         ]);
 
         return success(null, 'this item updated successfully');
     }
 
     //Import Item To Stock
-    public function importItem(Stock $item, StockDetailRequest $request)
+    public function importItem(Stock $item, StockRequest $request)
     {
-        if ($request->amount == 0) {
-            return error('Item amount should be greater than 0', 'Item amount should be greater than 0', 502);
-        }
-
         $item->update([
             'amount' => $item->amount + $request->amount
         ]);
 
-        StockDetail::create([
-            'item_id' => $item->id,
-            'amount' => $request->amount,
-            'type' => 'import',
-            'date' => $request->date,
-        ]);
-
+    
         return success(null, 'imported successfully');
     }
 
-    //Export Item From Stock
-    public function exportItem(Stock $item, StockDetailRequest $request)
-    {
-        $request->validate([
-            'amount' => 'required'
-        ]);
-
-        if ($request->amount == 0) {
-            return error('Item amount should be greater than 0', 'Item amount should be greater than 0', 502);
-        }
-
-        $item->update([
-            'amount' => $item->amount - $request->amount
-        ]);
-
-        StockDetail::create([
-            'item_id' => $item->id,
-            'amount' => $request->amount,
-            'type' => 'export',
-            'date' => $request->date,
-        ]);
-
-
-        return success(null, 'exported successfully');
-    }
+   
 
     //Get Stock Items Function
     public function getStockItems()
@@ -106,7 +59,7 @@ class StockController extends Controller
             return $query->where("name","LIKE","%".$name."%");
         })->get();
 
-        return success(SimpleListResource::collection($stocks), null);
+        return success($stocks, null);
     }
 
     //Get Stock Item Information Function
