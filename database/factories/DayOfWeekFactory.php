@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Schedule;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,7 @@ class DayOfWeekFactory extends Factory
     public function definition()
     {
         return [
-            //
+            "day" => (string) fake()->numberBetween(0,6),
         ];
     }
 }

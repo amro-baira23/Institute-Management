@@ -73,29 +73,13 @@ class DatabaseSeeder extends Seeder
         Subject::factory()->count(20)->create();
         Room::factory()->count(10)->create();
         
-        $persons = Person::factory()->count(20)->create(
-            ["type" => "T"]
-        )->pluck("id");
-        Teacher::factory()->count(20)->create([
-            "person_id" => fake()->unique()->randomElement($persons->toArray())
-        ]);
+     
+        Teacher::factory()->count(20)->create();
 
-        $persons = Person::factory()->count(20)->create(
-            ["type" => "S"]
-        )->pluck("id");
-        Student::factory()->count(20)->create([
-            "person_id" => fake()->unique()->randomElement($persons->toArray())
-        ]);
+        Student::factory()->count(20)->create();
 
-        $schedules = Schedule::factory()->count(8)->create()->pluck("id");
-        $days = DayOfWeek::factory()->count(50)
-        ->create([
-            "day" => (string) fake()->unique()->numberBetween(0,6),
-            "schedule_id" => fake()->randomElement($schedules->toArray())
-             ]);
+ 
         
-        Course::factory()->count(8)->create([
-            "schedule_id" => fake()->randomElement($schedules->toArray())
-        ]);
+        Course::factory()->count(8)->create();
     }
 }

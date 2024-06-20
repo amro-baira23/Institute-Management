@@ -17,7 +17,11 @@ class TeacherFactory extends Factory
      */
     public function definition()
     {
+        $persons = Person::factory()->create(
+            ["type" => "T"]
+        );
         return [
+            "person_id" => $persons["id"],
             "credentials" => fake()->numerify("credentials ###"),
         ];
     }

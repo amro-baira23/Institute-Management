@@ -2,7 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\DayOfWeek;
 use App\Models\Room;
+use App\Models\Schedule;
 use App\Models\Subject;
 use App\Models\Teacher;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -23,7 +25,13 @@ class CourseFactory extends Factory
         $rooms = Room::all()->pluck("id");
         $teachers = Teacher::all()->pluck('id');
         
+        $schedules = Schedule::factory()->create();
+        $days = DayOfWeek::factory()->count(4)
+        ->create([
+            "schedule_id" => $schedules["id"]
+             ]);
         return [
+            "schedule_id" => $schedules["id"],
             'subject_id' => fake()->randomElement($subjects->toArray()),
             'teacher_id' => fake()->randomElement($teachers->toArray()),
             'room_id' => fake()->randomElement($rooms->toArray()),
