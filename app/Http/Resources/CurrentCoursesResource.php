@@ -15,10 +15,11 @@ class CurrentCoursesResource extends JsonResource
     public function toArray($request)
     {
         return [
+            "id" => $this->id,
             "category" => $this->subject->name,
             "room" => $this->room->name,
-            "teacher" => new SimpleListResource($this->teacher),
-            "created_at" => $this->created_at,
+            "teacher" => $this->teacher?->person->name,
+            "created_at" => $this->created_at->format("Y-m-d"),
             "dates" => $this->dates
         ];
     }
