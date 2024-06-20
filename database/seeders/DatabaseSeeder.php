@@ -87,14 +87,14 @@ class DatabaseSeeder extends Seeder
             "person_id" => fake()->unique()->randomElement($persons->toArray())
         ]);
 
-        $schedules = Schedule::factory()->count(30)->create(["start" => fake()->time(),"end" => fake()->time()])->pluck("id");
+        $schedules = Schedule::factory()->count(8)->create()->pluck("id");
         $days = DayOfWeek::factory()->count(50)
         ->create([
             "day" => (string) fake()->unique()->numberBetween(0,6),
             "schedule_id" => fake()->randomElement($schedules->toArray())
              ]);
         
-        Course::factory()->count(30)->create([
+        Course::factory()->count(8)->create([
             "schedule_id" => fake()->randomElement($schedules->toArray())
         ]);
     }

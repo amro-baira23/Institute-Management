@@ -19,8 +19,8 @@ class CurrentCoursesResource extends JsonResource
             "category" => $this->subject->name,
             "room" => $this->room->name,
             "teacher" => $this->teacher?->person->name,
-            "created_at" => $this->created_at->format("Y-m-d"),
-            "days" => $this->schedule->days->pluck("day"),
+            "starts" => $this->schedule->start,
+            "ends" => $this->schedule->end,
             "dates" => $this->dates
         ];
     }

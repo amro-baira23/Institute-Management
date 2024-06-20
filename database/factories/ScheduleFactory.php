@@ -16,8 +16,10 @@ class ScheduleFactory extends Factory
      */
     public function definition()
     {
+        $time = fake()->time("H:i");
         return [
-            //
+            "start" => $time,
+            "end" => date("H:i",strtotime($time . "+2 hour"))
         ];
     }
 }
