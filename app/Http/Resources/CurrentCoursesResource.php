@@ -20,6 +20,7 @@ class CurrentCoursesResource extends JsonResource
             "room" => $this->room->name,
             "teacher" => $this->teacher?->person->name,
             "created_at" => $this->created_at->format("Y-m-d"),
+            "days" => $this->schedule->days->pluck("day"),
             "dates" => $this->dates
         ];
     }

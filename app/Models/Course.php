@@ -38,7 +38,7 @@ class Course extends Model
                    new DateTime($attributes["end_at"])
                 );      
                 foreach ($range as $date){
-                    if ($days->contains($date->format('N')))
+                    if ($days->contains($date->format('w')))
                         $array[] = $date->format("Y-m-d");
                 }
                 return $array   ;
