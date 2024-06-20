@@ -55,7 +55,7 @@ class RoleController extends Controller
         $roles = Role::with('permissions')->when(request("name"),function($query,$name){
             return $query->where("name","LIKE","%".$name."%");
         })->get();
-        return success(SimpleListResource::collection($roles), null);
+        return success($roles->paginate(20), null);
     }
 
     //Get Role Information Function
@@ -72,6 +72,6 @@ class RoleController extends Controller
     public function deleteRole(Role $role){
         $role->delete();
 
-        return success(null, 'this role deleted successfully');
+        return success(null, 'this role deleted successfully',204);
     }
 }

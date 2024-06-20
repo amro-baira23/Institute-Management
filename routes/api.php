@@ -127,7 +127,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
         });
         Route::middleware('manage-role')->prefix('roles')->group(function () {
             Route::post('/', [RoleController::class, 'addRole']);
-            Route::post('/{role}/permissions', [RoleController::class, 'attachPermission']);
             Route::post('/{role}', [RoleController::class, 'editRole']);
             Route::get('/', [RoleController::class, 'getRoles']);
             Route::get('/{role}', [RoleController::class, 'getRoleInformation']);
