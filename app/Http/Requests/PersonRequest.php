@@ -29,4 +29,12 @@ class PersonRequest extends FormRequest
             'birth_date' => 'date|required',
         ];
     }
+
+    public function messages()
+    {
+        return [
+            "*.required" => "هذا الحقل مطلوب",
+            "birt_date.date" => "تاريخ الميلاد المدخل غير صالح"
+        ];
+    }
 }

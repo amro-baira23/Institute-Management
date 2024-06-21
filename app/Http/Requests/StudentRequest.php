@@ -36,4 +36,12 @@ class StudentRequest extends FormRequest
             'education_level' => 'required',
         ];
     }
+
+    
+    public function messages()
+    {
+        return [
+            "*.required" => "هذا الحقل مطلوب",
+        ];
+    }
 }

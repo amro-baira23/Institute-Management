@@ -50,4 +50,5 @@ class StockRequest extends FormRequest
             "name.unique" => "يوجد مادة بهذا الاسم مسبقا",
         ];
     }
+
 }

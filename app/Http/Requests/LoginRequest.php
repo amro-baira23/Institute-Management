@@ -28,4 +28,12 @@ class LoginRequest extends FormRequest
             'password' => 'required|min:6',
         ];
     }
+    public function messages()
+    {
+        return [
+            "*.required" => "هذا الحقل مطلوب",
+            "password.min" => "يجب ان تكون كلمة سر من 6 احرف عالأقل"
+        ];
+    }
 }
+

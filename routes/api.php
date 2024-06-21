@@ -78,10 +78,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
             Route::get('/{item}', [StockController::class, 'getStockItemInformation']);
             Route::delete('/{item}', [StockController::class, 'deleteStockItem']);
         });
-        Route::middleware('manage-stock')->prefix('stock_details')->group(function () {
-            Route::get('/', [StockController::class, 'getStockDetails']);
-            Route::get('/{detail}', [StockController::class, 'getStockDetailInformation']);
-        });
+     
         Route::prefix('main-accounts')->group(function () {
             Route::get('/', [MainAccountController::class, 'getMainAccounts']);
             Route::get('/{mainAccount}', [MainAccountController::class, 'getMainAccountInformation']);
@@ -97,6 +94,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
             Route::post('/', [TeacherController::class, 'addTeacher']);
             Route::post('/{teacher}', [TeacherController::class, 'editTeacher']);
             Route::get('/', [TeacherController::class, 'getTeachers']);
+            Route::get('/names', [TeacherController::class, 'getNames']);
             Route::get('/{teacher}', [TeacherController::class, 'getTeacherInformation']);
             Route::delete('/{teacher}', [TeacherController::class, 'deleteTeacher']);
         });

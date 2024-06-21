@@ -47,6 +47,17 @@ class TeacherController extends Controller
         return success(null, 'this teacher edited successfully');
     }
 
+    public function getNames(){
+        $teachers = Teacher::query()->when(request("name"),function($query,$name){
+            return $query->whereHas("person",function($query,) use($name){
+                return $query->where("name","LIKE", '%'.$name.'%');
+            });
+        })
+        ->with("person")->get();
+        
+        return success(SimpleListResource::collection($teachers), null);
+    }
+
     //Get Teachers Function
     public function getTeachers()
     {
@@ -55,10 +66,10 @@ class TeacherController extends Controller
                 return $query->where("name","LIKE", '%'.$name.'%');
             });
         })
-        ->with("person")->get();
+        ->with("person")->paginate(20);
         
       
-        return success(SimpleListResource::collection($teachers), null);
+        return TeacherRetrieveResource::collection($teachers);
     }
 
     //Get Teacher Information Function

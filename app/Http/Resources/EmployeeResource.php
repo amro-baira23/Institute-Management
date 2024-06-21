@@ -3,7 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Routing\Route;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class EmployeeResource extends JsonResource
 {
@@ -35,4 +35,14 @@ class EmployeeResource extends JsonResource
             ]),
         ];
     }
+
+
+    public function paginationInformation($request, $paginated, $default)
+    {
+        unset($default["meta"]["links"]);
+        return $default;
+    }
+}
+class myclass{
+    
 }

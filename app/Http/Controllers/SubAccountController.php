@@ -36,8 +36,8 @@ class SubAccountController extends Controller
     {
         $subAccounts = SubAccount::query()->when(request("name"),function($query,$name){
             return $query->where("name","LIKE","%".$name."%");
-        })->get();
-        return success(SimpleListResource::collection($subAccounts), null);
+        })->paginate();
+        return SimpleListResource::collection($subAccounts);
     }
 
     //Get Sub Account Information Function

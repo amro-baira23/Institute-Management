@@ -16,9 +16,9 @@ class CurrentCoursesResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "category" => $this->subject->name,
-            "room" => $this->room->name,
-            "teacher" => $this->teacher?->person->name,
+            "subject" => new SimpleListResource($this->subject),
+            "room" => new SimpleListResource($this->room),
+            "teacher" => new SimpleListResource($this->teacher),
             "starts" => $this->schedule->start,
             "ends" => $this->schedule->end,
             "dates" => $this->dates

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PersonRequest;
 use App\Http\Requests\StudentRequest;
+use App\Http\Resources\SimpleListResource;
 use App\Http\Resources\StudentCollection;
 use App\Http\Resources\StudentResource;
 use App\Models\Person;
@@ -65,7 +66,17 @@ class StudentController extends Controller
 
         return success(null, 'this student updated successfully');
     }
+    public function getNames()
+    {
+        $students = Student::query()->when(request("name"),function($query,$name){
+            return $query->whereHas("person",function($query,) use($name){
+                return $query->where("name","LIKE", '%'.$name.'%');
+            });
+        })->with("person")->paginate(20);
+        return success(SimpleListResource::collection($students),null);
+    }
 
+    
     //Get Students Function
     public function getStudents()
     {

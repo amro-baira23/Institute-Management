@@ -34,7 +34,7 @@ class CategoryController extends Controller
     {
         $categories = Category::query()->when(request("name"),function($query,$name){
             return $query->where("name","LIKE","%".$name."%");
-        })->get();
+        })->paginate(20);
 
         return success(SimpleListResource::collection($categories), null);
     }

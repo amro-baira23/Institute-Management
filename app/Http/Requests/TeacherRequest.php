@@ -27,4 +27,12 @@ class TeacherRequest extends FormRequest
             'credentials' => 'required',
         ];
     }
+
+    
+    public function messages()
+    {
+        return [
+            "*.required" => "هذا الحقل مطلوب",
+        ];
+    }
 }

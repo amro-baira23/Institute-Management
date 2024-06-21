@@ -36,7 +36,9 @@ class EmployeeRequest extends FormRequest
     public function messages(): array
     {
         return [
+            "*.required" => "هذا الحقل مطلوب",
             'job_title_id.exists' => "معرف المناوبة المدخلة غير موجود في قاعدة البيانات" 
         ];
     }
+
 }

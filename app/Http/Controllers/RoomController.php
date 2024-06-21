@@ -34,9 +34,9 @@ class RoomController extends Controller
     {
         $rooms = Room::query()->when(request("name"),function($query,$name){
             return $query->where("name","LIKE","%".$name."%");
-        })->get();
+        })->paginate(20);
 
-        return success(SimpleListResource::collection($rooms), null);
+        return SimpleListResource::collection($rooms);
     }
 
     //Get Room Information Function

@@ -19,9 +19,9 @@ class JobTitleController extends Controller
     {
         $jobTitle = JobTitle::query()->when(request("name"),function($query,$name){
             return $query->where("name","like","%".$name."%");
-        })->get();
+        })->paginate(20);
 
-        return success(SimpleListResource::collection($jobTitle), null);
+        return SimpleListResource::collection($jobTitle);
     }
 
 

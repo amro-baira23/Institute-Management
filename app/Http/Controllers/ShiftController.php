@@ -16,8 +16,8 @@ class ShiftController extends Controller
     {
         $shifts = Shift::query()->when(request("name"),function($query,$name){
             return $query->where("name","LIKE", '%'.$name.'%');
-        })->get();
-        return success(SimpleListResource::collection($shifts), null);
+        })->paginate(20);
+        return ShiftResource::collection($shifts);
     }
 
     public function getShift(Shift $shift){
