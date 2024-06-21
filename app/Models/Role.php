@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,6 +12,11 @@ class Role extends Model
 
     protected $table = 'roles';
     protected $guarded = [];
+
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format("Y-m-d h:i");
+    }
 
     public function role_permissions()
     {

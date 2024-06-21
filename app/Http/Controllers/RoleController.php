@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RoleRequest;
+use App\Http\Resources\RoleCollection;
+use App\Http\Resources\RoleResource;
 use App\Http\Resources\SimpleListResource;
 use App\Models\Role;
 use App\Models\RolePermission;
@@ -54,8 +56,8 @@ class RoleController extends Controller
     {
         $roles = Role::with('permissions')->when(request("name"),function($query,$name){
             return $query->where("name","LIKE","%".$name."%");
-        })->get();
-        return success($roles->paginate(20), null);
+        })->simplePaginate(20);
+        return success(new RoleCollection($roles), null);
     }
 
     //Get Role Information Function

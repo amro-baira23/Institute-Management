@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Stock;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule ;
 
 class StockRequest extends FormRequest
 {
@@ -30,7 +32,7 @@ class StockRequest extends FormRequest
 
         else
             return [
-                'name' => ['required','unique:stocks'],
+                'name' => ['required',Rule::unique("stocks")->ignore($this->route("item")?->id)],
                 'amount' => ['required',"integer","gt:0"],
                 "source" => ["required"],
             ];
