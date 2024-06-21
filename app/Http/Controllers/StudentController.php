@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PersonRequest;
 use App\Http\Requests\StudentRequest;
+use App\Http\Resources\StudentCollection;
 use App\Http\Resources\StudentResource;
 use App\Models\Person;
 use App\Models\Student;
@@ -69,9 +70,11 @@ class StudentController extends Controller
     public function getStudents()
     {
         $students = Student::query()->when(request("name"),function($query,$name){
-            return $query->where("name",$name);
-        })->with("person")->get();
-        return success(StudentResource::collection($students), null);
+            return $query->whereHas("person",function($query,) use($name){
+                return $query->where("name","LIKE", '%'.$name.'%');
+            });
+        })->with("person")->paginate(20);
+        return new StudentCollection($students);
     
     }
 

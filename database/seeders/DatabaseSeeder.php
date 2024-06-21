@@ -13,6 +13,7 @@ use App\Models\Permission;
 use App\Models\Person;
 use App\Models\Room;
 use App\Models\Schedule;
+use App\Models\Stock;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\Teacher;
@@ -81,5 +82,6 @@ class DatabaseSeeder extends Seeder
  
         
         Course::factory()->count(8)->create();
+        Stock::factory()->count(20)->create();
     }
 }

@@ -57,7 +57,7 @@ class RoleController extends Controller
         $roles = Role::with('permissions')->when(request("name"),function($query,$name){
             return $query->where("name","LIKE","%".$name."%");
         })->simplePaginate(20);
-        return success(new RoleCollection($roles), null);
+        return new RoleCollection($roles);
     }
 
     //Get Role Information Function
