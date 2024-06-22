@@ -25,7 +25,7 @@ return new class extends Migration
             $table->enum("salary_type",["C","S"]);
             $table->integer('salary_amount');
             $table->integer('cost');
-            $table->string('status');
+            $table->enum('status',["C","P","O"]);
 
             $table->foreign('subject_id')->references('id')->on('subjects')->onDelete('cascade');
             $table->foreign('schedule_id')->references('id')->on('schedules')->onDelete('cascade');
