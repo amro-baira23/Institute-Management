@@ -22,7 +22,7 @@ class StudentResource extends JsonResource
                 $this->person->only("birth_date", "phone_number",),
             ),
             $this->mergeWhen(true, 
-            $this->only("gender","father_name","mother_name","line_number","national_number","educational_level","name_en","father_name_en","mother_name_en")
+            $this->only("gender","father_name","mother_name","line_phone_number","national_number","educational_level","name_en","father_name_en","mother_name_en")
             ),
             "created_at" => $this->created_at->format("Y-m-d h:i"),
 
