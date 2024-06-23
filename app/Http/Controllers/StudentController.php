@@ -92,7 +92,8 @@ class StudentController extends Controller
     //Get Student Information Function
     public function getStudentInformation(Student $student)
     {
-        return success($student->with('person')->find($student->id), null);
+        $student->load("person");
+        return success(new StudentResource($student), null);
     }
 
     //Delete Student Function
