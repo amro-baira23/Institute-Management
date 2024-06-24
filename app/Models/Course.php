@@ -28,6 +28,10 @@ class Course extends Model
         'status',
     ];
 
+    protected $casts = [
+        "students.pivot.with_diploma" => "boolean"
+    ];
+
     public function dates() : Attribute{
         return Attribute::make(
             function(mixed $value,array $attributes){
@@ -88,5 +92,9 @@ class Course extends Model
     public function room()
     {
         return $this->belongsTo(Room::class, 'room_id', 'id');
+    }
+
+    public function students(){
+        return $this->belongsToMany(Student::class,"enrollments","course_id","student_id")->withPivot("with_diploma");
     }
 }

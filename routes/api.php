@@ -115,6 +115,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
         Route::middleware('manage-course')->prefix('courses')->group(function () {
             Route::post('/', [CourseController::class, 'addCourse']);
             Route::post('/{course}', [CourseController::class, 'editCourse']);
+            Route::post('/{course}/students', [CourseController::class, 'addStudent']);
+            Route::get('/{course}/students', [CourseController::class, 'getStudents']);
             Route::get('/', [CourseController::class, 'getCourses']);
             Route::get('/{course}', [CourseController::class, 'getCourseInformation']);
             Route::delete('/{course}', [CourseController::class, 'deleteCourse']);

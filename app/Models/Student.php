@@ -20,4 +20,10 @@ class Student extends Model
     public function courses(){
         return $this->belongsToMany(Course::class, "enrollments", "student_id");
     }
+
+    
+    protected function serializeDate($date)
+    {
+        return $date->format('Y-m-d H:i');
+    }   
 }
