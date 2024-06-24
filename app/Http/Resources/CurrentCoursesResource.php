@@ -32,8 +32,11 @@ class CurrentCoursesResource extends JsonResource
             "salary_amount" => $this->salary_amount,
             "start_at" => $this->start_at,
             "end_at" => $this->end_at,
-       
-            "dates" => $this->dates
+            $this->mergeWhen(
+                $request->route()->getName() == "schedule",
+                ["dates" => $this->dates
+                ]
+            ),
         ];
     }
 }

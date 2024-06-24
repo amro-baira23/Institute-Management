@@ -147,7 +147,7 @@ class CourseController extends Controller
     //Get Course Information Function
     public function getCourseInformation(Course $course)
     {
-        return success($course->dates, null);
+        return success(new CurrentCoursesResource($course), null);
     }
 
     //Delete Course Function
