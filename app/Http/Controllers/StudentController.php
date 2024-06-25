@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PersonRequest;
 use App\Http\Requests\StudentRequest;
+use App\Http\Resources\SimpleListResource;
+use App\Http\Resources\StudentCollection;
+use App\Http\Resources\StudentResource;
 use App\Models\Person;
 use App\Models\Student;
 use Illuminate\Http\Request;
@@ -13,19 +16,20 @@ class StudentController extends Controller
     //Add Student Function
     public function addStudent(StudentRequest $studentRequest, PersonRequest $personRequest)
     {
-
+        $studentRequest->validate([
+            'national_number' => 'unique:students,national_number',
+        ]);
         $person = Person::create([
             'name' => $personRequest->name,
-            'father_name' => $personRequest->father_name,
             'phone_number' => $personRequest->phone_number,
-            'mother_name' => $personRequest->mother_name,
-            'gender' => $personRequest->gender,
             'birth_date' => $personRequest->birth_date,
-            'last_name' => $personRequest->last_name
         ]);
 
         Student::create([
             'person_id' => $person->id,
+            'father_name' => $personRequest->father_name,
+            'mother_name' => $personRequest->mother_name,
+            'gender' => $personRequest->gender,
             'name_en' => $studentRequest->name_en,
             'father_name_en' => $studentRequest->father_name_en,
             'line_phone_number' => $studentRequest->line_phone_number,
@@ -46,13 +50,13 @@ class StudentController extends Controller
         ]);
         $student->person()->update([
             'name' => $personRequest->name,
-            'father_name' => $personRequest->father_name,
             'phone_number' => $personRequest->phone_number,
-            'mother_name' => $personRequest->mother_name,
-            'gender' => $personRequest->gender,
             'birth_date' => $personRequest->birth_date,
         ]);
         $student->update([
+            'father_name' => $personRequest->father_name,
+            'mother_name' => $personRequest->mother_name,
+            'gender' => $personRequest->gender,
             'name_en' => $studentRequest->name_en,
             'father_name_en' => $studentRequest->father_name_en,
             'line_phone_number' => $studentRequest->line_phone_number,
@@ -64,13 +68,26 @@ class StudentController extends Controller
 
         return success(null, 'this student updated successfully');
     }
+    public function getNames()
+    {
+        $students = Student::query()->when(request("name"), function ($query, $name) {
+            return $query->whereHas("person", function ($query,) use ($name) {
+                return $query->where("name", "LIKE", '%' . $name . '%');
+            });
+        })->with("person")->paginate(20);
+        return success(SimpleListResource::collection($students), null);
+    }
+
 
     //Get Students Function
     public function getStudents()
     {
-        $students = Student::with('person')->get();
-
-        return success($students, null);
+        $students = Student::query()->when(request("name"), function ($query, $name) {
+            return $query->whereHas("person", function ($query,) use ($name) {
+                return $query->where("name", "LIKE", '%' . $name . '%');
+            });
+        })->with("person")->paginate(20);
+        return new StudentCollection($students);
     }
 
     //Get Student Information Function

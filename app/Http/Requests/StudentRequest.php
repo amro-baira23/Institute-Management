@@ -24,13 +24,24 @@ class StudentRequest extends FormRequest
     public function rules()
     {
         return [
+            'father_name' => 'required',
+            'mother_name' => 'required',
+            'gender' => 'required',
             'name_en' => 'required',
             'father_name_en' => 'required',
             'line_phone_number' => 'required',
             'mother_name_en' => 'required',
-            'national_number' => 'required|unique:students,national_number',
+            'national_number' => 'required',
             'nationality' => 'required',
             'education_level' => 'required',
+        ];
+    }
+
+    
+    public function messages()
+    {
+        return [
+            "*.required" => "هذا الحقل مطلوب",
         ];
     }
 }

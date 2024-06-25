@@ -16,12 +16,8 @@ return new class extends Migration
         Schema::create('persons', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('last_name');
-            $table->string('father_name');
-            $table->string('mother_name');
-            $table->string('gernder');
-            $table->string('phone_number');
             $table->date('birth_date');
+            $table->string('phone_number');
             $table->enum('type',['T','E','S']);
             $table->timestamps();
             $table->softDeletes();

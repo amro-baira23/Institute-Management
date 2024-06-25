@@ -21,7 +21,7 @@ class ManageSubAccountAuthentication
             return $next($request);
         }
         foreach (Auth::guard('user')->user()->role->permissions as $permission) {
-            if ($permission->permission == 'إدارة الحسابات الفرعية') {
+            if ($permission->name == 'إدارة الحسابات الفرعية') {
                 return $next($request);
             }
         }

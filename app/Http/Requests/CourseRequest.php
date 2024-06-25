@@ -39,4 +39,10 @@ class CourseRequest extends FormRequest
             'days' => 'required',
         ];
     }
+    public function messages()
+    {
+        return [
+            "*.required" => "هذا الحقل مطلوب",
+        ];
+    }
 }

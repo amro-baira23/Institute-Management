@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RoleRequest;
+use App\Http\Resources\RoleCollection;
+use App\Http\Resources\RoleResource;
+use App\Http\Resources\SimpleListResource;
 use App\Models\Role;
 use App\Models\RolePermission;
 use Illuminate\Http\Request;
@@ -13,7 +16,7 @@ class RoleController extends Controller
     public function addRole(RoleRequest $request)
     {
         $role = Role::create([
-            'role' => $request->role,
+            'name' => $request->role,
         ]);
 
         $permissions = explode(',', $request->permissions);
@@ -31,7 +34,7 @@ class RoleController extends Controller
     public function editRole(Role $role, RoleRequest $request)
     {
         $role->update([
-            'role' => $request->role,
+            'name' => $request->role,
         ]);
 
         foreach ($role->role_permissions as $role_permission)
@@ -51,20 +54,26 @@ class RoleController extends Controller
     //Get Roles Function
     public function getRoles()
     {
-        $roles = Role::with('permissions')->get();
-        return success($roles, null);
+        $roles = Role::with('permissions')->when(request("name"),function($query,$name){
+            return $query->where("name","LIKE","%".$name."%");
+        })->simplePaginate(20);
+        return new RoleCollection($roles);
     }
 
     //Get Role Information Function
     public function getRoleInformation(Role $role)
     {
-        return success($role->with('permissions')->find($role->id), null);
+        $role = $role->load("permissions");
+        $response = [];
+        $response["role"] = $role->only("id","name");
+        $response["permissions"] = $role->permissions->pluck("name");
+        return success($response, null);
     }
 
     //Delete Role Function
     public function deleteRole(Role $role){
         $role->delete();
 
-        return success(null, 'this role deleted successfully');
+        return success(null, 'this role deleted successfully',204);
     }
 }

@@ -29,4 +29,11 @@ class PasswordRequest extends FormRequest
             'confirm_password'=>'required',
         ];
     }
+
+    public function messages()
+    {
+        return [
+            "*.required" => "هذا الحقل مطلوب",
+        ];
+    }
 }

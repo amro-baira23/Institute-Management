@@ -16,14 +16,16 @@ return new class extends Migration
         Schema::create('students', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('person_id');
+            $table->string('father_name');
+            $table->string('mother_name');
+            $table->enum('gender',["M","F"]);
             $table->string('name_en');
             $table->string('father_name_en');
-            $table->string('line_phone_number');
             $table->string('mother_name_en');
+            $table->string('line_phone_number');
             $table->string('national_number');
             $table->string('nationality');
             $table->string('education_level');
-
             $table->foreign('person_id')->references('id')->on('persons')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();

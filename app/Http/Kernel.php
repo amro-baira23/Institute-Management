@@ -75,5 +75,6 @@ class Kernel extends HttpKernel
         'manage-course' => \App\Http\Middleware\ManageCourseAuthentication::class,
         'manage-role' => \App\Http\Middleware\ManageRoleAuthentication::class,
         'manage-employee' => \App\Http\Middleware\ManageEmployeeAuthentication::class,
+        'certificate' => \App\Http\Middleware\CertificateAuthentication::class,
     ];
 }

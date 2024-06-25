@@ -12,7 +12,7 @@ class Subject extends Model
     protected $table = 'subjects';
     protected $fillable = [
         'category_id',
-        'subject'
+        'name'
     ];
 
     public function category(){

@@ -21,7 +21,7 @@ class ManageEmployeeAuthentication
             return $next($request);
         }
         foreach (Auth::guard('user')->user()->role->permissions as $permission) {
-            if ($permission->permission == 'إدارة الموظفين') {
+            if ($permission->name == 'إدارة الموظفين') {
                 return $next($request);
             }
         }

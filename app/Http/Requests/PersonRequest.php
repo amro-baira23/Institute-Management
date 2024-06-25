@@ -25,12 +25,16 @@ class PersonRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'last_name' => 'required',
-            'father_name' => 'required',
-            'mother_name' => 'required',
-            'gender' => 'required',
             'phone_number' => 'required',
             'birth_date' => 'date|required',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            "*.required" => "هذا الحقل مطلوب",
+            "birt_date.date" => "تاريخ الميلاد المدخل غير صالح"
         ];
     }
 }

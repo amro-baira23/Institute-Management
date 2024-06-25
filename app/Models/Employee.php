@@ -12,11 +12,15 @@ class Employee extends Model
     protected $table = 'employees';
     protected $fillable = [
         'person_id',
-        'schedule_id',
-        'job_name',
+        'shift_id',
+        'job_id',
         'credentials',
-        'salary_amount',
     ];
+
+    protected function serializeDate($date)
+    {
+        return $date->format('Y-m-d h:i:s');
+    }
 
     public function person()
     {
@@ -24,16 +28,16 @@ class Employee extends Model
     }
 
     public function user(){
-        return $this->belongsTo(User::class,'person_id','person_id');
+        return $this->belongsTo(User::class,"account_id","id");
     }
 
-    public function schedule()
+    public function shift()
     {
-        return $this->belongsTo(Schedule::class, 'schedule_id', 'id');
+        return $this->belongsTo(Shift::class, 'shift_id', 'id');
     }
 
-    public function role()
+    public function jobTitle()
     {
-        return $this->belongsTo(Role::class, 'role_id', 'id');
+        return $this->belongsTo(JobTitle::class, 'job_id',"id");
     }
 }

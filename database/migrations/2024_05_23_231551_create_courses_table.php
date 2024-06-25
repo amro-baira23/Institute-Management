@@ -22,7 +22,7 @@ return new class extends Migration
             $table->integer('minimum_students');
             $table->date('start_at');
             $table->date('end_at');
-            $table->string('salary_type');
+            $table->enum("salary_type",["C","S"]);
             $table->integer('salary_amount');
             $table->integer('cost');
             $table->string('status');

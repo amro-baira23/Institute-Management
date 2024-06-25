@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\ListExists;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RoleRequest extends FormRequest
@@ -25,6 +26,15 @@ class RoleRequest extends FormRequest
     {
         return [
             'role' => 'required',
+            'permissions' => ["required" ,new ListExists("permissions")]
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            "*.required" => "هذا الحقل مطلوب",
+            
         ];
     }
 }

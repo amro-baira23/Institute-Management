@@ -21,7 +21,7 @@ class ManageSubjectAuthentication
             return $next($request);
         }
         foreach (Auth::guard('user')->user()->role->permissions as $permission) {
-            if ($permission->permission == 'إدارة المواد') {
+            if ($permission->name == 'إدارة المواد') {
                 return $next($request);
             }
         }

@@ -27,4 +27,10 @@ class CategoryRequest extends FormRequest
             'category' => 'required',
         ];
     }
+    public function messages()
+    {
+        return [
+            "*.required" => "هذا الحقل مطلوب",
+        ];
+    }
 }

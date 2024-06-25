@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SubjectRequest;
+use App\Http\Resources\SimpleListResource;
 use App\Models\Subject;
 use Illuminate\Http\Request;
 
@@ -13,7 +14,7 @@ class SubjectController extends Controller
     {
         Subject::create([
             'category_id' => $request->category_id,
-            'subject' => $request->subject
+            'name' => $request->subject
         ]);
 
         return success(null, 'this subject added successfully', 201);
@@ -24,24 +25,25 @@ class SubjectController extends Controller
     {
         $subject->update([
             'category_id' => $request->category_id,
-            'subject' => $request->subject
+            'name' => $request->subject
         ]);
 
         return success(null, 'this subject updated successfully');
     }
 
     //Get Subjects Function
-    public function getSubjects()
+    public function getSubjects(Request $request)
     {
-        $subjects = Subject::get();
-
-        return success($subjects, null);
+        $subjects = Subject::query()->when(request("name"),function($query,$name){
+            return $query->where("name","LIKE","%".$name."%");
+        })->paginate(20);
+        return SimpleListResource::collection($subjects);
     }
 
     //Get Subject Information Function
     public function getSubjectInformation(Subject $subject)
     {
-        return success($subject, null);
+        return success(SimpleListResource::collection($subject) , null);
     }
 
     //Delete Subject Function

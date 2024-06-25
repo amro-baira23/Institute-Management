@@ -28,4 +28,12 @@ class SubjectRequest extends FormRequest
             'subject' => 'required',
         ];
     }
+
+    
+    public function messages()
+    {
+        return [
+            "*.required" => "هذا الحقل مطلوب",
+        ];
+    }
 }

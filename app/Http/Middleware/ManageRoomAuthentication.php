@@ -21,7 +21,7 @@ class ManageRoomAuthentication
             return $next($request);
         }
         foreach (Auth::guard('user')->user()->role->permissions as $permission) {
-            if ($permission->permission == 'إدارة الغرف') {
+            if ($permission->name == 'إدارة الغرف') {
                 return $next($request);
             }
         }

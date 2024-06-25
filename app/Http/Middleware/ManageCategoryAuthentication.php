@@ -21,7 +21,7 @@ class ManageCategoryAuthentication
             return $next($request);
         }
         foreach (Auth::guard('user')->user()->role->permissions as $permission) {
-            if ($permission->permission == 'إدارة أصناف المواد') {
+            if ($permission->name == 'إدارة أصناف المواد') {
                 return $next($request);
             }
         }

@@ -4,9 +4,19 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Category;
+use App\Models\Course;
+use App\Models\DayOfWeek;
 use App\Models\MainAccount;
+use App\Models\Role;
 use App\Models\Permission;
 use App\Models\Person;
+use App\Models\Room;
+use App\Models\Schedule;
+use App\Models\Stock;
+use App\Models\Student;
+use App\Models\Subject;
+use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -29,24 +39,22 @@ class DatabaseSeeder extends Seeder
 
         $main_accounts = ['المصاريف', 'الإيرادات', 'الطلاب', 'الأساتذة', 'الصندوق', 'رأس المال', 'الموظفين'];
         $permissions = ['إدارة الطلاب', 'إدارة المستودع', 'إدارة الغرف', 'إدارة المواد', 'إدارة أصناف المواد', 'إدارة الحسابات الفرعية', 'إدارة الأساتذة', 'إدارة الدورات', 'إدارة الأدوار', 'إدارة الموظفين'];
-
+        $roles = ["مدير", "ضيف"];
 
         $person = Person::create([
             'name' => 'أحمد',
-            'last_name' => 'خليل',
-            'father_name' => 'عيسى',
-            'mother_name' => 'سلوى',
-            'gender' => 'Male',
             'phone_number' => '0988745545',
             'birth_date' => '1990-06-02',
-            'type' => 'M',
+            'type' => 'S',
         ]);
+        
+        $admin = Role::create(["name" => "مدير"]);
+        Role::create(["name" => "ضيف"]);
 
         User::create([
-            'person_id' => $person->id,
             'username' => 'admin',
             'password' => Hash::make('123456789'),
-            'is_admin' => 1
+            "role_id" => 1
         ]);
 
         foreach ($main_accounts as $account)
@@ -56,7 +64,24 @@ class DatabaseSeeder extends Seeder
 
         foreach ($permissions as $permission)
             Permission::create([
-                'permission' => $permission
+                'name' => $permission
             ]);
+
+
+        $admin->permissions()->attach(Permission::all());
+        
+        Category::factory()->count(6)->create();
+        Subject::factory()->count(20)->create();
+        Room::factory()->count(10)->create();
+        
+     
+        Teacher::factory()->count(20)->create();
+
+        Student::factory()->count(20)->create();
+
+ 
+        
+        Course::factory()->count(8)->create();
+        Stock::factory()->count(20)->create();
     }
 }

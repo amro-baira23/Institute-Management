@@ -27,4 +27,11 @@ class RoomRequest extends FormRequest
             'name'=>'required',
         ];
     }
+
+    public function messages()
+    {
+        return [
+            "*.required" => "هذا الحقل مطلوب",
+        ];
+    }
 }
