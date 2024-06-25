@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->timestamps();
         });
-
+        
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('username');
@@ -39,5 +39,6 @@ return new class extends Migration
     {
         Schema::dropIfExists('users');
         Schema::dropIfExists('roles');
+
     }
 };

@@ -16,12 +16,27 @@ class CurrentCoursesResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "subject" => new SimpleListResource($this->subject),
+            "subject" =>new SimpleListResource($this->subject),
             "room" => new SimpleListResource($this->room),
             "teacher" => new SimpleListResource($this->teacher),
-            "starts" => $this->schedule->start,
-            "ends" => $this->schedule->end,
-            "dates" => $this->dates
+            "minimum_students" => $this->minimum_students,
+            "status" => $this->status,
+            "cost" => $this->cost,
+            "schedule" => [
+                "id" => $this->schedule_id,
+                "starts" => $this->schedule->start,
+                "ends" => $this->schedule->end,
+                "days" => $this->schedule->days->pluck('day')
+            ],
+            "salary_type" => $this->salary_type,
+            "salary_amount" => $this->salary_amount,
+            "start_at" => $this->start_at,
+            "end_at" => $this->end_at,
+            $this->mergeWhen(
+                $request->route()->getName() == "schedule",
+                ["dates" => $this->dates
+                ]
+            ),
         ];
     }
 }

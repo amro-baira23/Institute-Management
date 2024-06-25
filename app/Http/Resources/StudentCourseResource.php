@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class StudentResource extends JsonResource
+class StudentCourseResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,16 +14,13 @@ class StudentResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [        
+        return [
             "id" => $this->id,
-            $this->merge(
-                $this->person->only("name","birth_date", "phone_number",),
-            ),
+            "name" => $this->person->name,
             $this->merge(
             $this->only("gender","father_name","mother_name","line_phone_number","national_number","education_level","name_en","father_name_en","mother_name_en")
             ),
-            "created_at" => $this->created_at->format("Y-m-d h:i"),
-
+            "with_diploma" => true ? $this->pivot->with_diploma == "1" : false
         ];
     }
 }

@@ -38,7 +38,7 @@ class CourseFactory extends Factory
             'start_at' => date("Y-m-d"),
             'end_at' =>  date('Y-m-d', strtotime(date("Y-m-d") . ' +1 month')),
             'minimum_students' => fake()->numberBetween(14,18),
-            'status' => fake()->randomElement(["P","S","C"]),
+            'status' => fake()->randomElement(["P","C","O"]),
             'salary_type' => fake()->randomElement(["C","S"]),
             'salary_amount' => fake()->randomElement([3000,5000,4600]),
             'cost' => fake()->randomElement(["200","300"]),

@@ -37,4 +37,9 @@ class User extends Authenticatable
             get:  fn () => $this->role->name == "مدير",
         );
     }
+    
+ 
+
+    
+ 
 }

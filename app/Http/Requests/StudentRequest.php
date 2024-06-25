@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StudentRequest extends FormRequest
 {
@@ -26,12 +27,12 @@ class StudentRequest extends FormRequest
         return [
             'father_name' => 'required',
             'mother_name' => 'required',
-            'gender' => 'required',
+            'gender' => ["required",Rule::in(["M","F"])],
             'name_en' => 'required',
             'father_name_en' => 'required',
             'line_phone_number' => 'required',
             'mother_name_en' => 'required',
-            'national_number' => 'required',
+            'national_number' => ["required",Rule::unique("students","national_number")],
             'nationality' => 'required',
             'education_level' => 'required',
         ];
@@ -42,6 +43,8 @@ class StudentRequest extends FormRequest
     {
         return [
             "*.required" => "هذا الحقل مطلوب",
+            "national_number" => "يجب ان يكون الرقم الوطني مميز لكل طالب",
+            "gender.*" => "قيمة الحقل غير صحيحة", 
         ];
     }
 }

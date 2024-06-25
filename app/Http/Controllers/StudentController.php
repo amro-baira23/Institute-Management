@@ -70,30 +70,32 @@ class StudentController extends Controller
     }
     public function getNames()
     {
-        $students = Student::query()->when(request("name"), function ($query, $name) {
-            return $query->whereHas("person", function ($query,) use ($name) {
-                return $query->where("name", "LIKE", '%' . $name . '%');
+        $students = Student::query()->when(request("name"),function($query,$name){
+            return $query->whereHas("person",function($query,) use($name){
+                return $query->where("name","LIKE", '%'.$name.'%');
             });
         })->with("person")->paginate(20);
-        return success(SimpleListResource::collection($students), null);
+        return success(SimpleListResource::collection($students),null);
     }
 
-
+    
     //Get Students Function
     public function getStudents()
     {
-        $students = Student::query()->when(request("name"), function ($query, $name) {
-            return $query->whereHas("person", function ($query,) use ($name) {
-                return $query->where("name", "LIKE", '%' . $name . '%');
+        $students = Student::query()->when(request("name"),function($query,$name){
+            return $query->whereHas("person",function($query,) use($name){
+                return $query->where("name","LIKE", '%'.$name.'%');
             });
         })->with("person")->paginate(20);
         return new StudentCollection($students);
+    
     }
 
     //Get Student Information Function
     public function getStudentInformation(Student $student)
     {
-        return success($student->with('person')->find($student->id), null);
+        $student->load("person");
+        return success(new StudentResource($student), null);
     }
 
     //Delete Student Function
