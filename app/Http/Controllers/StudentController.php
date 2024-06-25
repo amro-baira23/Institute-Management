@@ -95,7 +95,9 @@ class StudentController extends Controller
     public function getStudentInformation(Student $student)
     {
         $student->load("person");
-        return success(new StudentResource($student), null);
+        $r = new StudentResource(["id" => 1,"name" => "amro"]);
+        unset($r->resource["name"]);
+        return success($r->resource, null);
     }
 
     //Delete Student Function
