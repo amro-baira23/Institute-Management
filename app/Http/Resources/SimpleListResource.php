@@ -17,7 +17,9 @@ class SimpleListResource extends JsonResource
         return [
             "id" => $this->id,
             "name" => $this->person?->name ?? $this->name,
-            
+            $this->mergeWhen($this->base_salary,[
+            "base_salary" => $this->base_salary
+            ])
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ShiftRequest extends FormRequest
 {
@@ -24,6 +25,7 @@ class ShiftRequest extends FormRequest
     public function rules()
     {
         return [
+            "name" => ["required","max:15",Rule::unique("shifts","name")->ignore($this->route("shift"))],
             'start' => 'required',
             'end' => 'required',
             'days' => 'required',
@@ -34,6 +36,9 @@ class ShiftRequest extends FormRequest
     {
         return [
             "*.required" => "هذا الحقل مطلوب",
+            "unique" => "هذا الاسم مأخوذ من قبل",
+            "max" => "على الاسم ان لا يزيد عن 15 محرف",
+
         ];
     }
 }

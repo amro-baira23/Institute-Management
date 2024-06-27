@@ -7,6 +7,8 @@ namespace Database\Seeders;
 use App\Models\Category;
 use App\Models\Course;
 use App\Models\DayOfWeek;
+use App\Models\Employee;
+use App\Models\JobTitle;
 use App\Models\MainAccount;
 use App\Models\Role;
 use App\Models\Permission;
@@ -83,5 +85,8 @@ class DatabaseSeeder extends Seeder
         
         Course::factory()->count(8)->create();
         Stock::factory()->count(20)->create();
+
+        JobTitle::factory()->count(4)->create();
+        Employee::factory()->count(20)->create();
     }
 }

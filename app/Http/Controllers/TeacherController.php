@@ -61,12 +61,16 @@ class TeacherController extends Controller
     //Get Teachers Function
     public function getTeachers()
     {
+
         $teachers = Teacher::query()->when(request("name"),function($query,$name){
             return $query->whereHas("person",function($query,) use($name){
                 return $query->where("name","LIKE", '%'.$name.'%');
             });
-        })
-        ->with("person")->paginate(20);
+        })->when(request("phone_number"),function($query,$name){
+            return $query->whereHas("person",function($query,) use($name){
+                return $query->where("phone_number","LIKE", '%'.$name.'%');
+            });
+        })->with("person")->paginate(20);
         
       
         return TeacherRetrieveResource::collection($teachers);

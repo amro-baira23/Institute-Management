@@ -68,6 +68,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
             Route::post('/', [StudentController::class, 'addStudent']);
             Route::post('/{student}', [StudentController::class, 'editStudent']);
             Route::get('/', [StudentController::class, 'getStudents']);
+            Route::get('/names', [StudentController::class, 'getNames']);
             Route::get('/{student}', [StudentController::class, 'getStudentInformation'])->name("get");
             Route::delete('/{student}', [StudentController::class, 'deleteStudent']);
         });
@@ -154,6 +155,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
             Route::post('/', [JobTitleController::class, 'store']);
             Route::post('/{jobTitle}', [JobTitleController::class, 'update']);
             Route::get('/', [JobTitleController::class, 'index']);
+            Route::get('/names', [JobTitleController::class, 'getNames']);
             Route::get('/{jobTitle}', [JobTitleController::class, 'show']);
             Route::delete('/{jobTitle}', [JobTitleController::class, 'destroy']);
         });
