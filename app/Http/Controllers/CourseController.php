@@ -71,22 +71,7 @@ class CourseController extends Controller
         return success(null, 'this course added successfully', 201);
     }
 
-    public function addStudent(Course $course,Request $request){
-        $request->validate([
-            "student" => ["required",Rule::exists("students","id")],
-            "with_certificate" => ["required","bool"]
-        ]);
-        $student = Student::find($request->student);
-        $course->students()->attach([
-            "student_id" => $request->student,
-            "with_diploma" => $request->with_certificate
-        ]);
-        return success(null,  "student been enrolled successfuly");
-    }
-
-    public function getStudents(Course $course){
-        return StudentCourseResource::collection($course->students);
-    }
+   
     //Edit Course Function
     public function editCourse(Course $course, CourseRequest $request)
     {
@@ -157,4 +142,36 @@ class CourseController extends Controller
 
         return success(null, 'this course deleted successfully');
     }
+
+    public function getStudents(Course $course){
+        return ($course->students);
+    }
+
+    public function addStudent(Course $course,Request $request){
+        $request->validate([
+            "student" => ["required",Rule::exists("students","id")->withoutTrashed()],
+            "with_certificate" => ["required","bool"]
+        ]);
+        $student = Student::find($request->student);
+        $course->students()->syncWithoutDetaching([
+            "student_id" => $request->student,
+            "with_diploma" => $request->with_certificate
+        ]);
+        return success(null,  "student been enrolled successfuly");
+    }
+
+    public function editStudent(Course $course,Student $student,Request $request){
+        $request->validate([
+            "with_certificate" => ["required","bool"]
+        ]);
+
+        return $course->students()->findOrFail($student->id)->pivot
+                ->update(["with_diploma" => $request->with_certificate ]);
+    }
+
+    public function deleteStudent(Course $course,Student $student){
+        $course->students()->detach($student);
+        return success(null,null,204);
+    }
+    
 }

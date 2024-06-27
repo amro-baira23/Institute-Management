@@ -113,9 +113,9 @@ return [
     'not_regex' => 'The :attribute format is invalid.',
     'numeric' => 'The :attribute must be a number.',
     'password' => [
-        'letters' => 'The :attribute must contain at least one letter.',
+        'letters' => 'على كلمة السر ان تحتوي على حرف واحد على الأقل',
         'mixed' => 'The :attribute must contain at least one uppercase and one lowercase letter.',
-        'numbers' => 'The :attribute must contain at least one number.',
+        'numbers' => 'على كلمة السر ان تحتوي على رقم واحد على الأقل',
         'symbols' => 'The :attribute must contain at least one symbol.',
         'uncompromised' => 'The given :attribute has appeared in a data leak. Please choose a different :attribute.',
     ],

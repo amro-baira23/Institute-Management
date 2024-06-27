@@ -32,7 +32,7 @@ class StudentRequest extends FormRequest
             'father_name_en' => 'required',
             'line_phone_number' => 'required',
             'mother_name_en' => 'required',
-            'national_number' => ["required",Rule::unique("students","national_number")],
+            'national_number' => ["required",Rule::unique("students","national_number")->ignore($this->route("student"))],
             'nationality' => 'required',
             'education_level' => 'required',
         ];

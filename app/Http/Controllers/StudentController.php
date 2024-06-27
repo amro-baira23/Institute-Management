@@ -45,9 +45,7 @@ class StudentController extends Controller
     //Edit Student Function
     public function editStudent(Student $student, StudentRequest $studentRequest, PersonRequest $personRequest)
     {
-        $studentRequest->validate([
-            'national_number' => 'required|unique:students,national_number,' . $student->id,
-        ]);
+        
         $student->person()->update([
             'name' => $personRequest->name,
             'phone_number' => $personRequest->phone_number,

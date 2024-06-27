@@ -42,6 +42,28 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
             Route::post('/edit-password', [UserController::class, 'editPassword']);
             Route::post('/logout', [UserController::class, 'logout']);
         });
+
+        Route::middleware('manage-user')->prefix('users')->group(function () {
+            Route::post('/', [UserController::class, 'store']);
+            Route::post('/{user}', [UserController::class, 'edit']);
+            Route::get('/', [UserController::class, 'index']);
+            Route::get('/{user}', [UserController::class, 'get']);
+            Route::delete('/{user}', [UserController::class, 'delete']);
+        });
+
+        Route::middleware('manage-user')->prefix('roles')->group(function () {
+            Route::post('/', [RoleController::class, 'addRole']);
+            Route::post('/{role}', [RoleController::class, 'editRole']);
+            Route::get('/', [RoleController::class, 'getRoles']);
+            Route::get('/{role}', [RoleController::class, 'getRoleInformation']);
+            Route::delete('/{role}', [RoleController::class, 'deleteRole']);
+        });
+
+        Route::middleware("manage-user")->prefix('permissions')->group(function () {
+            Route::get('/', [PermissionController::class, 'getPermissions']);
+            Route::get('/{permission}', [PermissionController::class, 'getPermissionInformation']);
+        });
+        
         Route::middleware('manage-student')->prefix('students')->group(function () {
             Route::post('/', [StudentController::class, 'addStudent']);
             Route::post('/{student}', [StudentController::class, 'editStudent']);
@@ -82,11 +104,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
         Route::middleware('manage-course')->prefix('courses')->group(function () {
             Route::post('/', [CourseController::class, 'addCourse']);
             Route::post('/{course}', [CourseController::class, 'editCourse']);
-            Route::post('/{course}/students', [CourseController::class, 'addStudent']);
-            Route::get('/{course}/students', [CourseController::class, 'getStudents']);
             Route::get('/', [CourseController::class, 'getCourses'])->name("schedule");
             Route::get('/{course}', [CourseController::class, 'getCourseInformation']);
             Route::delete('/{course}', [CourseController::class, 'deleteCourse']);
+            Route::get('/{course}/students', [CourseController::class, 'getStudents']);
+            Route::post('/{course}/students', [CourseController::class, 'addStudent']);
+            Route::post('/{course}/students/{student}', [CourseController::class, 'editStudent']);
+            Route::delete('/{course}/students/{student}', [CourseController::class, 'deleteStudent']);
         });
 
         Route::middleware('manage-course')->prefix('rooms')->group(function () {
@@ -111,17 +135,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
             Route::delete('/{subject}', [SubjectController::class, 'deleteSubject']);
         });
 
-        Route::middleware("manage-user")->prefix('permissions')->group(function () {
-            Route::get('/', [PermissionController::class, 'getPermissions']);
-            Route::get('/{permission}', [PermissionController::class, 'getPermissionInformation']);
-        });
-        Route::middleware('manage-user')->prefix('roles')->group(function () {
-            Route::post('/', [RoleController::class, 'addRole']);
-            Route::post('/{role}', [RoleController::class, 'editRole']);
-            Route::get('/', [RoleController::class, 'getRoles']);
-            Route::get('/{role}', [RoleController::class, 'getRoleInformation']);
-            Route::delete('/{role}', [RoleController::class, 'deleteRole']);
-        });
+        
         Route::middleware('manage-employee')->prefix('employees')->group(function () {
             Route::post('/', [EmployeeController::class, 'addEmployee']);
             Route::post('/{employee}', [EmployeeController::class, 'editEmployee']);
