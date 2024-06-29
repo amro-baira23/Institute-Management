@@ -29,7 +29,7 @@ class EmployeeFactory extends Factory
             "person_id" => $persons["id"],
             "shift_id" => $shift['id'],
             "job_id" => fake()->randomElement($job->toArray()),
-            "account_id" => fake()->randomElement([]),
+            "account_id" => fake()->randomElement([null,$user]),
             "credentials" => "credentials 1 2 3"
         ];
     }

@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\PasswordRequest;
 use App\Http\Resources\UserResource;
+use App\Models\Employee;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password ;
 
 class UserController extends Controller
@@ -90,6 +92,10 @@ class UserController extends Controller
         return UserResource::collection($users);
     }
 
+    public function indexUnattached(){
+        $users = User::whereDoesntHave("employee")->paginate(20);
+        return UserResource::collection($users);
+    }
     public function get(User $user){
         return new UserResource($user);
     }
@@ -99,7 +105,7 @@ class UserController extends Controller
             "username" => ["required", "max:15", "alpha_num","unique:users,username"],
             "password" => ["required",Password::min(6)->numbers()->letters()],
             "role_id" => ["required","exists:roles,id"],
-            "person_id" => ["exists:persons,id",],
+            "employee_id" => [Rule::exists("employees","id")->where("account_id",null),],
         ],[
             "required" => "هذا الحقل مطلوب",
             "password.min" => "على كلمة السر ان لا تقل عن 5 محارف",
@@ -113,6 +119,7 @@ class UserController extends Controller
         $valid = $validator->validated();
         $valid["password"] = Hash::make($valid["password"]);
         $user = User::create($valid);
+        Employee::find($valid["employee_id"])->update("account_id",$user);
         return success(new UserResource($user),"تم اضافة حساب بنجاح",201);
     }
 
@@ -121,7 +128,7 @@ class UserController extends Controller
             "role_id" => ["required","exists:roles,id"],
         ],[
             "required" => "هذا الحقل مطلوب",
-            "exists" => "المعرف المدخل غير موجود في قاعدة البيانات"
+            "employee.exists" => "الموظف المدخل غير موجود او لديه حساب بالفعل"
         ]);
         $validator->validate();
         $valid = $validator->validated();

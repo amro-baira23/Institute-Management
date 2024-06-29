@@ -17,7 +17,7 @@ class EmployeeResource extends JsonResource
         return [
             "id" => $this->id,
             "name" => $this->person->name ?? null,
-            $this->mergeWhen($request->route()->getName() == "get", [
+            $this->merge( [
                 "salary" => $this->jobTitle->base_salary,
                 "credentials" => $this->credentials,
                 "birth_date" => $this->person->birth_date,

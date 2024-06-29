@@ -47,7 +47,8 @@ Route::middleware('user-auth')->group(function () {
     Route::middleware('manage-user')->prefix('users')->group(function () {
         Route::post('/', [UserController::class, 'store']);
         Route::post('/{user}', [UserController::class, 'edit']);
-        Route::get('/', [UserController::class, 'index']);
+        Route::get('/', [UserController::class, 'index'])->name("index");
+        Route::get('/unattached', [UserController::class, 'indexUnattached'])->name("unattached");
         Route::get('/{user}', [UserController::class, 'get']);
         Route::delete('/{user}', [UserController::class, 'delete']);
     });
@@ -143,6 +144,7 @@ Route::middleware('user-auth')->group(function () {
         Route::post('/', [EmployeeController::class, 'addEmployee']);
         Route::post('/{employee}', [EmployeeController::class, 'editEmployee']);
         Route::get('/', [EmployeeController::class, 'getEmployees'])->name("list");
+        Route::get('/unattached', [EmployeeController::class, 'getUnattached']);
         Route::get('/{employee}', [EmployeeController::class, 'getEmployeeInformation']);
         Route::delete('/{employee}', [EmployeeController::class, 'deleteEmployee']);
     });

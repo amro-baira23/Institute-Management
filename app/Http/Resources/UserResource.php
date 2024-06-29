@@ -15,12 +15,12 @@ class UserResource extends JsonResource
     public function toArray($request)
     {
         return [
+            "id" => $this->id,
             "username" => $this->username,
-            "role" => new SimpleListResource($this->role),
-            $this->mergeWhen($this->person,[
-            "employee" => new SimpleListResource($this->person),
+            "role" => new SimpleListResource($this->whenLoaded("role")),
+            $this->mergeWhen($this->employee,[
+            "employee" => new SimpleListResource($this->employee),
             ]),
-
 
         ];
     }

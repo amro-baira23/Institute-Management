@@ -18,12 +18,12 @@ class User extends Authenticatable
         'username',
         'password',
         'role_id',
-        'person_id',
+        'employee_id',
     ];
 
-    public function person()
+    public function employee()
     {
-        return $this->belongsTo(Person::class, 'person_id', 'id');
+        return $this->HasOne(Employee::class, 'account_id',"id" );
     }
 
     public function role()

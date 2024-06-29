@@ -7,6 +7,7 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\PersonRequest;
 use App\Http\Resources\EmployeeCollection;
 use App\Http\Resources\EmployeeResource;
+use App\Http\Resources\SimpleListResource;
 use App\Models\Employee;
 use App\Models\Person;
 use App\Models\User;
@@ -86,7 +87,7 @@ class EmployeeController extends Controller
     //Get Employees Function
     public function getEmployees()
     {
-        $employees = Employee::query()->when(request("name"),function($query,$name){
+        $employees = Employee::when(request("name"),function($query,$name){
             return $query->whereHas("person",function($query,) use($name){
                 return $query->where("name","LIKE", '%'.$name.'%');
             });
@@ -106,6 +107,14 @@ class EmployeeController extends Controller
         return (new EmployeeCollection($employees));
     }
 
+    public function getUnattached(){
+        $employees =  Employee::when(request("name"),function($query,$name){
+            return $query->whereHas("person",function($query,) use($name){
+                return $query->where("name","LIKE", '%'.$name.'%');
+            }); })
+            ->whereDoesntHave("user")->paginate(20);
+        return SimpleListResource::collection($employees);
+    } 
     //Get Employee Information Function
     public function getEmployeeInformation(Employee $employee)
     {
