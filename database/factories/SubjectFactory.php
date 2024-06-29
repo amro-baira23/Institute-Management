@@ -20,7 +20,7 @@ class SubjectFactory extends Factory
         $ids = Category::all()->pluck("id");
         $categories = Category::all()->pluck("name");
         return [
-            "name" => fake()->unique()->lexify('???') . " " .fake()->randomElement($categories->toArray()) ,
+            "name" => fake()->unique()->numerify('###') . " " .fake()->randomElement($categories->toArray()) ,
             "category_id" =>fake()->randomElement($ids->toArray())
         ];
     }
