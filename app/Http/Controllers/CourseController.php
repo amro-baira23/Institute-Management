@@ -145,7 +145,7 @@ class CourseController extends Controller
     {
         $courses = Course::with('subject', 'schedule.days', 'teacher', 'room')->whereNot("status","C")
         ->where("end_at",">",today())
-        ->paginate(20);
+        ->get();
         return success(CurrentCoursesResource::collection($courses), null);
     }
 

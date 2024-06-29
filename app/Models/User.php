@@ -37,7 +37,11 @@ class User extends Authenticatable
         );
     }
     
- 
+    public function name() : Attribute{
+        return Attribute::make(
+            fn() => $this->username
+        );
+    }
 
     
  

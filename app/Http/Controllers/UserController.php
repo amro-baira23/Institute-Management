@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\PasswordRequest;
+use App\Http\Resources\SimpleListResource;
 use App\Http\Resources\UserResource;
 use App\Models\Employee;
 use App\Models\User;
@@ -93,10 +94,13 @@ class UserController extends Controller
     }
 
     public function indexUnattached(){
-        $users = User::whereDoesntHave("employee")->paginate(20);
-        return UserResource::collection($users);
+        $users = User::whereDoesntHave("employee")->when(request("name"),function ($query,$var){
+            return $query->where("username","LIKE",'%'.$var .'%');    
+        })->paginate(20);
+        return SimpleListResource::collection($users);
     }
     public function get(User $user){
+        $user->load("role","employee");
         return new UserResource($user);
     }
 
