@@ -73,6 +73,9 @@ class Kernel extends HttpKernel
         'manage-user' => \App\Http\Middleware\ManageUserAuthentication::class,
         'manage-employee' => \App\Http\Middleware\ManageEmployeeAuthentication::class,
         'manage-certificate' => \App\Http\Middleware\ManageCertificateAuthentication::class,
+<<<<<<< HEAD
         'manage-transaction' => \App\Http\Middleware\ManageTransactionAuthentication::class,
+=======
+>>>>>>> 928a4515d1fb5b4f825570c251069b7dace30c04
     ];
 }
