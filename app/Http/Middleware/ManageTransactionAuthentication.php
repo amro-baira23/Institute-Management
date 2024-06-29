@@ -6,11 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-<<<<<<< HEAD:app/Http/Middleware/ManageTransactionAuthentication.php
 class ManageTransactionAuthentication
-=======
-class ManageAccountingAuthentication
->>>>>>> 928a4515d1fb5b4f825570c251069b7dace30c04:app/Http/Middleware/ManageAccountingAuthentication.php
 {
     /**
      * Handle an incoming request.
@@ -25,15 +21,13 @@ class ManageAccountingAuthentication
             return $next($request);
         }
         foreach (Auth::guard('user')->user()->role->permissions as $permission) {
-<<<<<<< HEAD:app/Http/Middleware/ManageTransactionAuthentication.php
             if ($permission->name == 'إدارة الصندوق') {
-=======
-            if ($permission->name == 'إدارة المحاسبة') {
->>>>>>> 928a4515d1fb5b4f825570c251069b7dace30c04:app/Http/Middleware/ManageAccountingAuthentication.php
-                return $next($request);
+                if ($permission->name == 'إدارة المحاسبة') {
+                    return $next($request);
+                }
             }
-        }
 
-        return error('some thing went wrong', 'you dont have authentication to do it', 401);
+            return error('some thing went wrong', 'you dont have authentication to do it', 401);
+        }
     }
 }
