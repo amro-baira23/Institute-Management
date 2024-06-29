@@ -13,6 +13,10 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Date;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CurrentCoursesResource;
+use App\Http\Resources\StudentCourseCollection;
+use App\Http\Resources\StudentCourseResource;
+use App\Models\Student;
+use Illuminate\Validation\Rule ;
 
 class CourseController extends Controller
 {
@@ -67,7 +71,7 @@ class CourseController extends Controller
         return success(null, 'this course added successfully', 201);
     }
 
-
+   
     //Edit Course Function
     public function editCourse(Course $course, CourseRequest $request)
     {
@@ -119,14 +123,16 @@ class CourseController extends Controller
     //Get Courses Function
     public function getCourses()
     {
-        $courses = Course::with('subject', 'schedule.days', 'teacher', 'room')->get();
+        $courses = Course::with('subject', 'schedule.days', 'teacher', 'room')->whereNot("status","C")
+        ->where("end_at",">",today())
+        ->get();
         return success(CurrentCoursesResource::collection($courses), null);
     }
 
     //Get Course Information Function
     public function getCourseInformation(Course $course)
     {
-        return success($course->dates, null);
+        return success(new CurrentCoursesResource($course), null);
     }
 
     //Delete Course Function
@@ -136,4 +142,36 @@ class CourseController extends Controller
 
         return success(null, 'this course deleted successfully');
     }
+
+    public function getStudents(Course $course){
+        return ($course->students);
+    }
+
+    public function addStudent(Course $course,Request $request){
+        $request->validate([
+            "student" => ["required",Rule::exists("students","id")->withoutTrashed()],
+            "with_certificate" => ["required","bool"]
+        ]);
+        $student = Student::find($request->student);
+        $course->students()->syncWithoutDetaching([
+            "student_id" => $request->student,
+            "with_diploma" => $request->with_certificate
+        ]);
+        return success(null,  "student been enrolled successfuly");
+    }
+
+    public function editStudent(Course $course,Student $student,Request $request){
+        $request->validate([
+            "with_certificate" => ["required","bool"]
+        ]);
+
+        return $course->students()->findOrFail($student->id)->pivot
+                ->update(["with_diploma" => $request->with_certificate ]);
+    }
+
+    public function deleteStudent(Course $course,Student $student){
+        $course->students()->detach($student);
+        return success(null,null,204);
+    }
+    
 }

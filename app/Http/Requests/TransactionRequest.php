@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class ShiftRequest extends FormRequest
+class TransactionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,20 +24,19 @@ class ShiftRequest extends FormRequest
     public function rules()
     {
         return [
-            "name" => ["required","max:15",Rule::unique("shifts","name")->ignore($this->route("shift"))],
-            'start' => 'required',
-            'end' => 'required',
-            'days' => 'required',
+            'subaccount_id' => 'required',
+            'account' => 'required',
+            'type' => 'required',
+            'amount' => 'required|numeric',
+            'note' => 'required',
         ];
     }
 
     public function messages()
     {
         return [
-            "*.required" => "هذا الحقل مطلوب",
-            "unique" => "هذا الاسم مأخوذ من قبل",
-            "max" => "على الاسم ان لا يزيد عن 15 محرف",
-
+            '*.required' => 'هذا الحقل مطلوب',
+            '*.numeric' => 'هذا الحقل يقبل أرقام فقط',
         ];
     }
 }

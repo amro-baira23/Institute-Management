@@ -86,7 +86,23 @@ class EmployeeController extends Controller
     //Get Employees Function
     public function getEmployees()
     {
-        $employees = Employee::with('person', 'shift', 'user',"jobTitle")->paginate(20);
+        $employees = Employee::query()->when(request("name"),function($query,$name){
+            return $query->whereHas("person",function($query,) use($name){
+                return $query->where("name","LIKE", '%'.$name.'%');
+            });
+        })->when(request("phone_number"),function($query,$name){
+            return $query->whereHas("person",function($query,) use($name){
+                return $query->where("phone_number","LIKE", '%'.$name.'%');
+            });
+        })->when(request("shift"),function($query,$name){
+            return $query->whereHas("shift",function($query,) use($name){
+                return $query->where("name","LIKE", '%'.$name.'%');
+            });
+        })->when(request("job_title"),function($query,$name){
+            return $query->whereHas("job_title",function($query,) use($name){
+                return $query->where("name","LIKE", '%'.$name.'%');
+            });
+        })->with('person', 'shift', 'user',"jobTitle")->paginate(20);
         return (new EmployeeCollection($employees));
     }
 

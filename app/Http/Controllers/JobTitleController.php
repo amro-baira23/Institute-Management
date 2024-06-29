@@ -24,6 +24,10 @@ class JobTitleController extends Controller
         return SimpleListResource::collection($jobTitle);
     }
 
+    public function getNames() {
+        return JobTitle::all()->pluck("name");
+    }
+
 
     public function store(JobTitleRequest $request)
     {
@@ -60,6 +64,8 @@ class JobTitleController extends Controller
             "name" => $request->name,
             "base_salary" => $request->base_salary
         ]);
+
+        return success(null, "job title been edited successfuly",200);
     }
 
     /**

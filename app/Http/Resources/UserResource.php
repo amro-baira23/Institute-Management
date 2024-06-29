@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SimpleListResource extends JsonResource
+class UserResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,11 +15,13 @@ class SimpleListResource extends JsonResource
     public function toArray($request)
     {
         return [
-            "id" => $this->id,
-            "name" => $this->person?->name ?? $this->name,
-            $this->mergeWhen($this->base_salary,[
-            "base_salary" => $this->base_salary
-            ])
+            "username" => $this->username,
+            "role" => new SimpleListResource($this->role),
+            $this->mergeWhen($this->person,[
+            "employee" => new SimpleListResource($this->person),
+            ]),
+
+
         ];
     }
 }

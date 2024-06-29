@@ -14,8 +14,12 @@ class Transaction extends Model
         'subaccount_id',
         'account',
         'type',
-        'type',
         'amount',
         'note',
     ];
+
+    public function subaccount()
+    {
+        return $this->belongsTo(SubAccount::class, 'subaccount_id', 'id');
+    }
 }

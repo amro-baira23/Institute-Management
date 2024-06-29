@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class JobTitleRequest extends FormRequest
 {
@@ -24,7 +25,7 @@ class JobTitleRequest extends FormRequest
     public function rules()
     {
         return [
-            "name" => ["required","max:15"],
+            "name" => ["required","max:15",Rule::unique("job_titles","name")->ignore($this->route("jobTitle"))],
             "base_salary" => ["required","integer"],
 
         ];
@@ -33,6 +34,9 @@ class JobTitleRequest extends FormRequest
     {
         return [
             "*.required" => "هذا الحقل مطلوب",
+            "unique" => "هذا الاسم مأخوذ من قبل",
+            "max" => "على الاسم ان لا يزيد عن 15 محرف",
+
         ];
     }
 }

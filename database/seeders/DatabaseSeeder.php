@@ -7,6 +7,8 @@ namespace Database\Seeders;
 use App\Models\Category;
 use App\Models\Course;
 use App\Models\DayOfWeek;
+use App\Models\Employee;
+use App\Models\JobTitle;
 use App\Models\MainAccount;
 use App\Models\Role;
 use App\Models\Permission;
@@ -38,7 +40,7 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $main_accounts = ['المصاريف', 'الإيرادات', 'الطلاب', 'الأساتذة', 'الصندوق', 'رأس المال', 'الموظفين'];
-        $permissions = ['إدارة الطلاب', 'إدارة المستودع', 'إدارة الغرف', 'إدارة المواد', 'إدارة أصناف المواد', 'إدارة الحسابات الفرعية', 'إدارة الأساتذة', 'إدارة الدورات', 'إدارة الأدوار', 'إدارة الموظفين'];
+        $permissions = ['إدارة الطلاب', 'إدارة المستودع', "إدارة الحسابات", 'إدارة المحاسبة', 'إدارة الأساتذة', 'إدارة الدورات', 'إدارة الموظفين', "إدارة الشهادات", "إدارة الصندوق"];
         $roles = ["مدير", "ضيف"];
 
         $person = Person::create([
@@ -47,7 +49,7 @@ class DatabaseSeeder extends Seeder
             'birth_date' => '1990-06-02',
             'type' => 'S',
         ]);
-        
+
         $admin = Role::create(["name" => "مدير"]);
         Role::create(["name" => "ضيف"]);
 
@@ -69,19 +71,22 @@ class DatabaseSeeder extends Seeder
 
 
         $admin->permissions()->attach(Permission::all());
-        
+
         Category::factory()->count(6)->create();
         Subject::factory()->count(20)->create();
         Room::factory()->count(10)->create();
-        
-     
+
+
         Teacher::factory()->count(20)->create();
 
         Student::factory()->count(20)->create();
 
- 
-        
+
+
         Course::factory()->count(8)->create();
         Stock::factory()->count(20)->create();
+
+        JobTitle::factory()->count(4)->create();
+        Employee::factory()->count(20)->create();
     }
 }

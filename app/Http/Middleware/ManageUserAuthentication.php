@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class ManageSubAccountAuthentication
+class ManageUserAuthentication
 {
     /**
      * Handle an incoming request.
@@ -21,7 +21,7 @@ class ManageSubAccountAuthentication
             return $next($request);
         }
         foreach (Auth::guard('user')->user()->role->permissions as $permission) {
-            if ($permission->name == 'إدارة الحسابات الفرعية') {
+            if ($permission->name == 'إدارة الحسابات') {
                 return $next($request);
             }
         }

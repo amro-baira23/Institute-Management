@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SimpleListResource extends JsonResource
+class StudentCourseResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,10 +16,11 @@ class SimpleListResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "name" => $this->person?->name ?? $this->name,
-            $this->mergeWhen($this->base_salary,[
-            "base_salary" => $this->base_salary
-            ])
+            "name" => $this->person->name,
+            $this->merge(
+            $this->only("gender","father_name","mother_name","line_phone_number","national_number","education_level","name_en","father_name_en","mother_name_en")
+            ),
+            "with_diploma" => true ? $this->pivot->with_diploma == "1" : false
         ];
     }
 }

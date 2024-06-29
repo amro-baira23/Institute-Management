@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class CertificateAuthentication
+class ManageTransactionAuthentication
 {
     /**
      * Handle an incoming request.
@@ -20,9 +20,8 @@ class CertificateAuthentication
         if (Auth::guard('user')->user()->is_admin) {
             return $next($request);
         }
-        if(Auth::guard('user')->user()->role->permissions != '[]')
         foreach (Auth::guard('user')->user()->role->permissions as $permission) {
-            if ($permission->permission == 'الشهادات') {
+            if ($permission->name == 'إدارة الصندوق') {
                 return $next($request);
             }
         }
