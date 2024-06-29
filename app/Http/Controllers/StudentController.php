@@ -45,9 +45,7 @@ class StudentController extends Controller
     //Edit Student Function
     public function editStudent(Student $student, StudentRequest $studentRequest, PersonRequest $personRequest)
     {
-        $studentRequest->validate([
-            'national_number' => 'required|unique:students,national_number,' . $student->id,
-        ]);
+        
         $student->person()->update([
             'name' => $personRequest->name,
             'phone_number' => $personRequest->phone_number,
@@ -70,30 +68,46 @@ class StudentController extends Controller
     }
     public function getNames()
     {
-        $students = Student::query()->when(request("name"), function ($query, $name) {
-            return $query->whereHas("person", function ($query,) use ($name) {
-                return $query->where("name", "LIKE", '%' . $name . '%');
-            });
+        $students = Student::query()->when(request("name"),function($query,$name){
+            return $query->whereHas("person",function($query,) use($name){
+                return $query->where("name","LIKE", '%'.$name.'%');
+            })->orWhere("name_en","LIKE", '%'.$name.'%');
         })->with("person")->paginate(20);
-        return success(SimpleListResource::collection($students), null);
+        return success(SimpleListResource::collection($students),null);
     }
 
-
+    
     //Get Students Function
     public function getStudents()
     {
-        $students = Student::query()->when(request("name"), function ($query, $name) {
-            return $query->whereHas("person", function ($query,) use ($name) {
-                return $query->where("name", "LIKE", '%' . $name . '%');
+        $students = Student::query()->when(request("name"),function($query,$name){
+            return $query->whereHas("person",function($query,) use($name){
+                return $query->where("name","LIKE", '%'.$name.'%');
+            })->orWhere("name_en","LIKE", '%'.$name.'%')
+            ->orWhere("father_name_en","LIKE", '%'.$name.'%')
+            ->orWhere("mother_name_en","LIKE", '%'.$name.'%')
+            ->orWhere("father_name","LIKE", '%'.$name.'%')
+            ->orWhere("mother_name","LIKE", '%'.$name.'%');
+        })->when(request("phone_number"),function($query,$name){
+            return $query->whereHas("person",function($query,) use($name){
+                return $query->where("phone_number","LIKE", '%'.$name.'%');
             });
+        })->when(request("education_level"),function($query,$var){
+            return $query->where("education_level","LIKE",'%'.$var.'%');
+        })->when(request("line_number"),function($query,$var){
+            return $query->where("line_phone_number","LIKE",'%'.$var.'%');
+        })->when(request("natinoal_number"),function($query,$var){
+            return $query->where("national_number","LIKE",'%'.$var.'%');
         })->with("person")->paginate(20);
         return new StudentCollection($students);
+    
     }
 
     //Get Student Information Function
     public function getStudentInformation(Student $student)
     {
-        return success($student->with('person')->find($student->id), null);
+        $student->load("person");
+        return success(new StudentResource($student), null);
     }
 
     //Delete Student Function

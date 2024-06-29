@@ -16,13 +16,11 @@ class StudentResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "name" => $this->person->name,
-            $this->mergeWhen(
-                true,
-                $this->person->only("birth_date", "phone_number",),
+            $this->merge(
+                $this->person->only("name", "birth_date", "phone_number",),
             ),
-            $this->mergeWhen($request->route()->getName() == "get", 
-            $this->only("gender","father_name","mother_name","line_number","national_number","educational_level")
+            $this->merge(
+                $this->only("gender", "father_name", "mother_name", "line_phone_number", "national_number", "education_level", "name_en", "father_name_en", "mother_name_en")
             ),
             "created_at" => $this->created_at->format("Y-m-d h:i"),
 

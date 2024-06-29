@@ -15,6 +15,7 @@ class User extends Authenticatable
     
     protected $table = 'users';
     protected $fillable = [
+        'role_id',
         'person_id',
         'username',
         'password',
@@ -37,4 +38,9 @@ class User extends Authenticatable
             get:  fn () => $this->role->name == "مدير",
         );
     }
+    
+ 
+
+    
+ 
 }

@@ -90,12 +90,6 @@ class CourseController extends Controller
             }
         }
 
-        // $course->schedule->time->update([
-        //     'schedule_id' => $schedule->id,
-        //     'start' => $request->start,
-        //     'end' => $request->end,
-        // ]);
-
         foreach ($course->schedule->days as $day)
             $day->delete();
 
