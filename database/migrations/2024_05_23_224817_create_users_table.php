@@ -24,7 +24,6 @@ return new class extends Migration
             $table->string('username');
             $table->string('password');
             $table->foreignId("role_id")->constrained();
-            $table->foreignId('person_id')->nullable()->constrained(table: "persons");
             $table->timestamps();
             $table->softDeletes();
         });

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->foreignId("job_id")->constrained(table: "job_titles");
             $table->foreignId("account_id")->nullable()->constrained(table: "users");
             $table->timestamps();
+            
         });
     }
 
