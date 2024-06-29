@@ -29,7 +29,7 @@ class UserController extends Controller
             return success($token, 'login successfully');
         }
 
-        return error('incorrect password', null, 502);
+        return error('incorrect password', null, 422);
     }
 
     //Profile Function
@@ -71,10 +71,10 @@ class UserController extends Controller
 
                 return success(null, "your password updated successfully");
             }
-            return error("error in confirming password", null, 502);
+            return error("error in confirming password", null, 422);
         }
 
-        return error("incorrect password", null, 502);
+        return error("incorrect password", null, 422);
     }
 
     //Logout Function

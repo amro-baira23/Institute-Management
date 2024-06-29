@@ -22,4 +22,8 @@ class Transaction extends Model
     {
         return $this->belongsTo(SubAccount::class, 'subaccount_id', 'id');
     }
+
+    public function serializeDate($date){
+        return $date->format("Y-m-d h:i");
+    }
 }

@@ -20,8 +20,6 @@ class User extends Authenticatable
         'role_id',
         'person_id',
     ];
-    protected bool $x = true;
-
 
     public function person()
     {
