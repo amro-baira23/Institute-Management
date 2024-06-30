@@ -37,7 +37,7 @@ class CourseRequest extends FormRequest
             'salary_type' => ['required',Rule::in(["S","C"])],
             'salary_amount' => ['required','integer'],
             'cost' => ['required'],
-            'start' =>[ 'required'],
+            'start' => [ 'required'],
             'end' => ['required'],
             'days' => ['required'],
         ];
@@ -56,15 +56,19 @@ class CourseRequest extends FormRequest
                 return $query->whereIn("day",$data["days"]);
             });
         })->first();
-        if ($course)
+        if ($course){
+            $subject = $course->subject->name;
+            $sentence = "هذه المادة تتعارض مع دورة";
             $validator->errors()->add(
-                "schedule", $course->subject->name." الجدول الزمني المدخل لهذه الدورة يتعارض مع دورة" 
+                "schedule", "لغة" . "عربية"
             );
+        }
+           
     }
 
     public function withValidator($validator){
         $validator->after(function($validator){
-            $this->scheduleIsInvalid($validator);
+            // $this->scheduleIsInvalid($validator);
         });
     }
 

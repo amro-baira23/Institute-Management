@@ -17,6 +17,7 @@ use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
+use App\Models\Activity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -51,6 +52,13 @@ Route::middleware('user-auth')->group(function () {
         Route::get('/unattached', [UserController::class, 'indexUnattached'])->name("unattached");
         Route::get('/{user}', [UserController::class, 'get']);
         Route::delete('/{user}', [UserController::class, 'delete']);
+    });
+
+    Route::middleware('manage-user')->prefix('activities')->group(function () {
+        Route::get('/', function(){
+          
+            return Activity::orderby("id","desc")->get();
+        });
     });
 
     Route::middleware('manage-user')->prefix('roles')->group(function () {
