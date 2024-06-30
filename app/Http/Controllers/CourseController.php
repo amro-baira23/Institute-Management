@@ -137,7 +137,7 @@ class CourseController extends Controller
         ->when(request("end_at"),function ($query, $value){
             return $query->where("end_at",'<',$value); })
         ->paginate(20);
-        return success(CurrentCoursesResource::collection($courses), null);
+        return CurrentCoursesResource::collection($courses);
     }
 
     //Get Courses Function

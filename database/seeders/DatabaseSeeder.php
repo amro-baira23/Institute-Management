@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Activity;
 use App\Models\Category;
 use App\Models\Course;
 use App\Models\DayOfWeek;
@@ -88,5 +89,7 @@ class DatabaseSeeder extends Seeder
 
         JobTitle::factory()->count(4)->create();
         Employee::factory()->count(20)->create();
+
+        Activity::factory()->count(30)->create();
     }
 }
