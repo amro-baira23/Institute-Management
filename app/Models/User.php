@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute ;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -35,6 +36,10 @@ class User extends Authenticatable
         return  Attribute::make(
             get:  fn () => $this->role->name == "مدير",
         );
+    }
+    
+    public function activities(): HasMany{
+        return $this->hasMany(Activity::class,"user_id");
     }
     
     public function name() : Attribute{

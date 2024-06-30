@@ -90,6 +90,5 @@ class DatabaseSeeder extends Seeder
         JobTitle::factory()->count(4)->create();
         Employee::factory()->count(20)->create();
 
-        Activity::factory()->count(30)->create();
     }
 }

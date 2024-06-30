@@ -21,6 +21,7 @@ class UserResource extends JsonResource
             $this->mergeWhen($this->employee,[
             "employee" => new SimpleListResource($this->employee),
             ]),
+            "activities" => ActivityResource::collection($this->whenLoaded("activities"))
 
         ];
     }

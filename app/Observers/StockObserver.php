@@ -23,7 +23,7 @@ class StockObserver
             "user_id" => $user1->id ,
             "operation" => "C",
             "model" => "مادة مخزن",
-            "desc" => "تم إضافة مادة مخزن باسم " . $stock->username . " " . "من قبل " . $user1->username
+            "desc" => "تم إضافة مادة مخزن باسم " . $stock->name . " " . "من قبل " . $user1->username
         ]);
     }
 
@@ -43,7 +43,7 @@ class StockObserver
             "user_id" => $user1->id ,
             "operation" => "U",
             "model" => "مادة مخزن",
-            "desc" => "تم تحديث معلومات مادة المخزن " . $stock->username . " " . "من قبل " . $user1->username
+            "desc" => "تم تحديث معلومات مادة المخزن " . $stock->name . " " . "من قبل " . $user1->username
         ]);
     }
 
@@ -63,7 +63,7 @@ class StockObserver
             "user_id" => $user1->id ,
             "operation" => "D",
             "model" => "مادة مخزن",
-            "desc" => "تم أرشفة معلومات مادة المخزن " . $stock->username . " " . "من قبل " . $user1->username
+            "desc" => "تم أرشفة معلومات مادة المخزن " . $stock->name . " " . "من قبل " . $user1->username
         ]);
     }
 

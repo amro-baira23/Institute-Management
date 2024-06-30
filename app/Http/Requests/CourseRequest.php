@@ -68,7 +68,7 @@ class CourseRequest extends FormRequest
 
     public function withValidator($validator){
         $validator->after(function($validator){
-            // $this->scheduleIsInvalid($validator);
+            $this->scheduleIsInvalid($validator);
         });
     }
 
