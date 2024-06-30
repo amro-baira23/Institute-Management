@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\CourseController;
@@ -17,6 +18,7 @@ use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
+use App\Http\Resources\ActivityResource;
 use App\Models\Activity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -55,10 +57,7 @@ Route::middleware('user-auth')->group(function () {
     });
 
     Route::middleware('manage-user')->prefix('activities')->group(function () {
-        Route::get('/', function(){
-          
-            return Activity::orderby("id","desc")->get();
-        });
+        Route::get('/', [ActivityController::class,"index"]);
     });
 
     Route::middleware('manage-user')->prefix('roles')->group(function () {

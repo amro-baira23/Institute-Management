@@ -128,8 +128,8 @@ class EmployeeController extends Controller
     //Delete Employee Function
     public function deleteEmployee(Employee $employee)
     {
-        if ($employee->person->user) {
-            $employee->person->user->delete();
+        if ($employee->user) {
+            $employee->user->delete();
         }
         
         $employee->person->delete();

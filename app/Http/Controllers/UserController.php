@@ -100,7 +100,9 @@ class UserController extends Controller
         return SimpleListResource::collection($users);
     }
     public function get(User $user){
-        $user->load("role","employee");
+        $user->load(["activities" => function($query){
+            return $query->orderby("id","desc")->take(5);
+        },"role","employee"]);
         return new UserResource($user);
     }
 

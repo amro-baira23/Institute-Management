@@ -23,7 +23,7 @@ class RoleObserver
             "user_id" => $user1->id ,
             "operation" => "C",
             "model" => "دور",
-            "desc" => "تم إضافة الدور " . $role->username . " " . "من قبل " . $user1->username
+            "desc" => "تم إضافة الدور " . $role->name . " " . "من قبل " . $user1->username
         ]);
     }
 
@@ -44,7 +44,7 @@ class RoleObserver
             "user_id" => $user1->id ,
             "operation" => "U",
             "model" => "دور",
-            "desc" => "تم تحديث معلومات الدور " . $role->username . " " . "من قبل " . $user1->username
+            "desc" => "تم تحديث معلومات الدور " . $role->name . " " . "من قبل " . $user1->username
         ]);
     }
 
@@ -64,7 +64,7 @@ class RoleObserver
             "user_id" => $user1->id ,
             "operation" => "D",
             "model" => "دور",
-            "desc" => "تم أرشفة معلومات الدور " . $role->username . " " . "من قبل " . $user1->username
+            "desc" => "تم أرشفة معلومات الدور " . $role->name . " " . "من قبل " . $user1->username
         ]);
     }
 
