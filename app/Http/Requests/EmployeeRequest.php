@@ -29,7 +29,7 @@ class EmployeeRequest extends FormRequest
             'credentials' => ["required",],
             'job_title_id' => ["required", "integer", Rule::exists("job_titles", "id")],
             'shift_id' => ["required", "integer", Rule::exists("shifts", "id")],
-            'user_id' => ["integer",Rule::unique("employee","acccount_id")],
+            'user_id' => ["integer",Rule::unique("employees","account_id")],
         ];
     }
 

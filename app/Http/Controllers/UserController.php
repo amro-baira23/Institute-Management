@@ -124,14 +124,15 @@ class UserController extends Controller
         $validator->validate();
         $valid = $validator->validated();
         $valid["password"] = Hash::make($valid["password"]);
-        $user = User::create($valid);
-        Employee::find($valid["employee_id"])->update("account_id",$user);
+        $user = User::create($request->except("employee_id"));
+        Employee::find($valid["employee_id"])->update(["account_id",$user]);
         return success(new UserResource($user),"تم اضافة حساب بنجاح",201);
     }
 
     public function edit(Request $request, User $user){
         $validator = Validator::make($request->all(),[
             "role_id" => ["required","exists:roles,id"],
+            "employee_id" => [Rule::exists("employees","id")->where("account_id",null),],
         ],[
             "required" => "هذا الحقل مطلوب",
             "employee.exists" => "الموظف المدخل غير موجود او لديه حساب بالفعل"

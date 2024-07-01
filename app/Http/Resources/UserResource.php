@@ -20,9 +20,8 @@ class UserResource extends JsonResource
             "role" => new SimpleListResource($this->whenLoaded("role")),
             $this->mergeWhen($this->employee,[
             "employee" => new SimpleListResource($this->employee),
-            ]),
+        ]),
             "activities" => ActivityResource::collection($this->whenLoaded("activities"))
-
         ];
     }
 }
