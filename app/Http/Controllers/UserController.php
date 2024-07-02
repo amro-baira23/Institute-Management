@@ -13,15 +13,15 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\Password ;
+use Illuminate\Validation\Rules\Password;
 
 class UserController extends Controller
 {
     //Login Function
     public function login(LoginRequest $request)
-    { 
+    {
         $user = User::where(['username' => $request->username])->first();
-        
+
         if (!$user) {
             return error("This User Not Found", null, 404);
         }
@@ -40,7 +40,7 @@ class UserController extends Controller
     {
         $user = Auth::guard('user')->user();
         $user->person;
-        if(!$user->is_admin){
+        if (!$user->is_admin) {
             $user->person->employee;
         }
         return success($user, null, 200);
@@ -88,64 +88,74 @@ class UserController extends Controller
         return success(null, 'logout successfully');
     }
 
-    public function index(){
+    public function index()
+    {
         $users = User::with("role")->get();
         return UserResource::collection($users);
     }
 
-    public function indexUnattached(){
-        $users = User::whereDoesntHave("employee")->when(request("name"),function ($query,$var){
-            return $query->where("username","LIKE",'%'.$var .'%');    
+    public function indexUnattached()
+    {
+        $users = User::whereDoesntHave("employee")->when(request("name"), function ($query, $var) {
+            return $query->where("username", "LIKE", '%' . $var . '%');
         })->paginate(20);
         return SimpleListResource::collection($users);
     }
-    public function get(User $user){
-        $user->load(["activities" => function($query){
-            return $query->orderby("id","desc")->take(5);
-        },"role","employee"]);
+    public function get(User $user)
+    {
+        $user->load(["activities" => function ($query) {
+            return $query->orderby("id", "desc")->take(5);
+        }, "role", "employee"]);
         return new UserResource($user);
     }
 
-    public function store(Request $request){
-        $validator = Validator::make($request->all(),[
-            "username" => ["required", "max:15", "alpha_num","unique:users,username"],
-            "password" => ["required",Password::min(6)->numbers()->letters()],
-            "role_id" => ["required","exists:roles,id"],
-            "employee_id" => [Rule::exists("employees","id")->where("account_id",null),],
-        ],[
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            "username" => ["required", "max:15", "alpha_num", "unique:users,username"],
+            "password" => ["required", Password::min(6)->numbers()->letters()],
+            "role_id" => ["required", "exists:roles,id"],
+            "employee_id" => [Rule::exists("employees", "id")->where("account_id", null),],
+        ], [
             "required" => "هذا الحقل مطلوب",
             "password.min" => "على كلمة السر ان لا تقل عن 5 محارف",
             "password.numbers" => "على كلمة السر ان تحتوي على رقم واحد على الأقل",
             "password.letters" => "على كلمة السر ان تحتوي على حرف واحد على الأقل",
             "username.max" => "على اسم المستخدم ان لا يزيد عن 15 محرف",
             "username.unique" => "اسم المستخدم المدخل مأخوذ",
+            "employee_id.exists" => "الموظف المدخل غير موجود او لديه حساب بالفعل",
             "exists" => "المعرف المدخل غير موجود في قاعدة البيانات"
         ]);
         $validator->validate();
         $valid = $validator->validated();
         $valid["password"] = Hash::make($valid["password"]);
         $user = User::create($request->except("employee_id"));
-        Employee::find($valid["employee_id"])->update(["account_id",$user]);
-        return success(new UserResource($user),"تم اضافة حساب بنجاح",201);
+        Employee::find($valid["employee_id"])->update(["account_id", $user]);
+        return success(new UserResource($user), "تم اضافة حساب بنجاح", 201);
     }
 
-    public function edit(Request $request, User $user){
-        $validator = Validator::make($request->all(),[
-            "role_id" => ["required","exists:roles,id"],
-            "employee_id" => [Rule::exists("employees","id")->where("account_id",null),],
-        ],[
+    public function edit(Request $request, User $user)
+    {
+        $validator = Validator::make($request->all(), [
+            "role_id" => ["required", "exists:roles,id"],
+            "employee_id" => ["required",Rule::exists("employees", "id")->where("account_id", null),],
+        ], [
             "required" => "هذا الحقل مطلوب",
-            "employee.exists" => "الموظف المدخل غير موجود او لديه حساب بالفعل"
+            "employee_id.exists" => "الموظف المدخل غير موجود او لديه حساب بالفعل"
         ]);
         $validator->validate();
-        $valid = $validator->validated();
-        $user->update($valid);
-        return success(new UserResource($user),"تم تعديل الحساب بنجاح",200);
-
+        $valid = $validator->safe();
+        $user->update($valid->except("employee_id"));
+        $user->employee?->update( ["account_id" => null]);
+        Employee::find($valid["employee_id"])->update(
+               ["account_id" => $user->id]
+            );
+        return success(new UserResource($user), "تم تعديل الحساب بنجاح", 200);
     }
 
-    public function delete(User $user){
+    public function delete(User $user)
+    {
         $user->delete();
-        return response(null,204);
+        return response(null, 204);
     }
 }

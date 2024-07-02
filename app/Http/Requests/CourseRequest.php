@@ -47,7 +47,7 @@ class CourseRequest extends FormRequest
     public function scheduleIsInvalid($validator) {
         $data = $this->validated();
         $data["days"] =  explode(',', $data["days"]);
-        $course = Course::where("room_id",$data["room_id"])
+        $course = Course::whereNot("id",$this->route("course")?->id)->where("room_id",$data["room_id"])
         ->whereHas("schedule",function($query) use ($data){
             return $query->where(function ($query) use ($data){
                 return $query->whereBetween("start",[$data["start"],$data["end"]])
@@ -60,7 +60,7 @@ class CourseRequest extends FormRequest
             $subject = $course->subject->name;
             $sentence = "هذه المادة تتعارض مع دورة";
             $validator->errors()->add(
-                "schedule", "لغة" . "عربية"
+                "schedule", $sentence . " " . $subject
             );
         }
            

@@ -78,7 +78,8 @@ class EmployeeController extends Controller
             'role_id' => $employeeRequest->role_id,
             'job_id' => $employeeRequest->job_title_id,
             'credentials' => $employeeRequest->credentials,
-            'shift_id' => $employeeRequest->shift_id
+            'shift_id' => $employeeRequest->shift_id,
+            'account_id' => $employeeRequest->user_id
         ]);
 
         return success(null, 'this employee been edited successfully');
