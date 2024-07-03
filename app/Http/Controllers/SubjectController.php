@@ -43,7 +43,7 @@ class SubjectController extends Controller
     //Get Subject Information Function
     public function getSubjectInformation(Subject $subject)
     {
-        return success(SimpleListResource::collection($subject) , null);
+        return success(new SimpleListResource($subject) , null);
     }
 
     //Delete Subject Function

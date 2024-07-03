@@ -90,7 +90,7 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = User::with("role")->get();
+        $users = User::with("role")->paginate(20);
         return UserResource::collection($users);
     }
 
@@ -112,10 +112,10 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            "username" => ["required", "max:15", "alpha_num", "unique:users,username"],
+            "username" => ["required", "max:15", "alpha_num", ],
             "password" => ["required", Password::min(6)->numbers()->letters()],
             "role_id" => ["required", "exists:roles,id"],
-            "employee_id" => [Rule::exists("employees", "id")->where("account_id", null),],
+            "employee_id" => ["nullable",Rule::exists("employees", "id")->where("account_id", null),],
         ], [
             "required" => "هذا الحقل مطلوب",
             "password.min" => "على كلمة السر ان لا تقل عن 5 محارف",
@@ -127,18 +127,20 @@ class UserController extends Controller
             "exists" => "المعرف المدخل غير موجود في قاعدة البيانات"
         ]);
         $validator->validate();
-        $valid = $validator->validated();
+        $valid = $validator->safe();
         $valid["password"] = Hash::make($valid["password"]);
         $user = User::create($request->except("employee_id"));
-        Employee::find($valid["employee_id"])->update(["account_id", $user]);
-        return success(new UserResource($user), "تم اضافة حساب بنجاح", 201);
+        Employee::find($valid["employee_id"] ?? null)?->update(["account_id" => $user->id]);
+        return success(new UserResource($user->load("employee")), "تم اضافة حساب بنجاح", 201);
     }
 
     public function edit(Request $request, User $user)
     {
         $validator = Validator::make($request->all(), [
             "role_id" => ["required", "exists:roles,id"],
-            "employee_id" => ["required",Rule::exists("employees", "id")->where("account_id", null),],
+            "employee_id" => ["nullable",Rule::exists("employees", "id")->where(function($query) use($user){
+                return $query->where("account_id",null)->orWhere("account_id",$user->id);
+            }),],
         ], [
             "required" => "هذا الحقل مطلوب",
             "employee_id.exists" => "الموظف المدخل غير موجود او لديه حساب بالفعل"
@@ -147,10 +149,10 @@ class UserController extends Controller
         $valid = $validator->safe();
         $user->update($valid->except("employee_id"));
         $user->employee?->update( ["account_id" => null]);
-        Employee::find($valid["employee_id"])->update(
+        Employee::find($valid["employee_id"]?? null)?->update(
                ["account_id" => $user->id]
             );
-        return success(new UserResource($user), "تم تعديل الحساب بنجاح", 200);
+        return success(new UserResource($user->refresh()), "تم تعديل الحساب بنجاح", 200);
     }
 
     public function delete(User $user)
