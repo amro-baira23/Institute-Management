@@ -54,7 +54,7 @@ class TransactionController extends Controller
                 'subaccount' => $transaction->subaccount->name,
                 'mainaccount' => $transaction->subaccount->mainaccount->name,
             ];
-            $merging = array_merge($transaction->toArray(),$data);
+            $merging = array_merge($transaction->toArray(), $data);
             $result[] = $merging;
         }
 
@@ -68,8 +68,8 @@ class TransactionController extends Controller
             'subaccount' => $transaction->subaccount->name,
             'mainaccount' => $transaction->subaccount->mainaccount->name,
         ];
-        $merging = array_merge($transaction->toArray(),$data);
-        $result[] = $merging;
+        $merging = array_merge($transaction->toArray(), $data);
+        $result = $merging;
         return success($result, null);
     }
 }
