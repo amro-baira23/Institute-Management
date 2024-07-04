@@ -13,4 +13,9 @@ class SubAccount extends Model
         'main_account_id',
         'name',
     ];
+
+        public function mainaccount()
+    {
+        return $this->belongsTo(MainAccount::class, 'main_account_id', 'id');
+    }
 }
