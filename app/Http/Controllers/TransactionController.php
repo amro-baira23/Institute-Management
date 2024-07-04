@@ -47,14 +47,29 @@ class TransactionController extends Controller
     //Get Transactions Function
     public function getTransactions()
     {
-        $transactions = Transaction::with(['subaccount','subaccount.mainaccount'])->get();
+        $transactions = Transaction::get();
+        $result = [];
+        foreach ($transactions as $transaction) {
+            $data = [
+                'subaccount' => $transaction->subaccount->name,
+                'mainaccount' => $transaction->subaccount->mainaccount->name,
+            ];
+            $merging = array_merge($transaction->toArray(),$data);
+            $result[] = $merging;
+        }
 
-        return success($transactions, null);
+        return success($result, null);
     }
 
     //Get Transaction Information Function
     public function getTransactionInformation(Transaction $transaction)
     {
-        return success($transaction->with(['subaccount','subaccount.mainaccount'])->find($transaction->id), null);
+        $data = [
+            'subaccount' => $transaction->subaccount->name,
+            'mainaccount' => $transaction->subaccount->mainaccount->name,
+        ];
+        $merging = array_merge($transaction->toArray(),$data);
+        $result[] = $merging;
+        return success($result, null);
     }
 }
