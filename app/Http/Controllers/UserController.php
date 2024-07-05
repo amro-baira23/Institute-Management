@@ -21,7 +21,9 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = User::with("role")->paginate(20);
+        $users = User::with("role")->when(request("name"), function ($query, $var) {
+            return $query->where("username", "LIKE", '%' . $var . '%');
+        })->paginate(20);
         return UserResource::collection($users);
     }
 
