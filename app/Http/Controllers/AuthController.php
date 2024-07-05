@@ -68,8 +68,8 @@ class AuthController extends Controller
             return error("كلمة السر المدخلة خاطئة", null, 422);
         
         
-        if (!$request->password === $request->confirm_password) 
-        return error("خطأ في حقل تأكيد كلمة السر", null, 422);
+        if ($request->password !== $request->confirm_password) 
+          return error("خطأ في حقل تأكيد كلمة السر", null, 422);
 
         $data["username"] = $request->username;
 
