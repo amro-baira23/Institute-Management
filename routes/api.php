@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\CourseController;
@@ -18,8 +19,6 @@ use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
-use App\Http\Resources\ActivityResource;
-use App\Models\Activity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -41,10 +40,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/login', [UserController::class, 'login']);
 Route::middleware('user-auth')->group(function () {
     Route::prefix('/')->group(function () {
-        Route::get('/', [UserController::class, 'profile']);
-        Route::post('/', [UserController::class, 'editProfile']);
-        Route::post('/edit-password', [UserController::class, 'editPassword']);
-        Route::post('/logout', [UserController::class, 'logout']);
+        Route::get('/', [AuthController::class, 'profile']);
+        Route::post('/', [AuthController::class, 'editProfile']);
+        Route::post('/logout', [AuthController::class, 'logout']);
     });
 
     Route::middleware('manage-user')->prefix('users')->group(function () {
