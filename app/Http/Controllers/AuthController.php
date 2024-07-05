@@ -28,7 +28,7 @@ class AuthController extends Controller
             $token = $user->createToken('admin')->plainTextToken;
             $data["token"] = $token;
             $data["user"] = new UserResource($user);
-            return success($data, 'login successfully');
+            return success($token, 'login successfully');
         }
 
         return error('incorrect password', null, 422);
