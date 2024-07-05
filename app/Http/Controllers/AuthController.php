@@ -21,7 +21,7 @@ class AuthController extends Controller
         $user = User::where(['username' => $request->username])->first();
 
         if (!$user) {
-            return error("This User Not Found", null, 404);
+            return error("User Not Found", null, 404);
         }
 
         if (Hash::check($request->password, $user->password)) {
@@ -49,12 +49,13 @@ class AuthController extends Controller
 
 
         $validator = Validator::make($request->all(), [
-            'username' => ["required","alpha_num","max:15"],
-            "password" => ["required", Password::min(6)->numbers()->letters()],
-            "confirm_password" => ["required"],
-            "old_password" => ["required"],
+            'username' => ["required","alpha_dash","max:15",Rule::unique("users","username")->ignore($admin->id)],
+            "old_password" => ["required", Password::min(6)->numbers()->letters()],
+            "password" => [],
+            "confirm_password" => [],
         ], [
             "required" => "هذا الحقل مطلوب",
+            "alpha_dash" => "اسم المستخدم يجب ان يحتوي احرف وارقام فقط",
             "password.min" => "على كلمة السر ان لا تقل عن 5 محارف",
             "password.numbers" => "على كلمة السر ان تحتوي على رقم واحد على الأقل",
             "password.letters" => "على كلمة السر ان تحتوي على حرف واحد على الأقل",
@@ -67,13 +68,13 @@ class AuthController extends Controller
         if (!Hash::check($request->old_password, $admin->password)) 
             return error("كلمة السر المدخلة خاطئة", null, 422);
         
+        if($request->password){
+            if ($request->password !== $request->confirm_password) 
+                return error("خطأ في حقل تأكيد كلمة السر", null, 422);
+            $data["password"] = Hash::make($request->password);
+        }
         
-        if ($request->password !== $request->confirm_password) 
-          return error("خطأ في حقل تأكيد كلمة السر", null, 422);
-
         $data["username"] = $request->username;
-
-        $data["password"] = Hash::make($request->password);
     
         $admin->update($data);
 
