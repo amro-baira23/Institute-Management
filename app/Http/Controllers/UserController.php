@@ -63,9 +63,9 @@ class UserController extends Controller
         $validator->validate();
         $valid = $validator->safe();
         $valid["password"] = Hash::make($valid["password"]);
-        $user = User::create($request->except("employee_id"));
+        $user = User::create($valid->except("employee_id"));
         Employee::find($valid["employee_id"])?->update(["account_id" => $user->id]);
-        return success(new UserResource($user->load("employee","role")), "تم اضافة حساب بنجاح", 201);
+        return success($user->password, "تم اضافة حساب بنجاح", 201);
     }
 
     public function edit(Request $request, User $user)
