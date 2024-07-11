@@ -9,6 +9,8 @@ use App\Http\Resources\SimpleListResource;
 use App\Models\Role;
 use App\Models\RolePermission;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class RoleController extends Controller
 {
@@ -71,9 +73,14 @@ class RoleController extends Controller
     }
 
     //Delete Role Function
-    public function deleteRole(Role $role){
-        $role->delete();
+    public function deleteRole(Role $role, Request $request){
+        Validator::make(["id" => $role->id],[
+            "id" => ["required",Rule::unique("users","role_id")],
+        ],[
+            "id" => "هذا الدور لا يمكن حذفه لأنه قد تم تعيينه لعدد من المستخدمين بالفعل"
+        ])->validate();
 
+        $role->delete();
         return success(null, 'this role deleted successfully',204);
     }
 }

@@ -17,12 +17,18 @@ use Illuminate\Validation\Rules\Password;
 
 class UserController extends Controller
 {
-    
+
 
     public function index()
     {
         $users = User::with("role")->when(request("name"), function ($query, $var) {
             return $query->where("username", "LIKE", '%' . $var . '%');
+        })->when(request("trashed") === true, function ($query) {
+            return $query->onlyTrashed();
+        })->when(request("role"), function ($query, $name) {
+            return $query->whereHas("role", function ($query,) use ($name) {
+                return $query->where("name", "LIKE", '%' . $name . '%');
+            });
         })->paginate(20);
         return UserResource::collection($users);
     }
@@ -45,10 +51,10 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            "username" => ["required", "max:15", "alpha_num","unique:users,username" ],
+            "username" => ["required", "max:15", "alpha_num", "unique:users,username"],
             "password" => ["required", Password::min(6)->numbers()->letters()],
             "role_id" => ["required", "exists:roles,id"],
-            "employee_id" => ["present","nullable",Rule::exists("employees", "id")->where("account_id", null),],
+            "employee_id" => ["present", "nullable", Rule::exists("employees", "id")->where("account_id", null),],
         ], [
             "required" => "هذا الحقل مطلوب",
             "present" => "هذا الحقل مطلوب",
@@ -72,8 +78,8 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "role_id" => ["required", "exists:roles,id"],
-            "employee_id" => ["nullable",Rule::exists("employees", "id")->where(function($query) use($user){
-                return $query->where("account_id",null)->orWhere("account_id",$user->id);
+            "employee_id" => ["nullable", Rule::exists("employees", "id")->where(function ($query) use ($user) {
+                return $query->where("account_id", null)->orWhere("account_id", $user->id);
             }),],
         ], [
             "required" => "هذا الحقل مطلوب",
@@ -84,16 +90,22 @@ class UserController extends Controller
         $validator->validate();
         $valid = $validator->safe();
         $user->update($valid->except("employee_id"));
-        $user->employee?->update( ["account_id" => null]);
+        $user->employee?->update(["account_id" => null]);
         Employee::find($valid["employee_id"])?->update(
-               ["account_id" => $user->id]
-            );
-        return success(new UserResource($user->load("role","employee")), "تم تعديل الحساب بنجاح", 200);
+            ["account_id" => $user->id]
+        );
+        return success(new UserResource($user->load("role", "employee")), "تم تعديل الحساب بنجاح", 200);
     }
 
     public function delete(User $user)
     {
         $user->delete();
         return response(null, 204);
+    }
+
+    public function restore(User $user)
+    {
+        $user->restore();
+        return success(new UserResource($user), "تم استعادة الحساب بنجاح", 200);
     }
 }

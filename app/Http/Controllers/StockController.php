@@ -10,6 +10,7 @@ use App\Models\Stock;
 use App\Models\StockDetail;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 
 class StockController extends Controller
 {
@@ -43,6 +44,11 @@ class StockController extends Controller
     //Import Item To Stock
     public function importItem(Stock $item, StockRequest $request)
     {
+        Validator::make(["amount" => $item->amount + $request->amount],[
+            "amount" => ["gt:0"]
+        ],[
+            "amount" => "لا يمكن سحب أكثر من الكمية الموجودة في المستودع لهذه المادة " . "(" .$item->amount . ")",
+        ])->validate();
         $item->update([
             'amount' => $item->amount + $request->amount
         ]);

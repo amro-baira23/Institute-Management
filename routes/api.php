@@ -52,6 +52,7 @@ Route::middleware('user-auth')->group(function () {
         Route::get('/unattached', [UserController::class, 'indexUnattached'])->name("unattached");
         Route::get('/{user}', [UserController::class, 'get']);
         Route::delete('/{user}', [UserController::class, 'delete']);
+        Route::post('/{user}/restore', [UserController::class, 'restore'])->withTrashed();
     });
 
     Route::middleware('manage-user')->prefix('activities')->group(function () {
