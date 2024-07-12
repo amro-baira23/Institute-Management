@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Rules\ListExists;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class RoleRequest extends FormRequest
 {
@@ -25,7 +26,7 @@ class RoleRequest extends FormRequest
     public function rules()
     {
         return [
-            'role' => 'required',
+            'role' => ["required",Rule::unique("roles","name")->ignore($this->route("role")?->id)],
             'permissions' => ["required" ,new ListExists("permissions")]
         ];
     }
@@ -34,6 +35,7 @@ class RoleRequest extends FormRequest
     {
         return [
             "*.required" => "هذا الحقل مطلوب",
+            "unique" => "هذا الاسم مأخوذ بالفعل"
             
         ];
     }

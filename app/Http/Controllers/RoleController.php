@@ -58,7 +58,7 @@ class RoleController extends Controller
     {
         $roles = Role::with('permissions')->when(request("name"),function($query,$name){
             return $query->where("name","LIKE","%".$name."%");
-        })->simplePaginate(20);
+        })->paginate(20);
         return new RoleCollection($roles);
     }
 
@@ -73,7 +73,7 @@ class RoleController extends Controller
     }
 
     //Delete Role Function
-    public function deleteRole(Role $role, Request $request){
+    public function deleteRole(Role $role){
         Validator::make(["id" => $role->id],[
             "id" => ["required",Rule::unique("users","role_id")],
         ],[
