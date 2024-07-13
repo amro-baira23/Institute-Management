@@ -10,12 +10,17 @@ class Enrollment extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    const UPDATED_AT = NULL;
-    const CREATED_AT = NULL;
-    
+    protected function serializeDate($date)
+    {
+        return $date->format('Y-m-d h:i:s');
+    }
     function student(){
         return $this->belongsTo(Student::class,"student_id");
     }
+    function course(){
+        return $this->belongsTo(Course::class,"course_id");
+    }
+
     function subaccount(){
         return $this->morphOne(SubAccount::class,"accountable");
     }

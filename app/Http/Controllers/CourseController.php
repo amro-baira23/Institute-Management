@@ -13,8 +13,10 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Date;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CurrentCoursesResource;
+use App\Http\Resources\EnrollmentResource;
 use App\Http\Resources\StudentCourseCollection;
 use App\Http\Resources\StudentCourseResource;
+use App\Http\Resources\StudentEnrolled;
 use App\Models\Enrollment;
 use App\Models\Student;
 use Illuminate\Validation\Rule ;
@@ -143,36 +145,16 @@ class CourseController extends Controller
     }
 
     public function getStudents(Course $course){
-        return ($course->students);
+        return StudentEnrolled::collection($course->students);
     }
 
-    public function addStudent(Course $course,Request $request){
-        $request->validate([
-            "student" => ["required",Rule::exists("students","id")->withoutTrashed(),Rule::unique("enrollments","student_id")->where("course_id",$course->id)],
-            "with_certificate" => ["required","bool"]
+    public function reverseStudentEnrollmentType(Course $course,Student $student){
+        $enrollment = $course->students()->find($student->id)->pivot;
+        $enrollment->update([
+            "with_certificate" => (int) !$enrollment->with_certificate
         ]);
-      
-        $enrollment = Enrollment::create([
-            "student_id" => $request->student,
-            "with_diploma" => $request->with_certificate,
-            "course_id" => $course->id,
-        ]);
-
-        $enrollment->subaccount()->create([
-            "main_account" => "الطلاب"
-        ]);
-        return success(null,  "student been enrolled successfuly");
+        return success(null,"enrollment with_certficate status been reversed successfuly");
     }
-
-    public function editStudent(Course $course,Student $student,Request $request){
-            $enrollement =  $course->students()->findOrFail($student->id)->pivot;
-            $enrollement->update(["with_diploma" => !$enrollement->with_diploma]);
-        return $enrollement;
-    }
-
-    public function deleteStudent(Course $course,Student $student){
-        $course->students()->detach($student);
-        return success(null,null,204);
-    }
+    
     
 }

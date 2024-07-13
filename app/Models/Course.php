@@ -83,6 +83,6 @@ class Course extends Model
     }
 
     public function students(){
-        return $this->belongsToMany(Student::class,"enrollments","course_id","student_id")->withPivot("with_diploma");
+        return $this->belongsToMany(Student::class,"enrollments","course_id","student_id")->withPivot(["with_certificate","created_at"]);
     }
 }

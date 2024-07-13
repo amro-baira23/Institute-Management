@@ -38,6 +38,3 @@ class EmployeeResource extends JsonResource
         return $default;
     }
 }
-class myclass
-{
-}

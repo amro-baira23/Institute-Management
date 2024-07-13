@@ -6,6 +6,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\JobTitleController;
 use App\Http\Controllers\MainAccountController;
 use App\Http\Controllers\PermissionController;
@@ -19,6 +20,7 @@ use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
+use App\Models\Enrollment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -118,9 +120,7 @@ Route::middleware('user-auth')->group(function () {
         Route::get('/{course}', [CourseController::class, 'getCourseInformation']);
         Route::delete('/{course}', [CourseController::class, 'deleteCourse']);
         Route::get('/{course}/students', [CourseController::class, 'getStudents']);
-        Route::post('/{course}/students', [CourseController::class, 'addStudent']);
-        Route::post('/{course}/students/{student}', [CourseController::class, 'editStudent']);
-        Route::delete('/{course}/students/{student}', [CourseController::class, 'deleteStudent']);
+        Route::post('/{course}/students/{student}', [CourseController::class, 'reverseStudentEnrollmentType']);
     });
 
     Route::middleware('manage-course')->prefix('rooms')->group(function () {
@@ -145,6 +145,12 @@ Route::middleware('user-auth')->group(function () {
         Route::delete('/{subject}', [SubjectController::class, 'deleteSubject']);
     });
 
+    Route::middleware('manage-course')->prefix('enrollments')->group(function () {
+        Route::post('/', [EnrollmentController::class, 'store']);
+        Route::post('/{enrollment}', [EnrollmentController::class, 'update']);
+        Route::get('/', [EnrollmentController::class, 'index']);
+        Route::delete('/{enrollment}', [EnrollmentController::class, 'destroy']);
+    });
 
     Route::middleware('manage-employee')->prefix('employees')->group(function () {
         Route::post('/', [EmployeeController::class, 'addEmployee']);
@@ -185,9 +191,3 @@ Route::middleware('user-auth')->group(function () {
     });
 });
 
-// Route::prefix('employee')->group(function () {
-//     Route::post('/login', [EmployeeController::class, 'login']);
-//     Route::middleware('employee-auth')->group(function () {
-//         Route::get('/', [EmployeeController::class, 'profile']);
-//     });
-// });
