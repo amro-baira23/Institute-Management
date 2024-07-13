@@ -4,52 +4,64 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SubAccountRequest;
 use App\Http\Resources\SimpleListResource;
+use App\Http\Resources\SubAccountResource;
+use App\Models\AdditionalSubAccount;
+use App\Models\Enrollment;
 use App\Models\SubAccount;
+use App\Models\Teacher;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SubAccountController extends Controller
 {
     //Add Sub Account Function
     public function addSubAccount(SubAccountRequest $request)
     {
-        SubAccount::create([
-            'main_account_id' => $request->main_account_id,
+        $subaccount = AdditionalSubAccount::create([
             'name' => $request->name,
         ]);
-
-        return success(null, 'this sub account added successfully', 201);
+        $subaccount->subaccount()->create([
+            "main_account" => $request->main_account,
+        ]);
+        return success(null, 'this subaccount added successfully', 201);
     }
 
     //Edit Sub Account Function
-    public function editSubAccount(SubAccount $subAccount, SubAccountRequest $request)
+    public function editSubAccount(AdditionalSubAccount $subAccount, SubAccountRequest $request)
     {
         $subAccount->update([
-            'main_account_id' => $request->main_account_id,
             'name' => $request->name,
         ]);
-
-        return success(null, 'this sub account updated successfully');
+        $subAccount->subaccount->update([
+            "main_account" => $request->main_account,
+        ]);
+        return success(null, 'this subaccount updated successfully');
     }
 
-    //Get Sub Accounts Function
     public function getSubAccounts()
     {
-        $subAccounts = SubAccount::query()->when(request("name"),function($query,$name){
-            return $query->where("name","LIKE","%".$name."%");
-        })->paginate(20);
+        $subAccounts = AdditionalSubAccount::when(request("name"), function ($query, $name) {
+            return $query->where("name", "LIKE", "%" . $name . "%");
+        })->with("subaccount")->paginate(20);
         return SimpleListResource::collection($subAccounts);
     }
 
+    
+
     //Get Sub Account Information Function
-    public function getSubAccountInformation(SubAccount $subAccount)
+    public function getSubAccountInformation(AdditionalSubAccount $subAccount)
     {
-        return success($subAccount, null);
+        $subAccount->load("subaccount");
+        return new SubAccountResource($subAccount);
     }
 
     //Delete Sub Account Function
-    public function deleteSubAccount(SubAccount $subAccount){
+    public function deleteSubAccount(AdditionalSubAccount $subAccount)
+    {
+        $subAccount->subaccount?->delete();
         $subAccount->delete();
 
-        return success(null,'this sub account deleted successfully');
+        return success(null, 'this subaccount deleted successfully', 204);
     }
 }

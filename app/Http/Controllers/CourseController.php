@@ -15,6 +15,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\CurrentCoursesResource;
 use App\Http\Resources\StudentCourseCollection;
 use App\Http\Resources\StudentCourseResource;
+use App\Models\Enrollment;
 use App\Models\Student;
 use Illuminate\Validation\Rule ;
 
@@ -29,18 +30,6 @@ class CourseController extends Controller
         ]);
 
         $days = explode(',', $request->days);
-
-        // $courses = Course::get();
-
-        // foreach ($courses as $course) {
-        //     foreach ($course->schedule->days as $course_day) {
-        //         foreach ($days as $day) {
-        //             if ($day == $course_day->day && $request->start >= $course->schedule->time->start && $request->start < $course->schedule->time->end && $request->start_at >= $course->start_at && $request->start_at <= $course->end_at && ($course->room_id == $request->room_id || $course->teacher_id == $request->teacher_id)) {
-        //                 return error('You cannot set course time in this days', 'You cannot set course time in this days', 502);
-        //             }
-        //         }
-        //     }
-        // }
 
         foreach ($days as $day)
             DayOfWeek::create([
@@ -59,6 +48,7 @@ class CourseController extends Controller
             'salary_type' => $request->salary_type,
             'salary_amount' => $request->salary_amount,
             'cost' => $request->cost,
+            'certificate_cost' => $request->certificate_cost,
             'status' => $request->status,
         ]);
 
@@ -75,18 +65,6 @@ class CourseController extends Controller
             'end' => $request->end,
         ]);
         $days = explode(',', $request->days);
-
-        // $courses = Course::whereNot('id', $course->id)->get();
-
-        // foreach ($courses as $c) {
-        //     foreach ($c->schedule->days as $course_day) {
-        //         foreach ($days as $day) {
-        //             if ($day == $course_day->day && $request->start >= $c->schedule->time->start && $request->start < $c->schedule->time->end && $request->start_at >= $c->start_at && $request->start_at <= $c->end_at && ($c->room_id == $request->room_id || $c->teacher_id == $request->teacher_id)) {
-        //                 return error('You cannot set course time in this days', 'You cannot set course time in this days', 502);
-        //             }
-        //         }
-        //     }
-        // }
 
         foreach ($course->schedule->days as $day)
             $day->delete();
@@ -108,6 +86,7 @@ class CourseController extends Controller
             'salary_type' => $request->salary_type,
             'salary_amount' => $request->salary_amount,
             'cost' => $request->cost,
+            'certificate_cost' => $request->certificate_cost,
             'status' => $request->status,
         ]);
 
@@ -169,24 +148,26 @@ class CourseController extends Controller
 
     public function addStudent(Course $course,Request $request){
         $request->validate([
-            "student" => ["required",Rule::exists("students","id")->withoutTrashed()],
+            "student" => ["required",Rule::exists("students","id")->withoutTrashed(),Rule::unique("enrollments","student_id")->where("course_id",$course->id)],
             "with_certificate" => ["required","bool"]
         ]);
-        $student = Student::find($request->student);
-        $course->students()->syncWithoutDetaching([
+      
+        $enrollment = Enrollment::create([
             "student_id" => $request->student,
-            "with_diploma" => $request->with_certificate
+            "with_diploma" => $request->with_certificate,
+            "course_id" => $course->id,
+        ]);
+
+        $enrollment->subaccount()->create([
+            "main_account" => "الطلاب"
         ]);
         return success(null,  "student been enrolled successfuly");
     }
 
     public function editStudent(Course $course,Student $student,Request $request){
-        $request->validate([
-            "with_certificate" => ["required","bool"]
-        ]);
-
-        return $course->students()->findOrFail($student->id)->pivot
-                ->update(["with_diploma" => $request->with_certificate ]);
+            $enrollement =  $course->students()->findOrFail($student->id)->pivot;
+            $enrollement->update(["with_diploma" => !$enrollement->with_diploma]);
+        return $enrollement;
     }
 
     public function deleteStudent(Course $course,Student $student){

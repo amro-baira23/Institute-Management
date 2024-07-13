@@ -30,4 +30,10 @@ class Teacher extends Model
     public function courses(){
         return $this->hasMany(Course::class,"teacher_id","id");
     }
+
+   
+    function subaccount(){
+        return $this->morphOne(SubAccount::class,"accountable");
+    }
+
 }

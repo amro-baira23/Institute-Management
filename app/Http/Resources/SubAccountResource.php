@@ -2,9 +2,11 @@
 
 namespace App\Http\Resources;
 
+use App\Models\AdditionalSubAccount;
+use App\Models\Enrollment;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SimpleListResource extends JsonResource
+class SubAccountResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,9 +18,8 @@ class SimpleListResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "name" => $this->person?->name ?? $this->name,
-            "base_salary" => $this->whenNotNull($this->base_salary),
-            "main_account" => $this->whenLoaded("subaccount",$this->subaccount?->main_account)
+            "main_account" => $this->main_account,
+            "name" => $this->name
         ];
     }
 }

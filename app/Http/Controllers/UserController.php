@@ -99,7 +99,9 @@ class UserController extends Controller
 
     public function delete(User $user)
     {
+        $user->employee?->update(["account_id"=>null]);
         $user->delete();
+
         return response(null, 204);
     }
 

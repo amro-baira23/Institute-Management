@@ -37,6 +37,7 @@ class CourseRequest extends FormRequest
             'salary_type' => ['required',Rule::in(["S","C"])],
             'salary_amount' => ['required','integer'],
             'cost' => ['required'],
+            'certificate_cost' => ['required'],
             'start' => [ 'required'],
             'end' => ['required'],
             'days' => ['required'],

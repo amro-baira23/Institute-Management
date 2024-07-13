@@ -40,7 +40,6 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        $main_accounts = ['المصاريف', 'الإيرادات', 'الطلاب', 'الأساتذة', 'الصندوق', 'رأس المال', 'الموظفين'];
         $permissions = ['إدارة الطلاب', 'إدارة المستودع', "إدارة الحسابات", 'إدارة المحاسبة', 'إدارة الأساتذة', 'إدارة الدورات', 'إدارة الموظفين', "إدارة الشهادات", "إدارة الصندوق"];
         $roles = ["مدير", "ضيف"];
 
@@ -60,10 +59,7 @@ class DatabaseSeeder extends Seeder
             "role_id" => 1
         ]);
 
-        foreach ($main_accounts as $account)
-            MainAccount::create([
-                'name' => $account
-            ]);
+    
 
         foreach ($permissions as $permission)
             Permission::create([

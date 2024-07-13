@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('person_id')->constrained(table: "persons");
             $table->foreignId("shift_id")->constrained();
             $table->foreignId("job_id")->constrained(table: "job_titles");
-            $table->foreignId("account_id")->nullable()->constrained(table: "users");
+            $table->foreignId("account_id")->nullable()->constrained(table: "users")->onDelete("set null");
             $table->timestamps();
             
         });

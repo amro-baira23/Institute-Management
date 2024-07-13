@@ -42,6 +42,7 @@ class CourseFactory extends Factory
             'salary_type' => fake()->randomElement(["C","S"]),
             'salary_amount' => fake()->randomElement([3000,5000,4600]),
             'cost' => fake()->randomElement(["200","300"]),
+            'certificate_cost' => fake()->randomElement(["2000","3000"]),
         ];
     }
 }

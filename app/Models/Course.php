@@ -14,19 +14,7 @@ class Course extends Model
 {
     use HasFactory;
     protected $table = 'courses';
-    protected $fillable = [
-        'subject_id',
-        'schedule_id',
-        'teacher_id',
-        'room_id',
-        'minimum_students',
-        'start_at',
-        'end_at',
-        'salary_type',
-        'salary_amount',
-        'cost',
-        'status',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         "students.pivot.with_diploma" => "boolean"

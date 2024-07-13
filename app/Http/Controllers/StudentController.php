@@ -25,7 +25,7 @@ class StudentController extends Controller
             'birth_date' => $personRequest->birth_date,
         ]);
 
-        Student::create([
+        $student = Student::create([
             'person_id' => $person->id,
             'father_name' => $personRequest->father_name,
             'mother_name' => $personRequest->mother_name,
@@ -38,6 +38,8 @@ class StudentController extends Controller
             'nationality' => $studentRequest->nationality,
             'education_level' => $studentRequest->education_level,
         ]);
+
+      
 
         return success(null, 'this student added successfully', 201);
     }

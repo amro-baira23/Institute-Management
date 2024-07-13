@@ -13,14 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('transactions', function (Blueprint $table) {
+        Schema::create('additional_sub_accounts', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('subaccount_id');
-            $table->enum('type', ['E', 'P']);
-            $table->integer('amount');
-            $table->text('note');
-
-            $table->foreign('subaccount_id')->references('id')->on('sub_accounts')->onDelete('cascade');
+            $table->string("name");
             $table->timestamps();
         });
     }
@@ -32,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('transactions');
+        Schema::dropIfExists('additional_sub_accounts');
     }
 };

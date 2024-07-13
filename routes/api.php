@@ -92,12 +92,12 @@ Route::middleware('user-auth')->group(function () {
 
     Route::middleware("manage-accounting")->prefix('main-accounts')->group(function () {
         Route::get('/', [MainAccountController::class, 'getMainAccounts']);
-        Route::get('/{mainAccount}', [MainAccountController::class, 'getMainAccountInformation']);
     });
     Route::middleware('manage-accounting')->prefix('sub-accounts')->group(function () {
         Route::post('/', [SubAccountController::class, 'addSubAccount']);
         Route::post('/{subAccount}', [SubAccountController::class, 'editSubAccount']);
         Route::get('/', [SubAccountController::class, 'getSubAccounts']);
+        Route::get('/names', [SubAccountController::class, 'getNames']);
         Route::get('/{subAccount}', [SubAccountController::class, 'getSubAccountInformation']);
         Route::delete('/{subAccount}', [SubAccountController::class, 'deleteSubAccount']);
     });

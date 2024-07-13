@@ -23,11 +23,14 @@ class TeacherController extends Controller
             'type' => 'T',
         ]);
 
-        Teacher::create([
+        $teacher = Teacher::create([
             'person_id' => $person->id,
             'credentials' => $teacherRequest->credentials,
         ]);
-
+        
+        $teacher->subaccount()->create([
+            "main_account" => "الأساتذة"
+        ]);
         return success(null, 'this teacher added successfully', 201);
     }
 

@@ -16,22 +16,18 @@ class EmployeeResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "name" => $this->person->name ?? null,
-            $this->merge( [
-                "salary" => $this->jobTitle->base_salary,
-                "credentials" => $this->credentials,
-                "birth_date" => $this->person->birth_date,
-                "phone_number" => $this->person->phone_number,
-                "created_at" => $this->created_at->format("Y-m-d h:i")
-            ]),
+            "name" => $this->person->name,
+            "credentials" => $this->credentials,
+            "birth_date" => $this->person->birth_date,
+            "phone_number" => $this->person->phone_number,
+            "created_at" => $this->created_at->format("Y-m-d h:i"),
             "shift" => new SimpleListResource($this->shift),
             "job_title" => new SimpleListResource($this->jobTitle),
-            $this->mergeWhen($this->user, [
-                "account" => [
-                    "id" => $this->user?->id,
-                    "username" => $this->user?->username,
-                ]
+            "account" => $this->when($this->user, [
+                "id" => $this->user?->id,
+                "username" => $this->user?->username,
             ]),
+
         ];
     }
 
@@ -42,6 +38,6 @@ class EmployeeResource extends JsonResource
         return $default;
     }
 }
-class myclass{
-    
+class myclass
+{
 }
