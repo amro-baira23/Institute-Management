@@ -15,6 +15,7 @@ class ActivityResource extends JsonResource
     public function toArray($request)
     {
         return [
+            "id" =>$this->id,
             "desc" => $this->desc,
             "created_at" => $this->created_at->format("Y-m-d h:i")
         ];

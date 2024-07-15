@@ -6,6 +6,7 @@ use App\Http\Requests\SubAccountRequest;
 use App\Http\Resources\SimpleListResource;
 use App\Http\Resources\SubAccountResource;
 use App\Models\AdditionalSubAccount;
+use App\Models\Employee;
 use App\Models\Enrollment;
 use App\Models\SubAccount;
 use App\Models\Teacher;
@@ -28,10 +29,10 @@ class SubAccountController extends Controller
     }
 
     //Edit Sub Account Function
-    public function editSubAccount(AdditionalSubAccount $subAccount, SubAccountRequest $request)
+    public function editSubAccount(SubAccount $subAccount, SubAccountRequest $request)
     {
         $subAccount->update([
-            'name' => $request->name,
+            'main_account' => $request->name,
         ]);
         $subAccount->subaccount->update([
             "main_account" => $request->main_account,
@@ -39,29 +40,42 @@ class SubAccountController extends Controller
         return success(null, 'this subaccount updated successfully');
     }
 
-    public function getSubAccounts()
+    public function getAddedSubAccounts()
     {
-        $subAccounts = AdditionalSubAccount::when(request("name"), function ($query, $name) {
-            return $query->where("name", "LIKE", "%" . $name . "%");
-        })->with("subaccount")->paginate(20);
-        return SimpleListResource::collection($subAccounts);
+        $subAccounts = SubAccount::when(request("name"), function ($query, $name) {
+            return $query->whereHas("accountable",function($query) use($name) {
+                return $query->where("name", "LIKE", "%" . $name . "%");
+            });
+        })->where("accountable_type",AdditionalSubAccount::class)
+        ->with("accountable")->paginate(20);
+        return SubAccountResource::collection($subAccounts);
+    }
+    public function getEmployeeSubAccounts()
+    {
+        $subAccounts = SubAccount::when(request("name"), function ($query, $name) {
+            return $query->whereHas("accountable",function($query) use($name) {
+                return $query->where("name", "LIKE", "%" . $name . "%");
+            });
+        })->where("accountable_type",Employee::class)
+        ->with("accountable")->paginate(20);
+        return SubAccountResource::collection($subAccounts);
     }
 
     
 
     //Get Sub Account Information Function
-    public function getSubAccountInformation(AdditionalSubAccount $subAccount)
+    public function getSubAccountInformation(SubAccount $subAccount)
     {
-        $subAccount->load("subaccount");
+        $subAccount->load("accountable");
         return new SubAccountResource($subAccount);
     }
 
     //Delete Sub Account Function
-    public function deleteSubAccount(AdditionalSubAccount $subAccount)
+    public function deleteSubAccount(SubAccount $subAccount)
     {
-        $subAccount->subaccount?->delete();
+      
+        $subAccount->accountable?->delete();
         $subAccount->delete();
-
         return success(null, 'this subaccount deleted successfully', 204);
     }
 }

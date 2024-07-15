@@ -19,7 +19,7 @@ return new class extends Migration
             $table->enum('type', ['E', 'P']);
             $table->integer('amount');
             $table->text('note');
-
+            $table->foreignId("course_id")->nullable()->constrained(table: "courses");
             $table->foreign('subaccount_id')->references('id')->on('sub_accounts')->onDelete('cascade');
             $table->timestamps();
         });

@@ -22,6 +22,7 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Models\Enrollment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -39,6 +40,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get("/attempt",function(){
+    $subjects = DB::table("subjects")->select(["id","name"]);
+    $data = DB::table("shifts")->select(["id","name"])->union($subjects)->orderBy("id")->paginate(20);
+    return $data;
+});
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('user-auth')->group(function () {
     Route::prefix('/')->group(function () {
@@ -98,7 +104,8 @@ Route::middleware('user-auth')->group(function () {
     Route::middleware('manage-accounting')->prefix('sub-accounts')->group(function () {
         Route::post('/', [SubAccountController::class, 'addSubAccount']);
         Route::post('/{subAccount}', [SubAccountController::class, 'editSubAccount']);
-        Route::get('/', [SubAccountController::class, 'getSubAccounts']);
+        Route::get('/additionals', [SubAccountController::class, 'getAddedSubAccounts']);
+        Route::get('/employees', [SubAccountController::class, 'getEmployeeSubAccounts']);
         Route::get('/names', [SubAccountController::class, 'getNames']);
         Route::get('/{subAccount}', [SubAccountController::class, 'getSubAccountInformation']);
         Route::delete('/{subAccount}', [SubAccountController::class, 'deleteSubAccount']);

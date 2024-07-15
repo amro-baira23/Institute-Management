@@ -10,13 +10,7 @@ class Employee extends Model
     use HasFactory;
 
     protected $table = 'employees';
-    protected $fillable = [
-        'account_id',
-        "person_id",
-        'shift_id',
-        'job_id',
-        'credentials',
-    ];
+    protected $guarded = [];
 
     protected function serializeDate($date)
     {
@@ -28,6 +22,11 @@ class Employee extends Model
         return $this->belongsTo(Person::class, 'person_id', 'id');
     }
 
+    
+    function subaccount(){
+        return $this->morphOne(SubAccount::class,"accountable");
+    }
+    
     public function user(){
         return $this->belongsTo(User::class,"account_id","id");
     }

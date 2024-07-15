@@ -16,14 +16,18 @@ class EmployeeObserver
     public function created(Employee $employee)
     {
         $user = auth()->guard("user")->user();
-        if (!$user)
+        if (!$user){
+            $employee->subaccount()->create([
+                "main_account" => "الموظفين",
+            ]);     
             return;
+        }
         
         Activity::create([
             "user_id" => $user->id ,
             "operation" => "C",
             "model" => "موظف",
-            "desc" => "تم إضافة الموظف " . $employee->person->name . " " . "من قبل " . $user->username
+            "desc" => "تم إضافة الموظف " . $employee->name . " " . "من قبل " . $user->username
         ]);
     }
 
@@ -43,7 +47,7 @@ class EmployeeObserver
             "user_id" => $user->id ,
             "operation" => "U",
             "model" => "موظف",
-            "desc" => "تم تحديث معلومات الموظف " . $employee->person->name . " " . "من قبل " . $user->username
+            "desc" => "تم تحديث معلومات الموظف " . $employee->name . " " . "من قبل " . $user->username
         ]);
     }
 
@@ -63,7 +67,7 @@ class EmployeeObserver
             "user_id" => $user->id ,
             "operation" => "D",
             "model" => "موظف",
-            "desc" => "تم أرشفة معلومات الموظف " . $employee->person->name . " " . "من قبل " . $user->username
+            "desc" => "تم أرشفة معلومات الموظف " . $employee->name . " " . "من قبل " . $user->username
         ]);
     }
 

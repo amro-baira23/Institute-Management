@@ -19,11 +19,11 @@ class StudentFactory extends Factory
     {
         $names = ["احمد","أحمد","محمد","عمر","عمار", "رضوان", "علي", "أسامة","مؤمن", "سعيد", "روان", "عبد الله", "يوشع"];
         $female_names = ["منى", "مريم", "عائشة", "خديجة", "صفية", "ثناء", "وفاء", "سارة"];
-        $persons = Person::factory()->create(
-            ["type" => "S"]
-        );
+      
         return [
-            "person_id" => $persons["id"],
+            "name" => fake()->randomElement($names) . " " . fake()->randomElement($names),
+            "birth_date" => fake()->date(),
+            "phone_number" => fake()->numerify("##########"),
             "father_name" =>  fake()->randomElement($names) . " " . fake()->randomElement($names),
             "mother_name" =>  fake()->randomElement($female_names) . " " . fake()->randomElement($names),
             "name_en" => fake()->firstNameMale(),

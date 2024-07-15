@@ -12,10 +12,7 @@ class Teacher extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'teachers';
-    protected $fillable = [
-        'person_id',
-        'credentials',
-    ];
+    protected $guarded = [];
 
     protected function serializeDate($date)
     {

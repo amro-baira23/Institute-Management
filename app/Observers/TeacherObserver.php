@@ -16,14 +16,18 @@ class TeacherObserver
     public function created(Teacher $teacher)
     {
         $user = auth()->guard("user")->user();
-        if (!$user)
+        if (!$user) {
+            $teacher->subaccount()->create([
+                "main_account" => "الأساتذة",
+            ]);
             return;
-        
+        }
+
         Activity::create([
-            "user_id" => $user->id ,
+            "user_id" => $user->id,
             "operation" => "C",
             "model" => "أستاذ",
-            "desc" => "تم إضافة الأستاذ " . $teacher->person->name . " " . "من قبل " . $user->username
+            "desc" => "تم إضافة الأستاذ " . $teacher->name . " " . "من قبل " . $user->username
         ]);
     }
 
@@ -38,12 +42,12 @@ class TeacherObserver
         $user = auth()->guard("user")->user();
         if (!$user)
             return;
-        
+
         Activity::create([
-            "user_id" => $user->id ,
+            "user_id" => $user->id,
             "operation" => "U",
             "model" => "أستاذ",
-            "desc" => "تم تحديث معلومات الأستاذ " . $teacher->person->name . " " . "من قبل " . $user->username
+            "desc" => "تم تحديث معلومات الأستاذ " . $teacher->name . " " . "من قبل " . $user->username
         ]);
     }
 
@@ -57,13 +61,13 @@ class TeacherObserver
     {
         $user = auth()->guard("user")->user();
         if (!$user)
-            return;
-        
+        return;
+    
         Activity::create([
-            "user_id" => $user->id ,
+            "user_id" => $user->id,
             "operation" => "D",
             "model" => "أستاذ",
-            "desc" => "تم أرشفة معلومات الأستاذ " . $teacher->person->name . " " . "من قبل " . $user->username
+            "desc" => "تم أرشفة معلومات الأستاذ " . $teacher->name . " " . "من قبل " . $user->username
         ]);
     }
 

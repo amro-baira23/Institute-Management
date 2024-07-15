@@ -46,15 +46,12 @@ class EmployeeController extends Controller
     //Add Employee Function
     public function addEmployee(EmployeeRequest $employeeRequest, PersonRequest $personRequest)
     {
-        $person = Person::create([
+   
+
+        $employee = Employee::create([
             'name' => $personRequest->name,
             'phone_number' => $personRequest->phone_number,
             'birth_date' => $personRequest->birth_date,
-            'type' => 'E',
-        ]);
-
-        $employee = Employee::create([
-            'person_id' => $person->id,
             'shift_id' => $employeeRequest->shift_id,
             'job_id' => $employeeRequest->job_title_id,
             'account_id' => $employeeRequest->user_id,
@@ -67,15 +64,10 @@ class EmployeeController extends Controller
     //Edit Employee Function
     public function editEmployee(Employee $employee, EmployeeRequest $employeeRequest, PersonRequest $personRequest)
     {
-        $employee->person()->update([
+        $employee->update([
             'name' => $personRequest->name,
             'phone_number' => $personRequest->phone_number,
             'birth_date' => $personRequest->birth_date,
-        ]);
-
-    
-        $employee->update([
-            'role_id' => $employeeRequest->role_id,
             'job_id' => $employeeRequest->job_title_id,
             'credentials' => $employeeRequest->credentials,
             'shift_id' => $employeeRequest->shift_id,
@@ -89,9 +81,7 @@ class EmployeeController extends Controller
     public function getEmployees()
     {
         $employees = Employee::when(request("name"),function($query,$name){
-            return $query->whereHas("person",function($query,) use($name){
                 return $query->where("name","LIKE", '%'.$name.'%');
-            });
         })->when(request("phone_number"),function($query,$name){
             return $query->whereHas("person",function($query,) use($name){
                 return $query->where("phone_number","LIKE", '%'.$name.'%');
@@ -104,26 +94,26 @@ class EmployeeController extends Controller
             return $query->whereHas("job_title",function($query,) use($name){
                 return $query->where("name","LIKE", '%'.$name.'%');
             });
-        })->with('person', 'shift', 'user',"jobTitle")->paginate(20);
+        })->with('shift', 'user',"jobTitle")->paginate(20);
         return (new EmployeeCollection($employees));
     }
 
     public function getUnattached(){
         $employees =  Employee::when(request("name"),function($query,$name){
-            return $query->whereHas("person",function($query,) use($name){
                 return $query->where("name","LIKE", '%'.$name.'%');
-            }); })
+            })
             ->whereDoesntHave("user")->paginate(20);
         return SimpleListResource::collection($employees);
     } 
     //Get Employee Information Function
     public function getEmployeeInformation(Employee $employee)
     {
-        $employee = $employee->with(['person', 'user','shift'])->find($employee->id);
+        $employee = $employee->with([ 'user','shift'])->find($employee->id);
         return success(new EmployeeResource($employee), null);
     }
     public function getNames(){
-        $employees = Employee::with('person', 'shift', 'user',"jobTitle")->get();
+        $employees = Employee::with('shift', 'user',"jobTitle")->get();
+        return $employees;
     }
 
     //Delete Employee Function
@@ -132,8 +122,6 @@ class EmployeeController extends Controller
         if ($employee->user) {
             $employee->user->delete();
         }
-        
-        $employee->person->delete();
         $employee->delete();
         return success(null, 'this employee deleted successfully',204);
     }

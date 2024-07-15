@@ -18,8 +18,8 @@ class SubAccountResource extends JsonResource
     {
         return [
             "id" => $this->id,
+            "name" => $this->accountable->name,
             "main_account" => $this->main_account,
-            "name" => $this->name
         ];
     }
 }

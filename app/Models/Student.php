@@ -21,6 +21,9 @@ class Student extends Model
         return $this->belongsToMany(Course::class, "enrollments", "student_id");
     }
 
+    function subaccount(){
+        return $this->morphOne(SubAccount::class,"accountable");
+    }
     
     protected function serializeDate($date)
     {

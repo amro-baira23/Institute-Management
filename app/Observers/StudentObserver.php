@@ -15,15 +15,20 @@ class StudentObserver
      */
     public function created(Student $student)
     {
+       
         $user = auth()->guard("user")->user();
-        if (!$user)
+        if (!$user){
+            $student->subaccount()->create([
+                "main_account" => "الطلاب",
+            ]);     
             return;
+        }
         
         Activity::create([
             "user_id" => $user->id ,
             "operation" => "C",
             "model" => "طالب",
-            "desc" => "تم إضافة الطالب " . $student->person->name . " " . "من قبل " . $user->username
+            "desc" => "تم إضافة الطالب " . $student->name . " " . "من قبل " . $user->username
         ]);
     }
 
@@ -43,7 +48,7 @@ class StudentObserver
             "user_id" => $user->id ,
             "operation" => "U",
             "model" => "طالب",
-            "desc" => "تم تحديث معلومات الطالب " . $student->person->name . " " . "من قبل " . $user->username
+            "desc" => "تم تحديث معلومات الطالب " . $student->name . " " . "من قبل " . $user->username
         ]);
     }
 
@@ -55,6 +60,7 @@ class StudentObserver
      */
     public function deleted(Student $student)
     {
+        
         $user = auth()->guard("user")->user();
         if (!$user)
             return;
@@ -63,8 +69,9 @@ class StudentObserver
             "user_id" => $user->id ,
             "operation" => "D",
             "model" => "طالب",
-            "desc" => "تم أرشفة معلومات الطالب " . $student->person->name . " " . "من قبل " . $user->username
+            "desc" => "تم أرشفة معلومات الطالب " . $student->name . " " . "من قبل " . $user->username
         ]);
+    
     }
 
     /**

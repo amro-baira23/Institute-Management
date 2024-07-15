@@ -13,7 +13,6 @@ class TransactionController extends Controller
     {
         Transaction::create([
             'subaccount_id' => $transactionRequest->subaccount_id,
-            'account' => $transactionRequest->account,
             'type' => $transactionRequest->type,
             'amount' => $transactionRequest->amount,
             'note' => $transactionRequest->note,
@@ -48,17 +47,8 @@ class TransactionController extends Controller
     public function getTransactions()
     {
         $transactions = Transaction::get();
-        $result = [];
-        foreach ($transactions as $transaction) {
-            $data = [
-                'subaccount' => $transaction->subaccount->name,
-                'mainaccount' => $transaction->subaccount->mainaccount->name,
-            ];
-            $merging = array_merge($transaction->toArray(), $data);
-            $result[] = $merging;
-        }
-
-        return success($result, null);
+    
+        return success($transactions, null);
     }
 
     //Get Transaction Information Function

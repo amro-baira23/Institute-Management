@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\AdditionalSubAccount;
 use App\Models\Category;
 use App\Models\Course;
 use App\Models\Employee;
@@ -11,6 +12,7 @@ use App\Models\Room;
 use App\Models\Shift;
 use App\Models\Stock;
 use App\Models\Student;
+use App\Models\SubAccount;
 use App\Models\Subject;
 use App\Models\Teacher;
 use App\Models\User;
@@ -26,6 +28,7 @@ use App\Observers\StudentObserver;
 use App\Observers\SubjectObserver;
 use App\Observers\TeacherObserver;
 use App\Observers\UserObserver;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -47,6 +50,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Route::bind('subAccount', function () {
+                return SubAccount::where('accountable_type', AdditionalSubAccount::class)->firstOrFail();
+            });
+
         Course::observe(CourseObserver::class);
         Student::observe(StudentObserver::class);
         Teacher::observe(TeacherObserver::class);

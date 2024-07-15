@@ -12,19 +12,7 @@ class SubAccount extends Model
     protected $table = 'sub_accounts';
     protected $guarded = [];
 
-    public function name() : Attribute {
-        return Attribute::make(
-            function(){
-                if ($this->accountable_type == AdditionalSubAccount::class)
-                    return $this->accountable->name;
-                if ($this->accountable_type == Enrollment::class)
-                    return $this->accountable->student->person->name;
-                if ($this->accountable_type == Teacher::class)
-                    return $this->accountable->person->name;
-                return null;
-            }
-        );
-    }
+
     public function accountable(){
         return $this->morphTo();
     }

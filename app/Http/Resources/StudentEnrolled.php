@@ -16,7 +16,7 @@ class StudentEnrolled extends JsonResource
     {
         return [
             "id" => $this->id,
-            "name" => $this->person->name,
+            "name" => $this->name,
             "with_certficate" => $this->pivot->with_certificate,
             "enrolled_at" => $this->pivot->created_at->format("Y-m-d h:i")
         ];
