@@ -34,7 +34,7 @@ class SubjectController extends Controller
     //Get Subjects Function
     public function getSubjects(Request $request)
     {
-        $subjects = Subject::query()->when(request("name"),function($query,$name){
+        $subjects = Subject::with("category")->when(request("name"),function($query,$name){
             return $query->where("name","LIKE","%".$name."%");
         })->paginate(20);
         return SimpleListResource::collection($subjects);
