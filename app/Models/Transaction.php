@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,6 +18,15 @@ class Transaction extends Model
         'amount',
         'note',
     ];
+
+    public function type() : Attribute{
+        return Attribute::make(function($value){
+            if ($value == "E")
+                return "قبض";
+            if ($value == "P")
+                return "دفغ";
+        });
+    }
 
     public function subaccount()
     {

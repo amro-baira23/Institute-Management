@@ -19,7 +19,7 @@ use App\Http\Resources\StudentCourseResource;
 use App\Http\Resources\StudentEnrolled;
 use App\Models\Enrollment;
 use App\Models\Student;
-use Illuminate\Validation\Rule ;
+use Illuminate\Validation\Rule;
 
 class CourseController extends Controller
 {
@@ -57,7 +57,7 @@ class CourseController extends Controller
         return success(null, 'this course added successfully', 201);
     }
 
-   
+
     //Edit Course Function
     public function editCourse(Course $course, CourseRequest $request)
     {
@@ -95,36 +95,50 @@ class CourseController extends Controller
         return success(null, 'this course updated successfully');
     }
 
-    public function indexCourses(){
+    public function indexCourses()
+    {
         $courses = Course::with('subject', 'schedule.days', 'teacher', 'room')
-        ->when(request("status"),function ($query, $status){
-            return $query->where("status",$status); })
-        ->when(request("subject"),function ($query, $value){
-            return $query->whereHas("subject",function($query) use ($value){
-                return $query->where("name","LIKE",'%'.$value.'%');
-            }); })
-        ->when(request("room"),function ($query, $value){
-            return $query->whereHas("room",function($query) use ($value){
-                return $query->where("name","LIKE",'%'.$value.'%');
-            }); })
-        ->when(request("teacher"),function ($query, $value){
-            return $query->whereHas("teacher",function($query) use ($value){
-                    return $query->where("name","LIKE",'%'.$value.'%');
-            }); })
-        ->when(request("start_at"),function ($query, $value){
-            return $query->where("start_at",'>',$value); })
-        ->when(request("end_at"),function ($query, $value){
-            return $query->where("end_at",'<',$value); })
-        ->paginate(20);
+            ->when(request("status"), function ($query, $status) {
+                return $query->where("status", $status);
+            })
+            ->when(request("subject"), function ($query, $value) {
+                return $query->whereHas("subject", function ($query) use ($value) {
+                    return $query->where("name", "LIKE", '%' . $value . '%');
+                });
+            })
+            ->when(request("category"), function ($query, $value) {
+                return $query->whereHas("subject", function ($query) use ($value) {
+                    return $query->whereHas("category", function ($query) use ($value) {
+                        return $query->where("name", "LIKE", '%' . $value . '%');
+                    });
+                });
+            })
+            ->when(request("room"), function ($query, $value) {
+                return $query->whereHas("room", function ($query) use ($value) {
+                    return $query->where("name", "LIKE", '%' . $value . '%');
+                });
+            })
+            ->when(request("teacher"), function ($query, $value) {
+                return $query->whereHas("teacher", function ($query) use ($value) {
+                    return $query->where("name", "LIKE", '%' . $value . '%');
+                });
+            })
+            ->when(request("start_at"), function ($query, $value) {
+                return $query->where("start_at", '>', $value);
+            })
+            ->when(request("end_at"), function ($query, $value) {
+                return $query->where("end_at", '<', $value);
+            })
+            ->paginate(20);
         return CurrentCoursesResource::collection($courses);
     }
 
     //Get Courses Function
     public function getCourses()
     {
-        $courses = Course::with('subject', 'schedule.days', 'teacher', 'room')->whereNot("status","C")
-        ->where("end_at",">",today())
-        ->get();
+        $courses = Course::with('subject', 'schedule.days', 'teacher', 'room')->whereNot("status", "C")
+            ->where("end_at", ">", today())
+            ->get();
         return success(CurrentCoursesResource::collection($courses), null);
     }
 
@@ -142,24 +156,24 @@ class CourseController extends Controller
         return success(null, 'this course deleted successfully');
     }
 
-    public function getStudents(Course $course){
+    public function getStudents(Course $course)
+    {
         return StudentEnrolled::collection($course->students);
     }
 
-    public function reverseStudentEnrollmentType(Course $course,Student $student){
+    public function reverseStudentEnrollmentType(Course $course, Student $student)
+    {
         $enrollment = $student->pivot;
         $enrollment->update([
             "with_certificate" => (int) !$enrollment->with_certificate
         ]);
-        return success(null,"enrollment with_certficate status been reversed successfuly");
+        return success(null, "enrollment with_certficate status been reversed successfuly");
     }
 
-    
-    public function deleteStudent(Course $course,Student $student){
+
+    public function deleteStudent(Course $course, Student $student)
+    {
         $course->students()->detach($student);
-        return success(null,"this student been detached successfuly",204);
+        return success(null, "this student been detached successfuly", 204);
     }
-    
-    
-    
 }

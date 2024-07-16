@@ -18,7 +18,7 @@ class ActivityController extends Controller
             });
         })
         ->when(request("model"),function ($query,$value){
-            return $query->where("model",$value);
+            return $query->where("username","like", "%" . $value . "%");
         })->orderby("id","desc")->paginate(20);
         return ActivityResource::collection($activities);
     }

@@ -92,7 +92,7 @@ class StudentController extends Controller
             return $query->where("education_level", "LIKE", '%' . $var . '%');
         })->when(request("line_number"), function ($query, $var) {
             return $query->where("line_phone_number", "LIKE", '%' . $var . '%');
-        })->when(request("natinoal_number"), function ($query, $var) {
+        })->when(request("national_number"), function ($query, $var) {
             return $query->where("national_number", "LIKE", '%' . $var . '%');
         })->paginate(20);
         return new StudentCollection($students);
