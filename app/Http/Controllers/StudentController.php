@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PersonRequest;
 use App\Http\Requests\StudentRequest;
+use App\Http\Resources\CourseSimpleListResource;
 use App\Http\Resources\SimpleListResource;
 use App\Http\Resources\StudentCollection;
 use App\Http\Resources\StudentResource;
+use App\Models\Course;
 use App\Models\Person;
 use App\Models\Student;
 use Illuminate\Http\Request;
@@ -108,4 +110,11 @@ class StudentController extends Controller
         $student->delete();
         return success(null, 'this student deleted successfully');
     }
+
+    public function getCourses(Student $student)
+    {
+        $courses = $student->courses()->get();
+        return (CourseSimpleListResource::collection($courses));
+    }
+
 }

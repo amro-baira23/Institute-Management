@@ -39,7 +39,7 @@ class EnrollmentController extends Controller
         ]);
         
        
-        return success(new EnrollmentResource($enrollment),"enrollement been creatd successfuly",201);
+        return success(null,"enrollement been creatd successfuly",201);
     }
 
    

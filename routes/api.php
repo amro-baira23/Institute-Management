@@ -87,6 +87,7 @@ Route::middleware('user-auth')->group(function () {
         Route::get('/names', [StudentController::class, 'getNames']);
         Route::get('/{student}', [StudentController::class, 'getStudentInformation'])->name("get");
         Route::delete('/{student}', [StudentController::class, 'deleteStudent']);
+        Route::get('/{student}/courses', [StudentController::class, 'getCourses']);
     });
 
     Route::middleware('manage-stock')->prefix('stocks')->group(function () {
