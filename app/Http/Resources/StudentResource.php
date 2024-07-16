@@ -16,12 +16,20 @@ class StudentResource extends JsonResource
     {
         return [        
             "id" => $this->id,
-            $this->merge(
-                $this->all(),
-            ),
-   
+            'name' => $this->name,
+            'phone_number' => $this->phone_number,
+            'birth_date' => $this->birth_date,
+            'father_name' => $this->father_name,
+            'mother_name' => $this->mother_name,
+            'gender' => $this->gender,
+            'name_en' => $this->name_en,
+            'father_name_en' => $this->father_name_en,
+            'line_phone_number' => $this->line_phone_number,
+            'mother_name_en' => $this->mother_name_en,
+            'national_number' => $this->national_number,
+            'nationality' => $this->nationality,
+            'education_level' => $this->education_level,
             "created_at" => $this->created_at->format("Y-m-d h:i"),
-
         ];
     }
 }
