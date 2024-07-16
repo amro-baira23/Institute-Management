@@ -76,7 +76,7 @@ class StudentController extends Controller
 
     //Get Students Function
     public function getStudents()
-    {
+{
         $students = Student::query()->when(request("name"), function ($query, $name) {
             return $query->where("name", "LIKE", '%' . $name . '%')
                 ->orWhere("name_en", "LIKE", '%' . $name . '%')
@@ -84,10 +84,8 @@ class StudentController extends Controller
                 ->orWhere("mother_name_en", "LIKE", '%' . $name . '%')
                 ->orWhere("father_name", "LIKE", '%' . $name . '%')
                 ->orWhere("mother_name", "LIKE", '%' . $name . '%');
-        })->when(request("phone_number"), function ($query, $name) {
-            return $query->whereHas("person", function ($query,) use ($name) {
-                return $query->where("phone_number", "LIKE", '%' . $name . '%');
-            });
+        })->when(request("phone_number"), function ($query, $var) {
+                return $query->where("phone_number", "LIKE", '%' . $var . '%');
         })->when(request("education_level"), function ($query, $var) {
             return $query->where("education_level", "LIKE", '%' . $var . '%');
         })->when(request("line_number"), function ($query, $var) {

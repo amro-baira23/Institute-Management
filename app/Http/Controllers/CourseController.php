@@ -109,9 +109,7 @@ class CourseController extends Controller
             }); })
         ->when(request("teacher"),function ($query, $value){
             return $query->whereHas("teacher",function($query) use ($value){
-                return $query->whereHas("person",function($query) use ($value){
                     return $query->where("name","LIKE",'%'.$value.'%');
-                });
             }); })
         ->when(request("start_at"),function ($query, $value){
             return $query->where("start_at",'>',$value); })
@@ -149,12 +147,19 @@ class CourseController extends Controller
     }
 
     public function reverseStudentEnrollmentType(Course $course,Student $student){
-        $enrollment = $course->students()->find($student->id)->pivot;
+        $enrollment = $student->pivot;
         $enrollment->update([
             "with_certificate" => (int) !$enrollment->with_certificate
         ]);
         return success(null,"enrollment with_certficate status been reversed successfuly");
     }
+
+    
+    public function deleteStudent(Course $course,Student $student){
+        $course->students()->detach($student);
+        return success(null,"this student been detached successfuly",204);
+    }
+    
     
     
 }

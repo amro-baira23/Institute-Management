@@ -16,8 +16,8 @@ class EnrollmentResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "student" => ($this->student),
-            "course" => ($this->course),
+            "student" => new SimpleListResource($this->student),
+            "course" => new CourseSimpleListResource($this->course),
             "with_certificate" => $this->with_certificate,
             "created_at" => $this->created_at?->format("Y-m-d h:i")
         ];

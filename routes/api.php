@@ -127,7 +127,8 @@ Route::middleware('user-auth')->group(function () {
         Route::get('/{course}', [CourseController::class, 'getCourseInformation']);
         Route::delete('/{course}', [CourseController::class, 'deleteCourse']);
         Route::get('/{course}/students', [CourseController::class, 'getStudents']);
-        Route::post('/{course}/students/{student}', [CourseController::class, 'reverseStudentEnrollmentType']);
+        Route::post('/{course}/students/{student:id}', [CourseController::class, 'reverseStudentEnrollmentType']);
+        Route::delete('/{course}/students/{student:id}', [CourseController::class, 'deleteStudent']);
     });
 
     Route::middleware('manage-course')->prefix('rooms')->group(function () {

@@ -38,10 +38,7 @@ class EnrollmentController extends Controller
             "with_certificate" => $request->with_certificate,
         ]);
         
-        $enrollment->subaccount()->create([
-            "main_account" => "الطلاب",
-        ]);
-
+       
         return success(new EnrollmentResource($enrollment),"enrollement been creatd successfuly",201);
     }
 

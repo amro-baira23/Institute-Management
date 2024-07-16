@@ -80,27 +80,25 @@ class EmployeeController extends Controller
     //Get Employees Function
     public function getEmployees()
     {
-        $employees = Employee::when(request("name"),function($query,$name){
-                return $query->where("name","LIKE", '%'.$name.'%');
-        })->when(request("phone_number"),function($query,$name){
-            return $query->whereHas("person",function($query,) use($name){
-                return $query->where("phone_number","LIKE", '%'.$name.'%');
+        $employees = Employee::when(request("name"),function($query,$var){
+                return $query->where("name","LIKE", '%'.$var.'%');
+        })->when(request("phone_number"),function($query,$var){
+                return $query->where("phone_number","LIKE", '%'.$var.'%');
+        })->when(request("shift"),function($query,$var){
+            return $query->whereHas("shift",function($query,) use($var){
+                return $query->where("name","LIKE", '%'.$var.'%');
             });
-        })->when(request("shift"),function($query,$name){
-            return $query->whereHas("shift",function($query,) use($name){
-                return $query->where("name","LIKE", '%'.$name.'%');
-            });
-        })->when(request("job_title"),function($query,$name){
-            return $query->whereHas("job_title",function($query,) use($name){
-                return $query->where("name","LIKE", '%'.$name.'%');
+        })->when(request("job_title"),function($query,$var){
+            return $query->whereHas("job_title",function($query,) use($var){
+                return $query->where("name","LIKE", '%'.$var.'%');
             });
         })->with('shift', 'user',"jobTitle")->paginate(20);
         return (new EmployeeCollection($employees));
     }
 
     public function getUnattached(){
-        $employees =  Employee::when(request("name"),function($query,$name){
-                return $query->where("name","LIKE", '%'.$name.'%');
+        $employees =  Employee::when(request("name"),function($query,$var){
+                return $query->where("name","LIKE", '%'.$var.'%');
             })
             ->whereDoesntHave("user")->paginate(20);
         return SimpleListResource::collection($employees);
@@ -119,9 +117,7 @@ class EmployeeController extends Controller
     //Delete Employee Function
     public function deleteEmployee(Employee $employee)
     {
-        if ($employee->user) {
-            $employee->user->delete();
-        }
+        $employee->user()->delete();
         $employee->delete();
         return success(null, 'this employee deleted successfully',204);
     }
