@@ -15,6 +15,7 @@ class TransactionResource extends JsonResource
     public function toArray($request)
     {
         return [
+            "id" => $this->id,
             'subaccount' => $this->whenLoaded("subaccount",function(){
                 return $this->subaccount->accountable->name;
             }),
@@ -24,7 +25,7 @@ class TransactionResource extends JsonResource
             'type' => $this->type,
             'amount' => $this->amount,
             'note' => $this->note,
-            "created_at" =>$this->created_at->format("Y-m-d h:i")
+            "created_at" =>$this->created_at?->format("Y-m-d h:i")
         ];
     }
 }

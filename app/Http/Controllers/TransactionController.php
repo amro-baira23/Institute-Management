@@ -63,7 +63,8 @@ class TransactionController extends Controller
             return $query->where("type",$var);
         })->when(request("date"), function ($query, $var) {
             return $query->where("created_at","like","%" . $var . "%");
-        })->paginate(20);
+        })->orderBy("id","desc")->paginate(1000);
+
         return TransactionResource::collection($transactions);
     }
 

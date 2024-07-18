@@ -39,8 +39,10 @@ class StudentController extends Controller
             'education_level' => $studentRequest->education_level,
         ]);
 
-
-
+        $student->subaccount()->create([
+            "main_account" => "الطلاب"
+        ]);
+        
         return success(null, 'this student added successfully', 201);
     }
 
@@ -80,12 +82,13 @@ class StudentController extends Controller
     public function getStudents()
 {
         $students = Student::query()->when(request("name"), function ($query, $name) {
-            return $query->where("name", "LIKE", '%' . $name . '%')
-                ->orWhere("name_en", "LIKE", '%' . $name . '%')
-                ->orWhere("father_name_en", "LIKE", '%' . $name . '%')
-                ->orWhere("mother_name_en", "LIKE", '%' . $name . '%')
-                ->orWhere("father_name", "LIKE", '%' . $name . '%')
-                ->orWhere("mother_name", "LIKE", '%' . $name . '%');
+            return $query->where("name", "LIKE", '%' . $name . '%');
+        })->when(request("name_en"), function ($query, $name_en) {
+            return $query->where("name_en", "LIKE", '%' . $name_en . '%');
+        })->when(request("father_name"), function ($query, $father_name) {
+            return $query->where("father_name", "LIKE", '%' . $father_name . '%');
+        })->when(request("mother_name"), function ($query, $mother_name) {
+            return $query->where("mother_name", "LIKE", '%' . $mother_name . '%');
         })->when(request("phone_number"), function ($query, $var) {
                 return $query->where("phone_number", "LIKE", '%' . $var . '%');
         })->when(request("education_level"), function ($query, $var) {

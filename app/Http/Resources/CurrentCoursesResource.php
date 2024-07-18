@@ -22,6 +22,7 @@ class CurrentCoursesResource extends JsonResource
             "minimum_students" => $this->minimum_students,
             "status" => $this->status,
             "cost" => $this->cost,
+            "certificate_cost" => $this->certificate_cost,
             "schedule" => [
                 "id" => $this->schedule_id,
                 "starts" => $this->schedule->start,

@@ -57,6 +57,10 @@ class EmployeeController extends Controller
             'account_id' => $employeeRequest->user_id,
             'credentials' => $employeeRequest->credentials,
         ]);
+
+        $employee->subaccount()->create([
+            "main_account" => "الموظفين"
+        ]);
      
         return success(null, 'this employee added successfully', 201);
     }
