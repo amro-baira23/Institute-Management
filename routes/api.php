@@ -198,5 +198,18 @@ Route::middleware('user-auth')->group(function () {
         Route::get('/', [TransactionController::class, 'getTransactions']);
         Route::get('/{transaction}', [TransactionController::class, 'getTransactionInformation']);
     });
+
+    Route::middleware('manage-import-export')->group(function(){
+        Route::prefix('imports')->group(function(){
+            Route::post('students',[ImportExportController::class, 'importStudents']);
+            Route::post('teachers',[ImportExportController::class, 'importTeachers']);
+            Route::post('employees',[ImportExportController::class, 'importEmployees']);
+        });
+        Route::prefix('exports')->group(function(){
+            Route::post('teachers',[ImportExportController::class, 'exportTeachers']);
+            Route::post('students',[ImportExportController::class, 'exportStudents']);
+            Route::post('employees',[ImportExportController::class, 'exportEmployees']);
+        });
+    });
 });
 
