@@ -81,7 +81,7 @@ class StudentController extends Controller
     //Get Students Function
     public function getStudents()
 {
-        $students = Student::query()->when(request("name"), function ($query, $name) {
+        $students = Student::when(request("name"), function ($query, $name) {
             return $query->where("name", "LIKE", '%' . $name . '%');
         })->when(request("name_en"), function ($query, $name_en) {
             return $query->where("name_en", "LIKE", '%' . $name_en . '%');
@@ -95,8 +95,10 @@ class StudentController extends Controller
             return $query->where("education_level", "LIKE", '%' . $var . '%');
         })->when(request("line_number"), function ($query, $var) {
             return $query->where("line_phone_number", "LIKE", '%' . $var . '%');
-        })->when(request("national_number"), function ($query, $var) {
-            return $query->where("national_number", "LIKE", '%' . $var . '%');
+        })->when(request("created_at"), function ($query, $var) {
+            return $query->whereDate("created_at", "=",  $var   );
+        })->when(request("trashed"), function ($query, $var) {
+            return $query->onlyTrashed();
         })->paginate(20);
         return new StudentCollection($students);
     }
@@ -111,6 +113,11 @@ class StudentController extends Controller
     public function deleteStudent(Student $student)
     {
         $student->delete();
+        return success(null, 'this student deleted successfully');
+    }
+    public function restoreStudent(Student $student)
+    {
+        $student->restore();
         return success(null, 'this student deleted successfully');
     }
 

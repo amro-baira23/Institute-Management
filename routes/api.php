@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\DebtController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\JobTitleController;
@@ -21,6 +22,8 @@ use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Models\Enrollment;
+use App\Models\Student;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -40,11 +43,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get("/attempt",function(){
-    $subjects = DB::table("subjects")->select(["id","name"]);
-    $data = DB::table("shifts")->select(["id","name"])->union($subjects)->orderBy("id")->paginate(20);
-    return $data;
-});
+Route::get("/attempt",[DebtController::class,"index"]);
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('user-auth')->group(function () {
     Route::prefix('/')->group(function () {
@@ -88,6 +87,8 @@ Route::middleware('user-auth')->group(function () {
         Route::get('/{student}', [StudentController::class, 'getStudentInformation'])->name("get");
         Route::delete('/{student}', [StudentController::class, 'deleteStudent']);
         Route::get('/{student}/courses', [StudentController::class, 'getCourses']);
+        Route::post('/{student}/restore', [StudentController::class, 'restoreStudent'])->withTrashed();
+
     });
 
     Route::middleware('manage-stock')->prefix('stocks')->group(function () {
@@ -102,6 +103,14 @@ Route::middleware('user-auth')->group(function () {
     Route::middleware("manage-accounting")->prefix('main-accounts')->group(function () {
         Route::get('/', [MainAccountController::class, 'getMainAccounts']);
     });
+
+    Route::middleware("manage-accounting")->prefix('debts')->group(function () {
+        Route::get('/students', [DebtController::class, 'indexStudents']);  
+        Route::get('/teachers', [DebtController::class, 'indexTeachers']);
+        Route::post('/pay_student', [DebtController::class, 'payStudent']);
+        Route::post('/pay_teacher', [DebtController::class, 'payTeacher']);
+    });
+
     Route::middleware('manage-accounting')->prefix('sub-accounts')->group(function () {
         Route::post('/', [SubAccountController::class, 'addSubAccount']);
         Route::post('/{subAccount}', [SubAccountController::class, 'editSubAccount']);
@@ -117,6 +126,7 @@ Route::middleware('user-auth')->group(function () {
         Route::get('/', [TeacherController::class, 'getTeachers']);
         Route::get('/names', [TeacherController::class, 'getNames']);
         Route::get('/{teacher}', [TeacherController::class, 'getTeacherInformation']);
+        Route::post('/{student}/restore', [StudentController::class, 'restoreStudent'])->withTrashed();
         Route::delete('/{teacher}', [TeacherController::class, 'deleteTeacher']);
     });
 
@@ -168,6 +178,7 @@ Route::middleware('user-auth')->group(function () {
         Route::get('/unattached', [EmployeeController::class, 'getUnattached']);
         Route::get('/{employee}', [EmployeeController::class, 'getEmployeeInformation']);
         Route::delete('/{employee}', [EmployeeController::class, 'deleteEmployee']);
+        Route::post('/{employee}/restore', [EmployeeController::class, 'restoreEmployee'])->withTrashed();
     });
     Route::middleware('manage-employee')->prefix('shifts')->group(function () {
         Route::post('/', [ShiftController::class, 'storeShift']);

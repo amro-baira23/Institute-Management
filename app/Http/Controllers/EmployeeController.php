@@ -126,5 +126,10 @@ class EmployeeController extends Controller
         return success(null, 'this employee deleted successfully',204);
     }
 
-  
+    public function restoreEmployee(Employee $employee)
+    {
+        $employee->restore();
+        return success(null, 'this student deleted successfully');
+    }
+
 }

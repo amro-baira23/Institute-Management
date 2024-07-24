@@ -23,7 +23,7 @@ class UserController extends Controller
     {
         $users = User::with("role")->when(request("name"), function ($query, $var) {
             return $query->where("username", "LIKE", '%' . $var . '%');
-        })->when(request("trashed") == true, function ($query) {
+        })->when(request("trashed"), function ($query) {
             return $query->onlyTrashed();
         })->when(request("role"), function ($query, $name) {
             return $query->whereHas("role", function ($query,) use ($name) {

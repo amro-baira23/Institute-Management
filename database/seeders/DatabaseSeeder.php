@@ -20,6 +20,7 @@ use App\Models\Stock;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\Teacher;
+use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -85,6 +86,7 @@ class DatabaseSeeder extends Seeder
 
         JobTitle::factory()->count(4)->create();
         Employee::factory()->count(20)->create();
+        Transaction::factory()->count(50)->create();
 
     }
 }
