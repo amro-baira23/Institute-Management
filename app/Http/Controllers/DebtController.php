@@ -29,7 +29,8 @@ class DebtController extends Controller
             return $query->whereIn("id", $subaccounts);
         })->selectRaw("subaccount_id ,SUM(IF(type='P',amount,0)) - SUM(IF(type='E',amount,0)) as balance, course_id, max(created_at) as created_at")
             ->groupBy("subaccount_id", "course_id")->with("subaccount.accountable", "course.subject")
-            ->get();
+            ->having("balance",">",0)
+            ->orderBy("created_at","desc")->paginate(20);
         return DebtResource::collection($debts);
     }
     public function indexTeachers()
@@ -49,7 +50,8 @@ class DebtController extends Controller
             return $query->whereIn("id", $subaccounts);
         })->selectRaw("subaccount_id ,SUM(IF(type='E',amount,0)) - SUM(IF(type='P',amount,0)) as balance, course_id, max(created_at) as created_at")
             ->groupBy("subaccount_id", "course_id")->with("subaccount.accountable", "course.subject")
-            ->get();
+            ->having("balance",">",0)
+            ->orderBy("created_at","desc")->paginate(20);
         return DebtResource::collection($debts);
     }
 
