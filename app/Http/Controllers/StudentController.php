@@ -118,7 +118,7 @@ class StudentController extends Controller
     public function restoreStudent(Student $student)
     {
         $student->restore();
-        return success(null, 'this student deleted successfully');
+        return success(null, 'this student been restored successfully');
     }
 
     public function getCourses(Student $student)

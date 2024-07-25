@@ -11,13 +11,7 @@ class Transaction extends Model
     use HasFactory;
 
     protected $table = 'transactions';
-    protected $fillable = [
-        'subaccount_id',
-        'account',
-        'type',
-        'amount',
-        'note',
-    ];
+    protected $guarded = [];
 
     public function type() : Attribute{
         return Attribute::make(function($value){

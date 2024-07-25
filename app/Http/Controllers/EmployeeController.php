@@ -96,6 +96,8 @@ class EmployeeController extends Controller
             return $query->whereHas("job_title",function($query,) use($var){
                 return $query->where("name","LIKE", '%'.$var.'%');
             });
+        })->when(request("trashed"), function ($query, $var) {
+            return $query->onlyTrashed();
         })->with('shift', 'user',"jobTitle")->paginate(20);
         return (new EmployeeCollection($employees));
     }
@@ -129,7 +131,7 @@ class EmployeeController extends Controller
     public function restoreEmployee(Employee $employee)
     {
         $employee->restore();
-        return success(null, 'this student deleted successfully');
+        return success(null, 'this employee been restored successfully');
     }
 
 }

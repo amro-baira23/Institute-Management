@@ -21,7 +21,7 @@ class DebtController extends Controller
         $subaccounts = SubAccount::select("id")->where("accountable_type", Student::class)
             ->when(request("name"), function ($query, $name) {
                 return $query->whereHas("accountable", function ($query) use ($name) {
-                    return $query->where("name", $name);
+                    return $query->where("name","like","%" . $name . "%");
                 });
             })->has("accountable");
           
@@ -37,7 +37,7 @@ class DebtController extends Controller
         $subaccounts = SubAccount::select("id")->where("accountable_type", Teacher::class)
             ->when(request("name"), function ($query, $name) {
                 return $query->whereHas("accountable", function ($query) use ($name) {
-                    return $query->where("name", $name);
+                    return $query->where("name","like","%" . $name . "%");
                 });
             })
             ->has("accountable")

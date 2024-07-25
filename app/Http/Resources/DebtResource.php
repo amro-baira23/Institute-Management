@@ -16,10 +16,10 @@ class DebtResource extends JsonResource
     {
         return [
             "subaccount_id" => $this->subaccount->id,
-            "course_id" => $this->course->id,
+            "course_id" => $this->course?->id,
             "subaccount_name" => $this->subaccount->accountable->name,
             "main_account" => $this->subaccount->main_account,
-            "course_subject" => $this->course->subject->name,
+            "course_subject" => $this->course?->subject->name,
             "debt_amount" => $this->balance,
             "last_payment_date" => $this->created_at->format("Y-m-d h:i"),
         ];

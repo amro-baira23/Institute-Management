@@ -127,8 +127,8 @@ Route::middleware('user-auth')->group(function () {
         Route::get('/', [TeacherController::class, 'getTeachers']);
         Route::get('/names', [TeacherController::class, 'getNames']);
         Route::get('/{teacher}', [TeacherController::class, 'getTeacherInformation']);
-        Route::post('/{student}/restore', [StudentController::class, 'restoreStudent'])->withTrashed();
         Route::delete('/{teacher}', [TeacherController::class, 'deleteTeacher']);
+        Route::post('/{teacher}/restore', [TeacherController::class, 'restoreTeacher'])->withTrashed();
     });
 
     Route::middleware('manage-course')->prefix('courses')->group(function () {
