@@ -172,6 +172,14 @@ Route::middleware('user-auth')->group(function () {
         Route::delete('/{enrollment}', [EnrollmentController::class, 'destroy']);
     });
 
+    Route::middleware('manage-course')->prefix('shopping-items')->group(function () {
+        Route::post('/', [ShoppingItemController::class, 'addShoppingItem']);
+        Route::post('/{shoppingItem}', [ShoppingItemController::class, 'editShoppingItem']);
+        Route::get('/', [ShoppingItemController::class, 'getShoppingItems']);
+        Route::get('/{shoppingItem}', [ShoppingItemController::class, 'getShoppingItemInformation']);
+        Route::delete('/{shoppingItem}', [ShoppingItemController::class, 'deleteShoppingItem']);
+    });
+
     Route::middleware('manage-employee')->prefix('employees')->group(function () {
         Route::post('/', [EmployeeController::class, 'addEmployee']);
         Route::post('/{employee}', [EmployeeController::class, 'editEmployee']);
