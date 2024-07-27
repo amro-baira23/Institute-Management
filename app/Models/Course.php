@@ -85,4 +85,8 @@ class Course extends Model
     public function students(){
         return $this->belongsToMany(Student::class,"enrollments","course_id","student_id")->withPivot(["with_certificate","created_at"]);
     }
+
+    public function shoppingItems(){
+        return $this->hasMany(ShoppingItem::class, 'course_id','id');
+    }
 }
