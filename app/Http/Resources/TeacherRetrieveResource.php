@@ -16,10 +16,10 @@ class TeacherRetrieveResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "name" => $this->person->name,
+            "name" => $this->name,
             "credentials" => $this->credentials,
-            "birth_date" => $this->person->birth_date,
-            "phone_number" => $this->person->phone_number,            
+            "birth_date" => $this->birth_date,
+            "phone_number" => $this->phone_number,            
             "created_at" => $this->created_at->format("Y-m-d h:i"),
             "recent_courses" => CourseSimpleListResource::collection($this->courses)  
         ];

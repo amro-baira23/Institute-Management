@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute ;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -15,19 +16,15 @@ class User extends Authenticatable
     
     protected $table = 'users';
     protected $fillable = [
-        'role_id',
-        'person_id',
         'username',
         'password',
         'role_id',
-        'person_id',
+        'employee_id',
     ];
-    protected bool $x = true;
 
-
-    public function person()
+    public function employee()
     {
-        return $this->belongsTo(Person::class, 'person_id', 'id');
+        return $this->HasOne(Employee::class, 'account_id',"id" );
     }
 
     public function role()
@@ -41,7 +38,15 @@ class User extends Authenticatable
         );
     }
     
- 
+    public function activities(): HasMany{
+        return $this->hasMany(Activity::class,"user_id");
+    }
+    
+    public function name() : Attribute{
+        return Attribute::make(
+            fn() => $this->username
+        );
+    }
 
     
  

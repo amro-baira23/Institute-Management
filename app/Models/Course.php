@@ -14,19 +14,7 @@ class Course extends Model
 {
     use HasFactory;
     protected $table = 'courses';
-    protected $fillable = [
-        'subject_id',
-        'schedule_id',
-        'teacher_id',
-        'room_id',
-        'minimum_students',
-        'start_at',
-        'end_at',
-        'salary_type',
-        'salary_amount',
-        'cost',
-        'status',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         "students.pivot.with_diploma" => "boolean"
@@ -95,6 +83,10 @@ class Course extends Model
     }
 
     public function students(){
-        return $this->belongsToMany(Student::class,"enrollments","course_id","student_id")->withPivot("with_diploma");
+        return $this->belongsToMany(Student::class,"enrollments","course_id","student_id")->withPivot(["with_certificate","created_at"]);
+    }
+
+    public function shoppingItems(){
+        return $this->hasMany(ShoppingItem::class, 'course_id','id');
     }
 }

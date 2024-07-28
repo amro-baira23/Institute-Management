@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('stocks', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('amount');
+            $table->integer('amount')->unsigned();
             $table->string('source'); 
             $table->timestamps();
         });

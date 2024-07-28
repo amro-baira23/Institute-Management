@@ -15,7 +15,9 @@ return new class extends Migration
     {
         Schema::create('students', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('person_id');
+            $table->string('name');
+            $table->date('birth_date');
+            $table->string('phone_number');
             $table->string('father_name');
             $table->string('mother_name');
             $table->enum('gender',["M","F"]);
@@ -26,7 +28,6 @@ return new class extends Migration
             $table->string('national_number');
             $table->string('nationality');
             $table->string('education_level');
-            $table->foreign('person_id')->references('id')->on('persons')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

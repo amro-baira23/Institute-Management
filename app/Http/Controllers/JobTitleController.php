@@ -7,6 +7,8 @@ use App\Http\Resources\JobTitleResource;
 use App\Http\Resources\SimpleListResource;
 use App\Models\JobTitle;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class JobTitleController extends Controller
 {
@@ -76,6 +78,11 @@ class JobTitleController extends Controller
      */
     public function destroy(JobTitle $jobTitle)
     {
+        Validator::make(["job" => $jobTitle->id],[
+            "job" => [Rule::unique("employees","job_id؛")]
+        ],[
+            "unique" => "هذه المسمى الوظيفي قد تم تعيينه لعدد من الموظفين بالفعل"
+        ])->validate();
         $jobTitle->delete();
     }
 }

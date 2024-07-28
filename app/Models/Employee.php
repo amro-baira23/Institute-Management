@@ -4,18 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Employee extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
 
     protected $table = 'employees';
-    protected $fillable = [
-        'person_id',
-        'shift_id',
-        'job_id',
-        'credentials',
-    ];
+    protected $guarded = [];
 
     protected function serializeDate($date)
     {
@@ -27,6 +23,11 @@ class Employee extends Model
         return $this->belongsTo(Person::class, 'person_id', 'id');
     }
 
+    
+    function subaccount(){
+        return $this->morphOne(SubAccount::class,"accountable");
+    }
+    
     public function user(){
         return $this->belongsTo(User::class,"account_id","id");
     }

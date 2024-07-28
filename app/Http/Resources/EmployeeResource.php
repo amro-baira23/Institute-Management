@@ -3,7 +3,6 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class EmployeeResource extends JsonResource
 {
@@ -17,22 +16,20 @@ class EmployeeResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "name" => $this->person->name ?? null,
-            $this->mergeWhen($request->route()->getName() == "get", [
-                "salary" => $this->jobTitle->base_salary,
-                "credentials" => $this->credentials,
-                "birth_date" => $this->person->birth_date,
-                "phone_number" => $this->person->phone_number,
-                "created_at" => $this->created_at->format("Y-m-d h:i")
-            ]),
+            "name" => $this->name,
+            "credentials" => $this->credentials,
+            "birth_date" => $this->birth_date,
+            "phone_number" => $this->phone_number,
+            "created_at" => $this->created_at->format("Y-m-d h:i"),
             "shift" => new SimpleListResource($this->shift),
             "job_title" => new SimpleListResource($this->jobTitle),
-            $this->mergeWhen($this->user, [
-                "account" => [
+            "account" => $this->whenNotNull($this->whenLoaded("user",function (){
+                return  [
                     "id" => $this->user?->id,
                     "username" => $this->user?->username,
-                ]
-            ]),
+                ];
+            })),
+
         ];
     }
 
@@ -42,7 +39,4 @@ class EmployeeResource extends JsonResource
         unset($default["meta"]["links"]);
         return $default;
     }
-}
-class myclass{
-    
 }

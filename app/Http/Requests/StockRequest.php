@@ -44,8 +44,8 @@ class StockRequest extends FormRequest
         return [
             "name.required" => "هذا الحقل مطلوب",
             "amount.required" => "هذا الحقل مطلوب",
-            "amount.gt" => "يجب ان يكون عدد المواد رقم موجب",
-            "amount.integer" => "يجب ان يكون عدد المواد رقم صحيح",
+            "amount.gt" => "يجب ان تكون كمية المواد رقم موجب",
+            "amount.integer" => "يجب ان تكون كمية المواد رقم صحيح",
             "source.required" => "هذا الحقل مطلوب",
             "name.unique" => "يوجد مادة بهذا الاسم مسبقا",
         ];

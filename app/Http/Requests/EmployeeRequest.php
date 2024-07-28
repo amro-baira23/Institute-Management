@@ -29,7 +29,7 @@ class EmployeeRequest extends FormRequest
             'credentials' => ["required",],
             'job_title_id' => ["required", "integer", Rule::exists("job_titles", "id")],
             'shift_id' => ["required", "integer", Rule::exists("shifts", "id")],
-            'user_id' => ["integer"],
+            'user_id' => ["nullable","integer","exists:users,id",Rule::unique("employees","account_id")->ignore($this->route("employee"))],
         ];
     }
 
@@ -37,7 +37,10 @@ class EmployeeRequest extends FormRequest
     {
         return [
             "*.required" => "هذا الحقل مطلوب",
-            'job_title_id.exists' => "معرف المناوبة المدخلة غير موجود في قاعدة البيانات" 
+            'shift_id.exists' => "معرف المناوبة المدخلة غير موجود في قاعدة البيانات" ,
+            'job_title.exists' => "معرف الوظيفة المدخلة غير موجود في قاعدة البيانات" ,
+            'user_id.unique' => "معرف الحساب المدخل مأخوذ مسبقا من قبل موظف اخر" ,
+            'user_id.exists' => "معرف الحساب المدخل غير موجود في قاعدة البيانات" ,
         ];
     }
 

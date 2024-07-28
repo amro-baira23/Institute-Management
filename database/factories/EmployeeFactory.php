@@ -20,16 +20,19 @@ class EmployeeFactory extends Factory
      */
     public function definition()
     {
+        $names = ["احمد","أحمد","محمد","عمر","عمار", "رضوان", "علي", "أسامة","مؤمن", "سعيد", "روان", "عبد الله", "يوشع"];
+
         $shift = Shift::factory()->create();
         $job = JobTitle::all()->pluck("id");
-        $persons = Person::factory()->create(
-            ["type" => "E"]);
+   
         $user = User::factory()->create();
         return [
-            "person_id" => $persons["id"],
+            "name" => fake()->randomElement($names) . " " . fake()->randomElement($names),
+            "birth_date" => fake()->date(),
+            "phone_number" => fake()->numerify("##########"),
             "shift_id" => $shift['id'],
             "job_id" => fake()->randomElement($job->toArray()),
-            "account_id" => fake()->randomElement([]),
+            "account_id" => fake()->randomElement([null,$user]),
             "credentials" => "credentials 1 2 3"
         ];
     }

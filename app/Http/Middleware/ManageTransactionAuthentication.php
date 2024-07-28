@@ -22,12 +22,10 @@ class ManageTransactionAuthentication
         }
         foreach (Auth::guard('user')->user()->role->permissions as $permission) {
             if ($permission->name == 'إدارة الصندوق') {
-                if ($permission->name == 'إدارة المحاسبة') {
-                    return $next($request);
-                }
+                return $next($request);
             }
-
-            return error('some thing went wrong', 'you dont have authentication to do it', 401);
         }
+
+        return error('some thing went wrong', 'you dont have authentication to do it', 422);
     }
 }

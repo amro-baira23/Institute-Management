@@ -15,10 +15,10 @@ return new class extends Migration
     {
         Schema::create('teachers', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('person_id');
+            $table->string('name');
+            $table->date('birth_date');
+            $table->string('phone_number');
             $table->mediumText('credentials');
-
-            $table->foreign('person_id')->references('id')->on('persons')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

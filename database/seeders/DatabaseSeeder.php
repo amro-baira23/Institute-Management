@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Activity;
 use App\Models\Category;
 use App\Models\Course;
 use App\Models\DayOfWeek;
@@ -19,6 +20,7 @@ use App\Models\Stock;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\Teacher;
+use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -39,9 +41,7 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        $main_accounts = ['المصاريف', 'الإيرادات', 'الطلاب', 'الأساتذة', 'الصندوق', 'رأس المال', 'الموظفين'];
-        $permissions = ['إدارة الطلاب', 'إدارة المستودع', "إدارة الحسابات", 'إدارة المحاسبة', 'إدارة الأساتذة', 'إدارة الدورات', 'إدارة الموظفين', "إدارة الشهادات", "إدارة الصندوق"];
-        $permissions = ['إدارة الطلاب', 'إدارة المستودع', "إدارة الحسابات", 'إدارة المحاسبة', 'إدارة الأساتذة', 'إدارة الدورات', 'إدارة الموظفين',"إدارة الشهادات"];
+        $permissions = ['إدارة الطلاب', 'إدارة المستودع', "إدارة الحسابات", 'إدارة المحاسبة', 'إدارة الأساتذة', 'إدارة الدورات', 'إدارة الموظفين', "إدارة الشهادات", "إدارة الصندوق", 'تصدير واستيرات ملفات إكسل'];
         $roles = ["مدير", "ضيف"];
 
         $person = Person::create([
@@ -60,10 +60,7 @@ class DatabaseSeeder extends Seeder
             "role_id" => 1
         ]);
 
-        foreach ($main_accounts as $account)
-            MainAccount::create([
-                'name' => $account
-            ]);
+    
 
         foreach ($permissions as $permission)
             Permission::create([
@@ -89,5 +86,7 @@ class DatabaseSeeder extends Seeder
 
         JobTitle::factory()->count(4)->create();
         Employee::factory()->count(20)->create();
+        Transaction::factory()->count(50)->create();
+
     }
 }

@@ -27,6 +27,6 @@ class ManageCertificateAuthentication
             }
         }
 
-        return error('some thing went wrong', 'you dont have authentication to do it', 401);
+        return error('some thing went wrong', 'you dont have authentication to do it', 422);
     }
 }

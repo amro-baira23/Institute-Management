@@ -17,11 +17,11 @@ class TeacherFactory extends Factory
      */
     public function definition()
     {
-        $persons = Person::factory()->create(
-            ["type" => "T"]
-        );
+        $names = ["احمد","أحمد","محمد","عمر","عمار", "رضوان", "علي", "أسامة","مؤمن", "سعيد", "روان", "عبد الله", "يوشع"];
         return [
-            "person_id" => $persons["id"],
+            "name" => fake()->randomElement($names) . " " . fake()->randomElement($names),
+            "birth_date" => fake()->date(),
+            "phone_number" => fake()->numerify("##########"),
             "credentials" => fake()->numerify("credentials ###"),
         ];
     }

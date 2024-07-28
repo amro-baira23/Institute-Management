@@ -13,12 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('sub_accounts', function (Blueprint $table) {
+        $main_accounts = ['المصاريف', 'الإيرادات', 'الطلاب', 'الأساتذة', 'الصندوق', 'رأس المال', 'الموظفين'];
+        Schema::create('sub_accounts', function (Blueprint $table) use ($main_accounts) {
             $table->id();
-            $table->unsignedBigInteger('main_account_id');
-            $table->string('name');
-
-            $table->foreign('main_account_id')->references('id')->on('main_accounts')->onDelete('cascade');
+            $table->enum("main_account",$main_accounts);
+            $table->foreignId("accountable_id")->nullable();
+            $table->string("accountable_type")->nullable();
             $table->timestamps();
         });
     }

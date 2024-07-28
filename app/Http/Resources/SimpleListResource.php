@@ -16,10 +16,12 @@ class SimpleListResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "name" => $this->person?->name ?? $this->name,
-            $this->mergeWhen($this->base_salary,[
-            "base_salary" => $this->base_salary
-            ])
+            "name" => $this->name,
+            "base_salary" => $this->whenNotNull($this->base_salary),
+            "main_account" => $this->whenLoaded("subaccount",function (){
+                return $this->subaccount->main_account;
+            }),
+            "category" => new SimpleListResource($this->whenLoaded("category"))
         ];
     }
 }

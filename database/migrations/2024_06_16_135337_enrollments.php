@@ -17,7 +17,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId("student_id")->constrained(table: "students");
             $table->foreignId("course_id")->constrained(table:"courses");
-            $table->boolean("with_diploma")->default(false);
+            $table->boolean("with_certificate")->default(false);
+            $table->timestamps();
         });
     }
 

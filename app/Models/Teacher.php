@@ -12,10 +12,7 @@ class Teacher extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'teachers';
-    protected $fillable = [
-        'person_id',
-        'credentials',
-    ];
+    protected $guarded = [];
 
     protected function serializeDate($date)
     {
@@ -30,4 +27,10 @@ class Teacher extends Model
     public function courses(){
         return $this->hasMany(Course::class,"teacher_id","id");
     }
+
+   
+    function subaccount(){
+        return $this->morphOne(SubAccount::class,"accountable");
+    }
+
 }

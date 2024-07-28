@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PersonRequest;
 use App\Http\Requests\StudentRequest;
+use App\Http\Resources\CourseSimpleListResource;
 use App\Http\Resources\SimpleListResource;
 use App\Http\Resources\StudentCollection;
 use App\Http\Resources\StudentResource;
+use App\Models\Course;
 use App\Models\Person;
 use App\Models\Student;
 use Illuminate\Http\Request;
@@ -19,14 +21,12 @@ class StudentController extends Controller
         $studentRequest->validate([
             'national_number' => 'unique:students,national_number',
         ]);
-        $person = Person::create([
+
+
+        $student = Student::create([
             'name' => $personRequest->name,
             'phone_number' => $personRequest->phone_number,
             'birth_date' => $personRequest->birth_date,
-        ]);
-
-        Student::create([
-            'person_id' => $person->id,
             'father_name' => $personRequest->father_name,
             'mother_name' => $personRequest->mother_name,
             'gender' => $personRequest->gender,
@@ -39,19 +39,21 @@ class StudentController extends Controller
             'education_level' => $studentRequest->education_level,
         ]);
 
+        $student->subaccount()->create([
+            "main_account" => "الطلاب"
+        ]);
+        
         return success(null, 'this student added successfully', 201);
     }
 
     //Edit Student Function
     public function editStudent(Student $student, StudentRequest $studentRequest, PersonRequest $personRequest)
     {
-        
-        $student->person()->update([
+
+        $student->update([
             'name' => $personRequest->name,
             'phone_number' => $personRequest->phone_number,
             'birth_date' => $personRequest->birth_date,
-        ]);
-        $student->update([
             'father_name' => $personRequest->father_name,
             'mother_name' => $personRequest->mother_name,
             'gender' => $personRequest->gender,
@@ -68,54 +70,61 @@ class StudentController extends Controller
     }
     public function getNames()
     {
-        $students = Student::query()->when(request("name"),function($query,$name){
-            return $query->whereHas("person",function($query,) use($name){
-                return $query->where("name","LIKE", '%'.$name.'%');
-            })->orWhere("name_en","LIKE", '%'.$name.'%');
-        })->with("person")->paginate(20);
-        return success(SimpleListResource::collection($students),null);
+        $students = Student::query()->when(request("name"), function ($query, $name) {
+            return $query->where("name", "LIKE", '%' . $name . '%')
+                ->orWhere("name_en", "LIKE", '%' . $name . '%');
+        })->paginate(20);
+        return success(SimpleListResource::collection($students), null);
     }
 
-    
+
     //Get Students Function
     public function getStudents()
-    {
-        $students = Student::query()->when(request("name"),function($query,$name){
-            return $query->whereHas("person",function($query,) use($name){
-                return $query->where("name","LIKE", '%'.$name.'%');
-            })->orWhere("name_en","LIKE", '%'.$name.'%')
-            ->orWhere("father_name_en","LIKE", '%'.$name.'%')
-            ->orWhere("mother_name_en","LIKE", '%'.$name.'%')
-            ->orWhere("father_name","LIKE", '%'.$name.'%')
-            ->orWhere("mother_name","LIKE", '%'.$name.'%');
-        })->when(request("phone_number"),function($query,$name){
-            return $query->whereHas("person",function($query,) use($name){
-                return $query->where("phone_number","LIKE", '%'.$name.'%');
-            });
-        })->when(request("education_level"),function($query,$var){
-            return $query->where("education_level","LIKE",'%'.$var.'%');
-        })->when(request("line_number"),function($query,$var){
-            return $query->where("line_phone_number","LIKE",'%'.$var.'%');
-        })->when(request("natinoal_number"),function($query,$var){
-            return $query->where("national_number","LIKE",'%'.$var.'%');
-        })->with("person")->paginate(20);
+{
+        $students = Student::when(request("name"), function ($query, $name) {
+            return $query->where("name", "LIKE", '%' . $name . '%');
+        })->when(request("name_en"), function ($query, $name_en) {
+            return $query->where("name_en", "LIKE", '%' . $name_en . '%');
+        })->when(request("father_name"), function ($query, $father_name) {
+            return $query->where("father_name", "LIKE", '%' . $father_name . '%');
+        })->when(request("mother_name"), function ($query, $mother_name) {
+            return $query->where("mother_name", "LIKE", '%' . $mother_name . '%');
+        })->when(request("phone_number"), function ($query, $var) {
+                return $query->where("phone_number", "LIKE", '%' . $var . '%');
+        })->when(request("education_level"), function ($query, $var) {
+            return $query->where("education_level", "LIKE", '%' . $var . '%');
+        })->when(request("line_number"), function ($query, $var) {
+            return $query->where("line_phone_number", "LIKE", '%' . $var . '%');
+        })->when(request("created_at"), function ($query, $var) {
+            return $query->whereDate("created_at", "=",  $var   );
+        })->when(request("trashed"), function ($query, $var) {
+            return $query->onlyTrashed();
+        })->paginate(20);
         return new StudentCollection($students);
-    
     }
 
     //Get Student Information Function
     public function getStudentInformation(Student $student)
     {
-        $student->load("person");
         return success(new StudentResource($student), null);
     }
 
     //Delete Student Function
     public function deleteStudent(Student $student)
     {
-        $student->person->delete();
         $student->delete();
-
         return success(null, 'this student deleted successfully');
     }
+    public function restoreStudent(Student $student)
+    {
+        $student->restore();
+        return success(null, 'this student been restored successfully');
+    }
+
+    public function getCourses(Student $student)
+    {
+        $courses = $student->courses()->get();
+        return (CourseSimpleListResource::collection($courses));
+    }
+
 }

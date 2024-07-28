@@ -16,45 +16,40 @@ class TeacherController extends Controller
     //Add Teacher Function
     public function addTeacher(PersonRequest $personRequest, TeacherRequest $teacherRequest)
     {
-        $person = Person::create([
+
+        $teacher = Teacher::create([
             'name' => $personRequest->name,
             'phone_number' => $personRequest->phone_number,
             'birth_date' => $personRequest->birth_date,
-            'type' => 'T',
-        ]);
-
-        Teacher::create([
-            'person_id' => $person->id,
             'credentials' => $teacherRequest->credentials,
         ]);
 
+        $teacher->subaccount()->create([
+            "main_account" => "الأساتذة"
+        ]);
         return success(null, 'this teacher added successfully', 201);
     }
 
     //Edit Teacher Function
     public function editTeacher(Teacher $teacher, PersonRequest $personRequest, TeacherRequest $teacherRequest)
     {
-        $teacher->person()->update([
+
+        $teacher->update([
             'name' => $personRequest->name,
             'phone_number' => $personRequest->phone_number,
             'birth_date' => $personRequest->birth_date,
-        ]);
-
-        $teacher->update([
             'credentials' => $teacherRequest->credentials,
         ]);
 
         return success(null, 'this teacher edited successfully');
     }
 
-    public function getNames(){
-        $teachers = Teacher::query()->when(request("name"),function($query,$name){
-            return $query->whereHas("person",function($query,) use($name){
-                return $query->where("name","LIKE", '%'.$name.'%');
-            });
-        })
-        ->with("person")->get();
-        
+    public function getNames()
+    {
+        $teachers = Teacher::when(request("name"), function ($query, $name) {
+            return $query->where("name", "LIKE", '%' . $name . '%');
+        })->get();
+
         return success(SimpleListResource::collection($teachers), null);
     }
 
@@ -62,26 +57,24 @@ class TeacherController extends Controller
     public function getTeachers()
     {
 
-        $teachers = Teacher::query()->when(request("name"),function($query,$name){
-            return $query->whereHas("person",function($query,) use($name){
-                return $query->where("name","LIKE", '%'.$name.'%');
-            });
-        })->when(request("phone_number"),function($query,$name){
-            return $query->whereHas("person",function($query,) use($name){
-                return $query->where("phone_number","LIKE", '%'.$name.'%');
-            });
-        })->with("person")->paginate(20);
-        
-      
+        $teachers = Teacher::query()->when(request("name"), function ($query, $name) {
+            return $query->where("name", "LIKE", '%' . $name . '%');
+        })->when(request("phone_number"), function ($query, $name) {
+            return $query->where("phone_number", "LIKE", '%' . $name . '%');
+        })->when(request("trashed"), function ($query, $var) {
+            return $query->onlyTrashed();
+        })->paginate(20);
+
+
         return TeacherRetrieveResource::collection($teachers);
     }
 
     //Get Teacher Information Function
     public function getTeacherInformation(Teacher $teacher)
     {
-        $teacher->load(["courses" => function($query){
-            $query->orderBy("id","desc")->take(3);
-        }],"courses.subject");
+        $teacher->load(["courses" => function ($query) {
+            $query->orderBy("id", "desc")->take(3);
+        }], "courses.subject");
         return success(new TeacherRetrieveResource($teacher), null);
     }
 
@@ -91,5 +84,11 @@ class TeacherController extends Controller
         $teacher->delete();
 
         return success(null, 'this teacher deleted successfully');
+    }
+
+    public function restoreTeacher(Teacher $teacher)
+    {
+        $teacher->restore();
+        return success(null, 'this teacher been restored successfully');
     }
 }

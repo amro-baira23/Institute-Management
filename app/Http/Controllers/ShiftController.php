@@ -9,6 +9,8 @@ use App\Models\DayOfWeek;
 use App\Models\Schedule;
 use App\Models\Shift;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class ShiftController extends Controller
 {
@@ -73,6 +75,11 @@ class ShiftController extends Controller
     
     public function destroyShift(Shift $shift)
     {
+        Validator::make(["shift" => $shift->id],[
+            "shift" => [Rule::unique("employees","shift_id")]
+        ],[
+            "unique" => "هذه المناوبة قد تم تعيينها لعدد من الموظفين بالفعل"
+        ])->validate();
         $shift->delete();
         return success(null, "", 204);
     }
