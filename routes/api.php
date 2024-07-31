@@ -178,6 +178,7 @@ Route::middleware('user-auth')->group(function () {
         Route::post('/{shoppingItem}', [ShoppingItemController::class, 'editShoppingItem']);
         Route::get('/', [ShoppingItemController::class, 'getShoppingItems']);
         Route::get('/{shoppingItem}', [ShoppingItemController::class, 'getShoppingItemInformation']);
+        Route::get('/course/{course}',[ShoppingItemController::class, 'getCourseShoppingItems']);
         Route::delete('/{shoppingItem}', [ShoppingItemController::class, 'deleteShoppingItem']);
     });
 
