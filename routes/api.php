@@ -21,6 +21,7 @@ use App\Http\Controllers\SubAccountController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\ShoppingItemController;
 use App\Http\Controllers\UserController;
 use App\Models\Enrollment;
 use App\Models\Student;
