@@ -20,7 +20,7 @@ class DebtResource extends JsonResource
             "subaccount_name" => $this->subaccount->accountable->name,
             "main_account" => $this->subaccount->main_account,
             "course_subject" => $this->course?->subject->name,
-            "debt_amount" => $this->balance,
+            "debt_amount" => (int) $this->balance,
             "last_payment_date" => $this->created_at->format("Y-m-d h:i"),
         ];
     }

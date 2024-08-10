@@ -16,9 +16,6 @@ use App\Http\Resources\CurrentCoursesResource;
 use App\Http\Resources\EnrollmentResource;
 use App\Http\Resources\StudentCourseCollection;
 use App\Http\Resources\StudentCourseResource;
-use App\Http\Resources\StudentEnrolled;
-use App\Models\Enrollment;
-use App\Models\ShoppingItem;
 use App\Models\Student;
 use Illuminate\Validation\Rule;
 
@@ -67,14 +64,6 @@ class CourseController extends Controller
             'certificate_cost' => $request->certificate_cost,
             'status' => $request->status,
         ]);
-
-        foreach ($request->lists as $list)
-            ShoppingItem::create([
-                'course_id' => $course->id,
-                'item_id' => $list['item_id'],
-                'amount' => $list['amount'],
-                'per_student' => $list['per_student'],
-            ]);
 
         return success(null, 'this course added successfully', 201);
     }

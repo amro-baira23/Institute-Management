@@ -21,12 +21,8 @@ use App\Http\Controllers\SubAccountController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TransactionController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\ShoppingItemController;
-use App\Http\Controllers\ReportController;
-use App\Models\Enrollment;
-use App\Models\Student;
-use App\Models\Transaction;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -46,8 +42,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get("/attempt", [DebtController::class, "index"]);
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [UserController::class, 'login']);
 Route::middleware('user-auth')->group(function () {
     Route::prefix('/')->group(function () {
         Route::get('/', [AuthController::class, 'profile']);
@@ -62,11 +57,6 @@ Route::middleware('user-auth')->group(function () {
         Route::get('/unattached', [UserController::class, 'indexUnattached'])->name("unattached");
         Route::get('/{user}', [UserController::class, 'get']);
         Route::delete('/{user}', [UserController::class, 'delete']);
-        Route::post('/{user}/restore', [UserController::class, 'restore'])->withTrashed();
-    });
-
-    Route::middleware('manage-user')->prefix('activities')->group(function () {
-        Route::get('/', [ActivityController::class, "index"]);
     });
 
     Route::middleware('manage-user')->prefix('roles')->group(function () {
@@ -89,8 +79,6 @@ Route::middleware('user-auth')->group(function () {
         Route::get('/names', [StudentController::class, 'getNames']);
         Route::get('/{student}', [StudentController::class, 'getStudentInformation'])->name("get");
         Route::delete('/{student}', [StudentController::class, 'deleteStudent']);
-        Route::get('/{student}/courses', [StudentController::class, 'getCourses']);
-        Route::post('/{student}/restore', [StudentController::class, 'restoreStudent'])->withTrashed();
     });
 
     Route::middleware('manage-stock')->prefix('stocks')->group(function () {
@@ -104,13 +92,7 @@ Route::middleware('user-auth')->group(function () {
 
     Route::middleware("manage-accounting")->prefix('main-accounts')->group(function () {
         Route::get('/', [MainAccountController::class, 'getMainAccounts']);
-    });
-
-    Route::middleware("manage-accounting")->prefix('debts')->group(function () {
-        Route::get('/students', [DebtController::class, 'indexStudents']);
-        Route::get('/teachers', [DebtController::class, 'indexTeachers']);
-        Route::post('/pay_student', [DebtController::class, 'payStudent']);
-        Route::post('/pay_teacher', [DebtController::class, 'payTeacher']);
+        Route::get('/{mainAccount}', [MainAccountController::class, 'getMainAccountInformation']);
     });
 
     Route::middleware('manage-accounting')->prefix('sub-accounts')->group(function () {
@@ -220,21 +202,11 @@ Route::middleware('user-auth')->group(function () {
         Route::get('/', [TransactionController::class, 'getTransactions']);
         Route::get('/{transaction}', [TransactionController::class, 'getTransactionInformation']);
     });
-
-    Route::middleware('manage-import-export')->group(function () {
-        Route::prefix('imports')->group(function () {
-            Route::post('students', [ImportExportController::class, 'importStudents']);
-            Route::post('teachers', [ImportExportController::class, 'importTeachers']);
-            Route::post('employees', [ImportExportController::class, 'importEmployees']);
-        });
-        Route::prefix('exports')->group(function () {
-            Route::post('teachers', [ImportExportController::class, 'exportTeachers']);
-            Route::post('students', [ImportExportController::class, 'exportStudents']);
-            Route::post('employees', [ImportExportController::class, 'exportEmployees']);
-        });
-    });
-
-    Route::prefix('reports')->group(function (){
-        Route::get('/main',[ReportController::class, 'getMainReport']);
-    });
 });
+
+// Route::prefix('employee')->group(function () {
+//     Route::post('/login', [EmployeeController::class, 'login']);
+//     Route::middleware('employee-auth')->group(function () {
+//         Route::get('/', [EmployeeController::class, 'profile']);
+//     });
+// });
