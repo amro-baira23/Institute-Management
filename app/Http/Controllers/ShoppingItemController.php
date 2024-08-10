@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ShoppingItemRequest;
+use App\Models\Course;
 use App\Models\ShoppingItem;
 use Illuminate\Http\Request;
 
@@ -67,5 +68,11 @@ class ShoppingItemController extends Controller
     public function getShoppingItemInformation(ShoppingItem $shoppingItem)
     {
         return success($shoppingItem->with('item', 'course')->find($shoppingItem->id), null);
+    }
+
+    //Get Course Shopping Items Function
+    public function getCourseShoppingItems(Course $course)
+    {
+        return success($course->with(['shoppingItems.item'])->find($course->id), null);
     }
 }

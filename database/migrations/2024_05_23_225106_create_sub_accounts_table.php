@@ -16,7 +16,7 @@ return new class extends Migration
         $main_accounts = ['المصاريف', 'الإيرادات', 'الطلاب', 'الأساتذة', 'الصندوق', 'رأس المال', 'الموظفين'];
         Schema::create('sub_accounts', function (Blueprint $table) use ($main_accounts) {
             $table->id();
-            $table->enum("main_account",$main_accounts);
+            $table->enum("main_account", $main_accounts);
             $table->foreignId("accountable_id")->nullable();
             $table->string("accountable_type")->nullable();
             $table->timestamps();

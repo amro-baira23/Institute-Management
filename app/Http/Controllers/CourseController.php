@@ -71,7 +71,7 @@ class CourseController extends Controller
         foreach ($request->lists as $list)
             ShoppingItem::create([
                 'course_id' => $course->id,
-                'item_id' => $list['item'],
+                'item_id' => $list['item_id'],
                 'amount' => $list['amount'],
                 'per_student' => $list['per_student'],
             ]);

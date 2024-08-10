@@ -23,6 +23,7 @@ use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ShoppingItemController;
+use App\Http\Controllers\ReportController;
 use App\Models\Enrollment;
 use App\Models\Student;
 use App\Models\Transaction;
@@ -135,7 +136,7 @@ Route::middleware('user-auth')->group(function () {
         Route::post('/', [CourseController::class, 'addCourse']);
         Route::post('/{course}', [CourseController::class, 'editCourse']);
         Route::get('/', [CourseController::class, 'getCourses'])->name("schedule");
-        Route::get('/index', [CourseController::class, 'indexCourses'])->name("index");
+        Route::get('/index', [CourseController::class, 'indexCourses']);
         Route::get('/{course}', [CourseController::class, 'getCourseInformation']);
         Route::delete('/{course}', [CourseController::class, 'deleteCourse']);
         Route::get('/{course}/students', [CourseController::class, 'getStudents']);
@@ -177,6 +178,7 @@ Route::middleware('user-auth')->group(function () {
         Route::post('/{shoppingItem}', [ShoppingItemController::class, 'editShoppingItem']);
         Route::get('/', [ShoppingItemController::class, 'getShoppingItems']);
         Route::get('/{shoppingItem}', [ShoppingItemController::class, 'getShoppingItemInformation']);
+        Route::get('/course/{course}',[ShoppingItemController::class, 'getCourseShoppingItems']);
         Route::delete('/{shoppingItem}', [ShoppingItemController::class, 'deleteShoppingItem']);
     });
 
@@ -230,5 +232,9 @@ Route::middleware('user-auth')->group(function () {
             Route::post('students', [ImportExportController::class, 'exportStudents']);
             Route::post('employees', [ImportExportController::class, 'exportEmployees']);
         });
+    });
+
+    Route::prefix('reports')->group(function (){
+        Route::get('/main',[ReportController::class, 'getMainReport']);
     });
 });
