@@ -1,4 +1,4 @@
-function fun(){
-
-    return <html> </html>
+function fun(x,y){
+    console.log(x,y);
 }
+fun();

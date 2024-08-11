@@ -42,7 +42,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('/login', [UserController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('user-auth')->group(function () {
     Route::prefix('/')->group(function () {
         Route::get('/', [AuthController::class, 'profile']);
@@ -168,6 +168,7 @@ Route::middleware('user-auth')->group(function () {
         Route::post('/', [EmployeeController::class, 'addEmployee']);
         Route::post('/{employee}', [EmployeeController::class, 'editEmployee']);
         Route::get('/', [EmployeeController::class, 'getEmployees'])->name("list");
+        Route::get('/names', [EmployeeController::class, 'getNames'])->name("list");
         Route::get('/unattached', [EmployeeController::class, 'getUnattached']);
         Route::get('/{employee}', [EmployeeController::class, 'getEmployeeInformation']);
         Route::delete('/{employee}', [EmployeeController::class, 'deleteEmployee']);

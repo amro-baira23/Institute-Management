@@ -116,8 +116,10 @@ class EmployeeController extends Controller
         return success(new EmployeeResource($employee), null);
     }
     public function getNames(){
-        $employees = Employee::with('shift', 'user',"jobTitle")->get();
-        return $employees;
+        $employees = Employee::when(request("name"), function ($query, $name) {
+            return $query->where("name", "LIKE", '%' . $name . '%');
+        })->paginate(20);
+        return success(SimpleListResource::collection($employees), null);
     }
 
     //Delete Employee Function
