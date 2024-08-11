@@ -23,6 +23,8 @@ use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\ShoppingItemController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ShareCapitalController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -160,7 +162,7 @@ Route::middleware('user-auth')->group(function () {
         Route::post('/{shoppingItem}', [ShoppingItemController::class, 'editShoppingItem']);
         Route::get('/', [ShoppingItemController::class, 'getShoppingItems']);
         Route::get('/{shoppingItem}', [ShoppingItemController::class, 'getShoppingItemInformation']);
-        Route::get('/course/{course}',[ShoppingItemController::class, 'getCourseShoppingItems']);
+        Route::get('/course/{course}', [ShoppingItemController::class, 'getCourseShoppingItems']);
         Route::delete('/{shoppingItem}', [ShoppingItemController::class, 'deleteShoppingItem']);
     });
 
@@ -202,6 +204,18 @@ Route::middleware('user-auth')->group(function () {
         Route::delete('/{transaction}', [TransactionController::class, 'deleteTransaction']);
         Route::get('/', [TransactionController::class, 'getTransactions']);
         Route::get('/{transaction}', [TransactionController::class, 'getTransactionInformation']);
+    });
+
+    Route::middleware('manage-accounting')->group(function () {
+        Route::post('/capital', [ShareCapitalController::class, 'addShareCapital']);
+        Route::post('/revenues', [ShareCapitalController::class, 'addRevenues']);
+        Route::post('/expenses', [ShareCapitalController::class, 'addExpenses']);
+        Route::post('/box', [ShareCapitalController::class, 'addBox']);
+    });
+
+    Route::prefix('reports')->group(function () {
+        Route::get('/', [ReportController::class, 'report']);
+        Route::get('/expenses_revenues', [ReportController::class, 'expensesRevenuesReport']);
     });
 });
 
