@@ -88,13 +88,22 @@ class ReportController extends Controller
         $expense_transactions = $expense->transactions()->where('created_at', 'LIKE', $request->year . "%")->get();
         $revenue_transactions = $revenue->transactions()->where('created_at', 'LIKE', $request->year . "%")->get();
 
-        foreach ($expense_transactions as $transaction) {
-            $expenses += $transaction->amount;
+        if (!$expense_transactions) {
+            $expense = 0;
+        } else {
+            foreach ($expense_transactions as $transaction) {
+                $expenses += $transaction->amount;
+            }
+        }
+        if (!$revenue_transactions) {
+            $revenue = 0;
+        } else {
+            foreach ($revenue_transactions as $transaction) {
+                $revenues += $transaction->amount;
+            }
         }
 
-        foreach ($revenue_transactions as $transaction) {
-            $revenues += $transaction->amount;
-        }
+
 
         $data = [
             'expenses' => $expenses,
