@@ -99,7 +99,7 @@ class DatabaseSeeder extends Seeder
             'main_account'=>'رأس المال',
         ]);
         SubAccount::create([
-            'main_account'=>'صندوق',
+            'main_account'=>'الصندوق',
         ]);
     }
 }
