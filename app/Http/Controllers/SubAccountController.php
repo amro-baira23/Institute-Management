@@ -40,6 +40,18 @@ class SubAccountController extends Controller
         return success(null, 'this subaccount updated successfully');
     }
 
+    public function index(){
+        $subAccounts = SubAccount::when(request("name"), function ($query, $name) {
+            return $query->whereHas("accountable",function($query) use($name) {
+                return $query->where("name", "LIKE", "%" . $name . "%");
+            });
+        })->when(request("main_account"),function($query,$value){
+                return $query->where("main_account",$value);
+        })
+        ->with("accountable")->paginate(20);
+        return SubAccountResource::collection($subAccounts);
+    }
+
     public function getAddedSubAccounts()
     {
         $subAccounts = SubAccount::when(request("name"), function ($query, $name) {

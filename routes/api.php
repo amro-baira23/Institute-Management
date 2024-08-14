@@ -100,9 +100,7 @@ Route::middleware('user-auth')->group(function () {
     Route::middleware('manage-accounting')->prefix('sub-accounts')->group(function () {
         Route::post('/', [SubAccountController::class, 'addSubAccount']);
         Route::post('/{subAccount}', [SubAccountController::class, 'editSubAccount']);
-        Route::get('/additionals', [SubAccountController::class, 'getAddedSubAccounts']);
-        Route::get('/employees', [SubAccountController::class, 'getEmployeeSubAccounts']);
-        Route::get('/names', [SubAccountController::class, 'getNames']);
+        Route::get('/', [SubAccountController::class, 'index']);
         Route::get('/{subAccount}', [SubAccountController::class, 'getSubAccountInformation']);
         Route::delete('/{subAccount}', [SubAccountController::class, 'deleteSubAccount']);
     });
