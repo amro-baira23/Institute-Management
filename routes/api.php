@@ -103,6 +103,13 @@ Route::middleware('user-auth')->group(function () {
         Route::get('/', [SubAccountController::class, 'index']);
         Route::get('/{subAccount}', [SubAccountController::class, 'getSubAccountInformation']);
         Route::delete('/{subAccount}', [SubAccountController::class, 'deleteSubAccount']);
+        Route::post('/{subAccount}/restore', [SubAccountController::class, 'restoreSubAccount'])->withTrashed();
+    });
+    Route::middleware('manage-accounting')->prefix('debts')->group(function () {
+        Route::post('/pay_students', [DebtController::class, 'payStudent']);
+        Route::post('/pay_teachers', [DebtController::class, 'payTeacher']);
+        Route::get('/teachers', [DebtController::class, 'indexTeachers']);
+        Route::get('/students', [DebtController::class, 'indexStudents']);
     });
     Route::middleware('manage-teacher')->prefix('teachers')->group(function () {
         Route::post('/', [TeacherController::class, 'addTeacher']);

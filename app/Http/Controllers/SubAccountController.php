@@ -47,8 +47,12 @@ class SubAccountController extends Controller
             });
         })->when(request("main_account"),function($query,$value){
                 return $query->where("main_account",$value);
+        })->when(request("trashed"),function($query,$value){
+            return $query->onlyTrashed();
         })
-        ->with("accountable")->paginate(20);
+        ->with(["accountable" => function($query){
+            return $query->withTrashed();
+        }])->paginate(20);
         return SubAccountResource::collection($subAccounts);
     }
 
@@ -81,6 +85,11 @@ class SubAccountController extends Controller
         $subAccount->load(["accountable","transactions" => function($query){
             return $query->orderBy("created_at","desc");
         }]);
+        
+        $subAccount->balance =  $subAccount->transactions()
+        ->selectRaw("SUM(IF(type='P',amount,0)) - SUM(IF(type='E',amount,0)) as balance")
+        ->groupBy("type")->get()[0]["balance"] ?? 0;
+        
         return new SubAccountResource($subAccount);
     }
 
@@ -91,5 +100,10 @@ class SubAccountController extends Controller
         $subAccount->accountable?->delete();
         $subAccount->delete();
         return success(null, 'this subaccount deleted successfully', 204);
+    }
+    public function restoreSubAccount(SubAccount $subAccount)
+    {
+        $subAccount->restore();
+        return success(null, 'this subaccount been restored successfully');
     }
 }

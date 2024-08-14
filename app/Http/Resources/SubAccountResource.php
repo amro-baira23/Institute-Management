@@ -18,11 +18,12 @@ class SubAccountResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "name" => $this->accountable->name,
+            "name" => $this->accountable->name ?? null,
             "main_account" => $this->main_account,
             "transactions" => $this->whenLoaded("transactions",function (){
                 return TransactionResource::collection($this->transactions);
             }),
+            "balance" =>  $this->whenNotNull((int)$this->balance)
         ];
     }
 }

@@ -19,13 +19,14 @@ return new class extends Migration
             $table->enum("main_account",$main_accounts);
             $table->foreignId("accountable_id")->nullable();
             $table->string("accountable_type")->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
 
     /**
      * Reverse the migrations.
-     *
+     *s
      * @return void
      */
     public function down()
