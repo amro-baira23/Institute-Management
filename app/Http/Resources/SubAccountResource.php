@@ -23,7 +23,7 @@ class SubAccountResource extends JsonResource
             "transactions" => $this->whenLoaded("transactions",function (){
                 return TransactionResource::collection($this->transactions);
             }),
-            "balance" =>  $this->whenNotNull((int)$this->balance)
+            "balance" =>  $this->whenNotNull($this->balance)
         ];
     }
 }

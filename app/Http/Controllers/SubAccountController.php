@@ -51,7 +51,7 @@ class SubAccountController extends Controller
             return $query->onlyTrashed();
         })
         ->with(["accountable" => function($query){
-            return $query->withTrashed();
+            return $query;
         }])->paginate(20);
         return SubAccountResource::collection($subAccounts);
     }
@@ -82,13 +82,15 @@ class SubAccountController extends Controller
     //Get Sub Account Information Function
     public function getSubAccountInformation(SubAccount $subAccount)
     {
-        $subAccount->load(["accountable","transactions" => function($query){
+        $subAccount->load(["accountable" => function($query){
+            return $query->withTrashed();
+        },"transactions" => function($query){
             return $query->orderBy("created_at","desc");
         }]);
         
         $subAccount->balance =  $subAccount->transactions()
         ->selectRaw("SUM(IF(type='E',amount,0)) - SUM(IF(type='P',amount,0)) as balance")
-        ->groupBy("type")->get()[0]["balance"] ?? 0;
+        ->groupBy("type")->get()[0]["balance"] ?? '0';
         
         return new SubAccountResource($subAccount);
     }
