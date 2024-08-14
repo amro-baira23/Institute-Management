@@ -20,6 +20,9 @@ class SubAccountResource extends JsonResource
             "id" => $this->id,
             "name" => $this->accountable->name,
             "main_account" => $this->main_account,
+            "transactions" => $this->whenLoaded("transactions",function (){
+                return TransactionResource::collection($this->transactions);
+            }),
         ];
     }
 }

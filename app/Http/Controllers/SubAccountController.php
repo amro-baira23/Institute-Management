@@ -78,7 +78,9 @@ class SubAccountController extends Controller
     //Get Sub Account Information Function
     public function getSubAccountInformation(SubAccount $subAccount)
     {
-        $subAccount->load("accountable");
+        $subAccount->load(["accountable","transactions" => function($query){
+            return $query->orderBy("created_at","desc");
+        }]);
         return new SubAccountResource($subAccount);
     }
 

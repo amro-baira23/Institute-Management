@@ -16,4 +16,8 @@ class SubAccount extends Model
     public function accountable(){
         return $this->morphTo();
     }
+    public function transactions(){
+        return $this->hasMany(Transaction::class,"subaccount_id","id");
+    }
+
 }
