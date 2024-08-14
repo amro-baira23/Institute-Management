@@ -98,5 +98,8 @@ class DatabaseSeeder extends Seeder
         SubAccount::create([
             'main_account'=>'رأس المال',
         ]);
+        SubAccount::create([
+            'main_account'=>'صندوق',
+        ]);
     }
 }
