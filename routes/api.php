@@ -221,6 +221,7 @@ Route::middleware('user-auth')->group(function () {
     Route::prefix('reports')->group(function () {
         Route::get('/', [ReportController::class, 'report']);
         Route::get('/expenses_revenues', [ReportController::class, 'expensesRevenuesReport']);
+        Route::get('/budget', [ReportController::class, 'budgetReport']);
     });
 });
 
