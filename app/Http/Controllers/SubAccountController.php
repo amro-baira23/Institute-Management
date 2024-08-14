@@ -87,7 +87,7 @@ class SubAccountController extends Controller
         }]);
         
         $subAccount->balance =  $subAccount->transactions()
-        ->selectRaw("SUM(IF(type='P',amount,0)) - SUM(IF(type='E',amount,0)) as balance")
+        ->selectRaw("SUM(IF(type='E',amount,0)) - SUM(IF(type='P',amount,0)) as balance")
         ->groupBy("type")->get()[0]["balance"] ?? 0;
         
         return new SubAccountResource($subAccount);
