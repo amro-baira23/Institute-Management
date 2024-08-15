@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ShoppingItemRequest;
 use App\Models\ShoppingItem;
+use App\Models\Course;
 use Illuminate\Http\Request;
 
 class ShoppingItemController extends Controller
