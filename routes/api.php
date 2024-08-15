@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BackupController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\CourseController;
@@ -223,6 +224,11 @@ Route::middleware('user-auth')->group(function () {
         Route::get('/expenses_revenues', [ReportController::class, 'expensesRevenuesReport']);
         Route::get('/budget', [ReportController::class, 'budgetReport']);
     });
+
+    Route::prefix('/backup-restore')->group(function () {
+        Route::post('/backup', [BackupController::class, 'createBackup']);
+        Route::post('/restore', [BackupController::class, 'restoreBackup']);
+    });
 });
 
 // Route::prefix('employee')->group(function () {
@@ -230,4 +236,5 @@ Route::middleware('user-auth')->group(function () {
 //     Route::middleware('employee-auth')->group(function () {
 //         Route::get('/', [EmployeeController::class, 'profile']);
 //     });
+// });
 // });
