@@ -13,6 +13,10 @@ class MainAccountController extends Controller
     {
 
         $main_accounts = ['المصاريف', 'الإيرادات',  'الصندوق', 'رأس المال', 'الموظفين'];
+        $i = 0;
+        foreach ( $main_accounts as $ms){
+            $main_accounts[$i++] = ["id" => $i, "name" => $ms];
+        }
 
         return success($main_accounts, null);
     }

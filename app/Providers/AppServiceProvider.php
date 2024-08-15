@@ -50,6 +50,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Route::bind("subaccount", function(int $value){
+            return SubAccount::where("accountable_type",AdditionalSubAccount::class)->findOrFail($value);
+        });
+
         Course::observe(CourseObserver::class);
         Student::observe(StudentObserver::class);
         Teacher::observe(TeacherObserver::class);

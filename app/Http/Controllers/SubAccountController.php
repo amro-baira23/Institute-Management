@@ -29,13 +29,13 @@ class SubAccountController extends Controller
     }
 
     //Edit Sub Account Function
-    public function editSubAccount(SubAccount $subAccount, SubAccountRequest $request)
+    public function editSubAccount(SubAccount $subaccount, SubAccountRequest $request)
     {
-        $subAccount->update([
-            'main_account' => $request->name,
+        $subaccount->update([
+            'main_account' => $request->main_account,
         ]);
-        $subAccount->subaccount->update([
-            "main_account" => $request->main_account,
+        $subaccount->accountable()->update([
+            "name" => $request->name,
         ]);
         return success(null, 'this subaccount updated successfully');
     }
