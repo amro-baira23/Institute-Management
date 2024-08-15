@@ -84,6 +84,7 @@ class EmployeeController extends Controller
     //Get Employees Function
     public function getEmployees()
     {
+        
         $employees = Employee::when(request("name"),function($query,$var){
                 return $query->where("name","LIKE", '%'.$var.'%');
         })->when(request("phone_number"),function($query,$var){
@@ -93,7 +94,7 @@ class EmployeeController extends Controller
                 return $query->where("name","LIKE", '%'.$var.'%');
             });
         })->when(request("job_title"),function($query,$var){
-            return $query->whereHas("job_title",function($query,) use($var){
+            return $query->whereHas("jobTitle",function($query,) use($var){
                 return $query->where("name","LIKE", '%'.$var.'%');
             });
         })->when(request("trashed"), function ($query, $var) {
@@ -112,7 +113,7 @@ class EmployeeController extends Controller
     //Get Employee Information Function
     public function getEmployeeInformation(Employee $employee)
     {
-        $employee = $employee->with([ 'user','shift'])->find($employee->id);
+        $employee->load([ 'user','shift',"jobTitle"]);
         return success(new EmployeeResource($employee), null);
     }
     public function getNames(){
