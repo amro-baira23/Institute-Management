@@ -51,29 +51,8 @@ class SubAccountController extends Controller
             return $query->onlyTrashed();
         })
         ->with(["accountable" => function($query){
-            return $query;
+            return $query->withTrashed();
         }])->paginate(20);
-        return SubAccountResource::collection($subAccounts);
-    }
-
-    public function getAddedSubAccounts()
-    {
-        $subAccounts = SubAccount::when(request("name"), function ($query, $name) {
-            return $query->whereHas("accountable",function($query) use($name) {
-                return $query->where("name", "LIKE", "%" . $name . "%");
-            });
-        })->where("accountable_type",AdditionalSubAccount::class)
-        ->with("accountable")->paginate(20);
-        return SubAccountResource::collection($subAccounts);
-    }
-    public function getEmployeeSubAccounts()
-    {
-        $subAccounts = SubAccount::when(request("name"), function ($query, $name) {
-            return $query->whereHas("accountable",function($query) use($name) {
-                return $query->where("name", "LIKE", "%" . $name . "%");
-            });
-        })->where("accountable_type",Employee::class)
-        ->with("accountable")->paginate(20);
         return SubAccountResource::collection($subAccounts);
     }
 
