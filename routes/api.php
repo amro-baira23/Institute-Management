@@ -107,8 +107,8 @@ Route::middleware('user-auth')->group(function () {
         Route::post('/{subAccount}/restore', [SubAccountController::class, 'restoreSubAccount'])->withTrashed();
     });
     Route::middleware('manage-accounting')->prefix('debts')->group(function () {
-        Route::post('/pay_students', [DebtController::class, 'payStudent']);
-        Route::post('/pay_teachers', [DebtController::class, 'payTeacher']);
+        Route::post('/pay_student', [DebtController::class, 'payStudent']);
+        Route::post('/pay_teacher', [DebtController::class, 'payTeacher']);
         Route::get('/teachers', [DebtController::class, 'indexTeachers']);
         Route::get('/students', [DebtController::class, 'indexStudents']);
     });
