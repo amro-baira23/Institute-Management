@@ -88,13 +88,22 @@ class ReportController extends Controller
         $expense_transactions = $expense->transactions()->where('created_at', 'LIKE', $request->year . "%")->get();
         $revenue_transactions = $revenue->transactions()->where('created_at', 'LIKE', $request->year . "%")->get();
 
-        foreach ($expense_transactions as $transaction) {
-            $expenses += $transaction->amount;
+        if (!$expense_transactions) {
+            $expense = 0;
+        } else {
+            foreach ($expense_transactions as $transaction) {
+                $expenses += $transaction->amount;
+            }
+        }
+        if (!$revenue_transactions) {
+            $revenue = 0;
+        } else {
+            foreach ($revenue_transactions as $transaction) {
+                $revenues += $transaction->amount;
+            }
         }
 
-        foreach ($revenue_transactions as $transaction) {
-            $revenues += $transaction->amount;
-        }
+
 
         $data = [
             'expenses' => $expenses,
@@ -102,6 +111,78 @@ class ReportController extends Controller
             'result' => $expenses - $revenues
         ];
 
+        return success($data, null);
+    }
+
+    //Budget Report Function
+    public function budgetReport(Request $request)
+    {
+        $share_capital = 0;
+        $teachers = 0;
+        $employees = 0;
+        $lose_requiremnet = 0;
+        $box = 0;
+        $students = 0;
+
+        $subAccounts = SubAccount::where('created_at', 'LIKE', $request->year . "%")->get();
+        foreach ($subAccounts as $subAccount) {
+            if ($subAccount->main_account === 'الأساتذة') {
+                $teacher = $subAccount->accountable_type::with('courses')->find($subAccount->accountable_id);
+                foreach ($teacher->courses as $course) {
+                    $course = Course::where('created_at', 'LIKE', $request->year . "%")->where('id', $course->id)->first();
+                    if ($course) {
+                        $teachers += $course->salary_amount;
+                    }
+                }
+            } else if ($subAccount->main_account === 'الطلاب') {
+                $transactions = Transaction::where('created_at', 'LIKE', $request->year . "%")->where('subaccount_id', $subAccount->id)->get();
+                foreach ($transactions as $transaction) {
+                    $students += $transaction->amount;
+                }
+            } else if ($subAccount->main_account === 'الموظفين') {
+                $transactions = Transaction::where('created_at', 'LIKE', $request->year . "%")->where('subaccount_id', $subAccount->id)->get();
+                foreach ($transactions as $transaction) {
+                    $employees += $transaction->amount;
+                }
+            } else if ($subAccount->main_account === 'رأس المال') {
+                $transaction = Transaction::where('created_at', 'LIKE', $request->year . "%")->where('subaccount_id', $subAccount->id)->first();
+                $share_capital += $transaction->amount;
+            } else if ($subAccount->main_account === 'الصندوق') {
+                $transaction = Transaction::where('created_at', 'LIKE', $request->year . "%")->where('subaccount_id', $subAccount->id)->first();
+                $box += $transaction->amount;
+            }
+        }
+
+        $data = [
+            'demands' => [
+                'constant' => [
+                    'partly' => [
+                        'share_capital' => $share_capital,
+                    ],
+                    'total' => $share_capital,
+                ],
+                'common' => [
+                    'partly' => [
+                        'teachers' => $teachers,
+                        'employees' => $employees,
+                    ],
+                    'total' => $teachers + $employees,
+                ],
+                'total' => $share_capital + $teachers + $employees,
+            ],
+
+            'assets' => [
+                'common' => [
+                    'partly' => [
+                        'box' => $box,
+                        'students' => $students,
+                    ],
+                    'total' => $box + $students,
+                ],
+            ],
+
+            'lose' => ($share_capital + $teachers + $employees) - ($box + $students),
+        ];
         return success($data, null);
     }
 }

@@ -18,6 +18,7 @@ use App\Models\Room;
 use App\Models\Schedule;
 use App\Models\Stock;
 use App\Models\Student;
+use App\Models\SubAccount;
 use App\Models\Subject;
 use App\Models\Teacher;
 use App\Models\Transaction;
@@ -50,6 +51,7 @@ class DatabaseSeeder extends Seeder
             'birth_date' => '1990-06-02',
             'type' => 'S',
         ]);
+
 
         $admin = Role::create(["name" => "مدير"]);
         Role::create(["name" => "ضيف"]);
@@ -87,6 +89,14 @@ class DatabaseSeeder extends Seeder
         JobTitle::factory()->count(4)->create();
         Employee::factory()->count(20)->create();
         Transaction::factory()->count(50)->create();
-
+        SubAccount::create([
+            'main_account'=>'المصاريف',
+        ]);
+        SubAccount::create([
+            'main_account'=>'الإيرادات',
+        ]);
+        SubAccount::create([
+            'main_account'=>'رأس المال',
+        ]);
     }
 }
