@@ -12,9 +12,9 @@ class BackupController extends Controller
     //Create Backup Function
     public function createBackup()
     {
-        Artisan::call('backup:run');
-        return success(null, 'backup created successfully');
         try {
+            Artisan::call('backup:run --only-db --disable-notifications');
+            return success(null, 'backup created successfully');
         } catch (Exception $e) {
             return error('some thing went wrong', 'backup failed', 500);
         }

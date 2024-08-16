@@ -150,57 +150,58 @@ return [
      */
     'notifications' => [
 
-        'notifications' => [
-            \Spatie\Backup\Notifications\Notifications\BackupHasFailedNotification::class => ['mail'],
-            \Spatie\Backup\Notifications\Notifications\UnhealthyBackupWasFoundNotification::class => ['mail'],
-            \Spatie\Backup\Notifications\Notifications\CleanupHasFailedNotification::class => ['mail'],
-            \Spatie\Backup\Notifications\Notifications\BackupWasSuccessfulNotification::class => ['mail'],
-            \Spatie\Backup\Notifications\Notifications\HealthyBackupWasFoundNotification::class => ['mail'],
-            \Spatie\Backup\Notifications\Notifications\CleanupWasSuccessfulNotification::class => ['mail'],
-        ],
+        // 'notifications' => [
+        //     \Spatie\Backup\Notifications\Notifications\BackupHasFailedNotification::class => ['mail'],
+        //     \Spatie\Backup\Notifications\Notifications\UnhealthyBackupWasFoundNotification::class => ['mail'],
+        //     \Spatie\Backup\Notifications\Notifications\CleanupHasFailedNotification::class => ['mail'],
+        //     \Spatie\Backup\Notifications\Notifications\BackupWasSuccessfulNotification::class => ['mail'],
+        //     \Spatie\Backup\Notifications\Notifications\HealthyBackupWasFoundNotification::class => ['mail'],
+        //     \Spatie\Backup\Notifications\Notifications\CleanupWasSuccessfulNotification::class => ['mail'],
+        // ],
 
         /*
          * Here you can specify the notifiable to which the notifications should be sent. The default
          * notifiable will use the variables specified in this config file.
          */
-        'notifiable' => \Spatie\Backup\Notifications\Notifiable::class,
+        // 'notifiable' => \Spatie\Backup\Notifications\Notifiable::class,
+        'notifiable' => null,
 
-        'mail' => [
-            'to' => 'your@example.com',
+        // 'mail' => [
+        //     'to' => 'your@example.com',
 
-            'from' => [
-                'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-                'name' => env('MAIL_FROM_NAME', 'Example'),
-            ],
-        ],
+        //     'from' => [
+        //         'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
+        //         'name' => env('MAIL_FROM_NAME', 'Example'),
+        //     ],
+        // ],
 
-        'slack' => [
-            'webhook_url' => '',
+        // 'slack' => [
+        //     'webhook_url' => '',
 
-            /*
-             * If this is set to null the default channel of the webhook will be used.
-             */
-            'channel' => null,
+        //     /*
+        //      * If this is set to null the default channel of the webhook will be used.
+        //      */
+        //     'channel' => null,
 
-            'username' => null,
+        //     'username' => null,
 
-            'icon' => null,
+        //     'icon' => null,
 
-        ],
+        // ],
 
-        'discord' => [
-            'webhook_url' => '',
+        // 'discord' => [
+        //     'webhook_url' => '',
 
-            /*
-             * If this is an empty string, the name field on the webhook will be used.
-             */
-            'username' => '',
+        //     /*
+        //      * If this is an empty string, the name field on the webhook will be used.
+        //      */
+        //     'username' => '',
 
-            /*
-             * If this is an empty string, the avatar on the webhook will be used.
-             */
-            'avatar_url' => '',
-        ],
+        //     /*
+        //      * If this is an empty string, the avatar on the webhook will be used.
+        //      */
+        //     'avatar_url' => '',
+        // ],
     ],
 
     /*
