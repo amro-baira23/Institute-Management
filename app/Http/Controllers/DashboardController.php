@@ -217,15 +217,14 @@ class DashboardController extends Controller
                 $counts[$index] = 0;
             }
 
-            $result1 = $required_counts[0] * 100 / ($required_counts[0] + $required_counts[1] + $required_counts[2] + $required_counts[3] + $required_counts[4]);
             $result2 = $required_counts[1] * 100 / ($required_counts[0] + $required_counts[1] + $required_counts[2] + $required_counts[3] + $required_counts[4]);
             $result3 = $required_counts[2] * 100 / ($required_counts[0] + $required_counts[1] + $required_counts[2] + $required_counts[3] + $required_counts[4]);
             $result4 = $required_counts[3] * 100 / ($required_counts[0] + $required_counts[1] + $required_counts[2] + $required_counts[3] + $required_counts[4]);
-            $result5 = 100 - $result1 - $result2 - $result3 - $result4;
+            $result5 = 100 - $result2 - $result2 - $result3 - $result4;
             $data = [
                 [
                     'subject' => Subject::find($ids[0]),
-                    'percent' => $result1,
+                    'percent' => $result2,
                 ],
                 [
                     'subject' => Subject::find($ids[1]),

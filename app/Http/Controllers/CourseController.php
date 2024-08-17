@@ -17,6 +17,7 @@ use App\Http\Resources\EnrollmentResource;
 use App\Http\Resources\StudentCourseCollection;
 use App\Http\Resources\StudentCourseResource;
 use App\Http\Resources\StudentEnrolled;
+use App\Models\ShoppingItem;
 use App\Models\Student;
 use Illuminate\Validation\Rule;
 
@@ -66,7 +67,18 @@ class CourseController extends Controller
             'status' => $request->status,
         ]);
 
-        return success(null, 'this course added successfully', 201);
+        $lists = $request->lists;
+        foreach($lists as $list){
+        $item = ShoppingItem::create([
+            "item_id" => $list["item_id"],
+            "amount" => $list["amount"],
+            "per_student" => $list["per_student"],
+            "course_id" => $course->id
+        ]);
+
+        }
+
+        return success($item, 'this course added successfully', 201);
     }
 
 

@@ -41,6 +41,9 @@ class CourseRequest extends FormRequest
             'start' => [ 'required'],
             'end' => ['required'],
             'days' => ['required'],
+            "lists.*.item_id" => [Rule::exists("stocks")],
+            "lists.*.amount" => ["integer"],
+            "lists.*.per_student"=> ["boolean"]
         ];
     }
 
