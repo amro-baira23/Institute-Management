@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ShoppingItemRequest;
+use App\Models\Course;
 use App\Models\ShoppingItem;
 use Illuminate\Http\Request;
 

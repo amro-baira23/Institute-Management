@@ -9,6 +9,9 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Spatie\Browsershot\Browsershot;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use ZipArchive;
+use ZipStream\ZipStream;
 
 class CertificateController extends Controller
 {
@@ -89,15 +92,36 @@ class CertificateController extends Controller
     public function createStudentCertificate(Certificate $certificate, Request $request)
     {
         // $students = explode(',', $request->students);
-        $students = Student::with('person')->whereIn('id', explode(',', $request->students))->get();
-
-
+        $students = Student::whereIn('id', explode(',', $request->students))->get();
 
         foreach ($students as $student) {
             $file_name = time() . '.pdf';
             $pdf = PDF::loadView('certificate', ['student' => $student, 'certificate' => $certificate]);
             $pdf->save(storage_path('app/public/StudentsCertificates') . '/' . $file_name);
-        }
+        }   
+
+        // $headers = [
+        //     'Content-Type' => 'application/octet-stream',
+        //     'Content-Disposition' => 'attachment; filename="images.zip"',
+        // ];
+        // $files = Storage::disk('public')->allFiles('StudentsCertificates');
+        // if (!is_array($files)) {
+        //     // return $files;
+        //     $files = [];
+        // }
+        
+        // $options = new ZipArchive();
+        // $zip = new ZipStream('example.zip');
+        // // return $files;
+        // foreach ($files as $file) {
+        //     $zip->addFileFromPath($file, public_path($file));
+        // }
+
+        // $zip->finish();
+        // return 1;
+        // return response()->streamDownload(function () use ($zip) {
+        //     $zip->finish();
+        // }, 'certificates.zip', $headers);
 
         return success(null, 'this certificates created successfully');
     }

@@ -171,7 +171,7 @@ Route::middleware('user-auth')->group(function () {
         Route::post('/', [EmployeeController::class, 'addEmployee']);
         Route::post('/{employee}', [EmployeeController::class, 'editEmployee']);
         Route::get('/', [EmployeeController::class, 'getEmployees'])->name("list");
-        Route::get('/names', [EmployeeController::class, 'getNames'])->name("list");
+        // Route::get('/names', [EmployeeController::class, 'getNames'])->name("list");
         Route::get('/unattached', [EmployeeController::class, 'getUnattached']);
         Route::get('/{employee}', [EmployeeController::class, 'getEmployeeInformation']);
         Route::delete('/{employee}', [EmployeeController::class, 'deleteEmployee']);
@@ -195,7 +195,7 @@ Route::middleware('user-auth')->group(function () {
     Route::middleware('manage-certificate')->prefix('certificates')->group(function () {
         Route::get('/', [CertificateController::class, 'getCertificates']);
         Route::get('/{certificate}', [CertificateController::class, 'getCertificateInformation']);
-        Route::get('/create/{certificate}', [CertificateController::class, 'createStudentCertificate']);
+        Route::post('/create/{certificate}', [CertificateController::class, 'createStudentCertificate']);
         Route::delete('/{certificate}', [CertificateController::class, 'deleteCertificate']);
     });
 
@@ -215,6 +215,7 @@ Route::middleware('user-auth')->group(function () {
     });
 
     Route::prefix('reports')->group(function () {
+        Route::get('/main-report',[ReportController::class, 'mainReport']);
         Route::get('/', [ReportController::class, 'report']);
         Route::get('/expenses_revenues', [ReportController::class, 'expensesRevenuesReport']);
         Route::get('/budget', [ReportController::class, 'budgetReport']);
