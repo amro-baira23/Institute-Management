@@ -16,6 +16,7 @@ use App\Http\Resources\CurrentCoursesResource;
 use App\Http\Resources\EnrollmentResource;
 use App\Http\Resources\StudentCourseCollection;
 use App\Http\Resources\StudentCourseResource;
+use App\Http\Resources\StudentEnrolled;
 use App\Models\Student;
 use Illuminate\Validation\Rule;
 
@@ -156,7 +157,7 @@ class CourseController extends Controller
     //Get Course Information Function
     public function getCourseInformation(Course $course)
     {
-        return success(new CurrentCoursesResource($course), null);
+        return success($course->with('shoppingItems')->find($course->id), null);
     }
 
     //Delete Course Function
