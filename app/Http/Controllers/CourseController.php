@@ -16,6 +16,7 @@ use App\Http\Resources\CurrentCoursesResource;
 use App\Http\Resources\EnrollmentResource;
 use App\Http\Resources\StudentCourseCollection;
 use App\Http\Resources\StudentCourseResource;
+use App\Http\Resources\StudentEnrolled;
 use App\Models\Student;
 use Illuminate\Validation\Rule;
 

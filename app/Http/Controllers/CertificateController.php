@@ -9,6 +9,9 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Spatie\Browsershot\Browsershot;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use ZipArchive;
+use ZipStream\ZipStream;
 
 class CertificateController extends Controller
 {
@@ -88,10 +91,8 @@ class CertificateController extends Controller
     //Create Students Certificates Function
     public function createStudentCertificate(Certificate $certificate, Request $request)
     {
-        // $students = explode(',', $request->students);
-        $students = Student::with('person')->whereIn('id', explode(',', $request->students))->get();
-
-
+        $students = explode(',', $request->students);
+        $students = Student::whereIn('id', explode(',', $request->students))->get();
 
         foreach ($students as $student) {
             $file_name = time() . '.pdf';
@@ -99,6 +100,20 @@ class CertificateController extends Controller
             $pdf->save(storage_path('app/public/StudentsCertificates') . '/' . $file_name);
         }
 
-        return success(null, 'this certificates created successfully');
+        $zip = new ZipArchive;
+
+        $fileName = 'certificates';
+        if ($zip->open($fileName, ZipArchive::CREATE)) {
+            $files = File::files(public_path('storage/StudentsCertificates'));
+
+            foreach ($files as $file) {
+                $nameInZipFile = basename($file);
+
+                $zip->addFile($file, $nameInZipFile);
+            }
+            $zip->close();
+        }
+
+        return response()->download($fileName);
     }
 }
