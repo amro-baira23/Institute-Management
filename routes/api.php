@@ -75,6 +75,9 @@ Route::middleware('user-auth')->group(function () {
         Route::get('/', [PermissionController::class, 'getPermissions']);
         Route::get('/{permission}', [PermissionController::class, 'getPermissionInformation']);
     });
+    Route::middleware("manage-user")->prefix('activities')->group(function () {
+        Route::get('/', [ActivityController::class, 'index']);
+    });
 
     Route::middleware('manage-student')->prefix('students')->group(function () {
         Route::post('/', [StudentController::class, 'addStudent']);
@@ -219,7 +222,7 @@ Route::middleware('user-auth')->group(function () {
         Route::post('/expenses', [ShareCapitalController::class, 'addExpenses']);
         Route::post('/box', [ShareCapitalController::class, 'addBox']);
     });
-
+    
     Route::prefix('reports')->group(function () {
         Route::get('/main-report',[ReportController::class, 'mainReport']);
         Route::get('/', [ReportController::class, 'report']);
