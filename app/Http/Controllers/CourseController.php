@@ -67,7 +67,7 @@ class CourseController extends Controller
             'status' => $request->status,
         ]);
 
-        $lists = $request->lists;
+        $lists = $request->lists ?? [];
         foreach($lists as $list){
         $item = ShoppingItem::create([
             "item_id" => $list["item_id"],
@@ -78,7 +78,7 @@ class CourseController extends Controller
 
         }
 
-        return success($item, 'this course added successfully', 201);
+        return success(null, 'this course added successfully', 201);
     }
 
 
