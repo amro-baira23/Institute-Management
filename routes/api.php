@@ -26,6 +26,7 @@ use App\Http\Controllers\ShoppingItemController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ShareCapitalController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -225,6 +226,7 @@ Route::middleware('user-auth')->group(function () {
         Route::post('/backup', [BackupController::class, 'createBackup']);
         Route::post('/restore', [BackupController::class, 'restoreBackup']);
     });
+    Route::get('/dashboard',[DashboardController::class, 'getEarnings']);
 });
 
 // Route::prefix('employee')->group(function () {
