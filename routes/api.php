@@ -201,6 +201,17 @@ Route::middleware('user-auth')->group(function () {
         Route::get('/{jobTitle}', [JobTitleController::class, 'show']);
         Route::delete('/{jobTitle}', [JobTitleController::class, 'destroy']);
     });
+
+    Route::prefix('imports')->group(function () {
+        Route::post('/teachers', [ImportExportController::class, 'importTeachers']);
+        Route::post('/employees', [ImportExportController::class, 'importEmployees']);
+        Route::post('/students', [ImportExportController::class, 'importStudents']);
+    });
+    Route::prefix('exports')->group(function () {
+        Route::post('/teachers', [ImportExportController::class, 'exportTeachers']);
+        Route::post('/employees', [ImportExportController::class, 'exportEmployees']);
+        Route::post('/students', [ImportExportController::class, 'exportStudents']);
+    });
     Route::middleware('manage-certificate')->prefix('certificates')->group(function () {
         Route::get('/', [CertificateController::class, 'getCertificates']);
         Route::get('/{certificate}', [CertificateController::class, 'getCertificateInformation']);
