@@ -96,7 +96,7 @@ class CertificateController extends Controller
 
         foreach ($students as $student) {
             $file_name = time() . '.pdf';
-            $pdf = PDF::loadView('certificate', ['student' => $student, 'certificate' => $certificate]);
+            $pdf = PDF::loadView('certificate', ['student' => $student, 'certificate' => $certificate, 'course' => $course]);
             $pdf->save(storage_path('app/public/StudentsCertificates') . '/' . $file_name);
         }
 
