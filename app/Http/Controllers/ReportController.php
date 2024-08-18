@@ -46,11 +46,14 @@ class ReportController extends Controller
                 }
             } else if ($subAccount->main_account === 'رأس المال') {
                 $transaction = Transaction::where('created_at', 'LIKE', $request . "%")->where('subaccount_id', $subAccount->id)->first();
-                $share_capital += $transaction->amount;
-            } else if ($subAccount->main_account === 'الإيرادات') {
-                $transaction = Transaction::where('created_at', 'LIKE', $request . "%")->where('subaccount_id', $subAccount->id)->first();
                 if ($transaction)
-                    $revenues += $transaction->amount;
+                    $share_capital += $transaction->amount;
+            } else if ($subAccount->main_account === 'الإيرادات') {
+                $transactions = Transaction::where('created_at', 'LIKE', $request . "%")->where('subaccount_id', $subAccount->id)->get();
+                if ($transactions != '[]')
+                    foreach ($transactions as $transaction) {
+                        $revenues += $transaction->amount;
+                    }
             } else if ($subAccount->main_account === 'المصاريف') {
                 $transactions = Transaction::where('created_at', 'LIKE', $request . "%")->where('subaccount_id', $subAccount->id)->get();
                 foreach ($transactions as $transaction)
