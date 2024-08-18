@@ -59,7 +59,7 @@ class ShoppingItemController extends Controller
     //Get Shopping Items Function
     public function getShoppingItems()
     {
-        $items = ShoppingItem::with('item', 'course')->get();
+        $items = ShoppingItem::with('item', 'course')->paginate(20);
 
         return success($items, null);
     }

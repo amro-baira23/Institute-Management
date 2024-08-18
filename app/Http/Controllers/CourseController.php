@@ -78,7 +78,7 @@ class CourseController extends Controller
 
         }
 
-        return success(null, 'this course added successfully', 201);
+        return success($list, 'this course added successfully', 201);
     }
 
 

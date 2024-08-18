@@ -3,7 +3,9 @@
 namespace App\Observers;
 
 use App\Models\Activity;
+use App\Models\AdditionalSubAccount;
 use App\Models\Course;
+use App\Models\Transaction;
 use App\Models\User;
 
 class CourseObserver
@@ -26,6 +28,24 @@ class CourseObserver
             "model" => "دورة",
             "desc" => "تم انشاء دورة جديدة من قبل " . $user->username . " " . "للمادة " . $course->subject->name 
         ]);
+
+        $expences_subaccount = AdditionalSubAccount::where("name","الرواتب")->firstOr(function(){
+            $subaccount = AdditionalSubAccount::create([
+                'name' => "الرواتب",
+            ]);
+            $subaccount->subaccount()->create([
+                "main_account" => "المصاريف",
+            ]);
+            return $subaccount;
+        });
+        $expences_subaccount = $expences_subaccount->subaccount;
+        Transaction::create([
+            "subaccount_id" => $expences_subaccount->id,
+            "type" => "P",
+            "amount" => $course->salary,
+            "note" => $course->subject->name,
+        ]);
+
     }
 
     /**
