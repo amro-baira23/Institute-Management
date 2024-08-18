@@ -104,6 +104,16 @@ class CourseController extends Controller
             'status' => $request->status,
         ]);
 
+        $course->shoppingItems()->delete();
+        $lists = $request->lists ?? [];
+        foreach($lists as $list){
+            ShoppingItem::create([
+                "item_id" => $list["item_id"],
+                "amount" => $list["amount"],
+                "per_student" => $list["per_student"],
+                "course_id" => $course->id
+            ]);
+        }
         return success(null, 'this course updated successfully');
     }
 
