@@ -33,7 +33,7 @@ class CurrentCoursesResource extends JsonResource
             "salary_amount" => $this->salary_amount,
             "start_at" => $this->start_at,
             "end_at" => $this->end_at,
-            "shoppingItems" => $this->shoppingItems()->with('item')->get(),
+            "shopping_items" => $this->whenLoaded("shoppingItems",ShoppingItemResource::collection($this->shoppingItems)),
             $this->mergeWhen(
                 $request->route()->getName() == "schedule",
                 [

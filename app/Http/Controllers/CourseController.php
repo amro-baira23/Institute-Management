@@ -26,18 +26,7 @@ class CourseController extends Controller
     //Add Course Function
     public function addCourse(CourseRequest $request)
     {
-        // $lists = [
-        //     [
-        //         'item'=>1,
-        //         'amount'=>10,
-        //         'per_student'=>false
-        //     ],
-        //     [
-        //         'item'=>2,
-        //         'amount'=>5,
-        //         'per_student'=>true
-        //     ],
-        // ];
+  
 
         $schedule = Schedule::create([
             'start' => $request->start,
@@ -69,13 +58,12 @@ class CourseController extends Controller
 
         $lists = $request->lists ?? [];
         foreach($lists as $list){
-        $item = ShoppingItem::create([
-            "item_id" => $list["item_id"],
-            "amount" => $list["amount"],
-            "per_student" => $list["per_student"],
-            "course_id" => $course->id
-        ]);
-
+            ShoppingItem::create([
+                "item_id" => $list["item_id"],
+                "amount" => $list["amount"],
+                "per_student" => $list["per_student"],
+                "course_id" => $course->id
+            ]);
         }
 
         return success($list, 'this course added successfully', 201);
@@ -153,7 +141,7 @@ class CourseController extends Controller
             ->when(request("end_at"), function ($query, $value) {
                 return $query->where("end_at", '<', $value);
             })
-            ->paginate(20);
+            ->orderBy("created_at","desc")->paginate(20);
         return CurrentCoursesResource::collection($courses);
     }
 
@@ -169,6 +157,7 @@ class CourseController extends Controller
     //Get Course Information Function
     public function getCourseInformation(Course $course)
     {
+        $course->load("shoppingItems.course");
         return success(new CurrentCoursesResource($course), null);
     }
 
