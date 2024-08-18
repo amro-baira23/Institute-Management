@@ -110,6 +110,7 @@ class CertificateController extends Controller
                 $nameInZipFile = basename($file);
 
                 $zip->addFile($file, $nameInZipFile);
+                File::delete($file);
             }
             $zip->close();
         }
