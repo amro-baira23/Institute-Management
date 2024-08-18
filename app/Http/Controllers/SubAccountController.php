@@ -81,7 +81,6 @@ class SubAccountController extends Controller
     public function deleteSubAccount(SubAccount $subAccount)
     {
       
-        $subAccount->accountable?->delete();
         $subAccount->delete();
         return success(null, 'this subaccount deleted successfully', 204);
     }
