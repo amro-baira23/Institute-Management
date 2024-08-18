@@ -179,7 +179,7 @@ class ReportController extends Controller
                     ],
                     'total' => $teachers + $employees,
                 ],
-                'total' => $share_capital + $teachers + $employees,
+                'total' => $share_capital + $teachers + $employees + ($share_capital + $teachers + $employees) - ($box + $students),
             ],
 
             'assets' => [
