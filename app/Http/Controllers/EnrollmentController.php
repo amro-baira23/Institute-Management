@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\EnrollmentRequest;
 use App\Http\Resources\EnrollmentResource;
+use App\Models\AdditionalSubAccount;
 use App\Models\Enrollment;
 use App\Models\SubAccount;
 use App\Models\Transaction;
@@ -48,12 +49,6 @@ class EnrollmentController extends Controller
                 ]);
             }
         }
-
-        $expences_subaccount = SubAccount::where("main_account","المصاريف")->whereHas("accountable",function($query){
-            return $query->where("name","الرواتب");
-        })->firstOr(function(){
-            
-        });
 
         Transaction::create([
             "subaccount_id" => $subaccount->id,

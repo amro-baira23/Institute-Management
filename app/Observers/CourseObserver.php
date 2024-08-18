@@ -39,10 +39,19 @@ class CourseObserver
             return $subaccount;
         });
         $expences_subaccount = $expences_subaccount->subaccount;
+
+        
         Transaction::create([
             "subaccount_id" => $expences_subaccount->id,
             "type" => "P",
-            "amount" => $course->salary,
+            "amount" => $course->salary_amount,
+            "note" => $course->subject->name,
+        ]);
+        $teacher_account = $course->teacher->subaccount()->firstOrCreate(["main_account" => "الأساتذة"]);
+        Transaction::create([
+            "subaccount_id" => $teacher_account->id ,
+            "type" => "E",
+            "amount" => $course->salary_amount,
             "note" => $course->subject->name,
         ]);
 
