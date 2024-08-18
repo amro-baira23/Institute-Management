@@ -49,8 +49,8 @@
           <div class="image-cover-section">
                <img id="cover" src="{{$certificate->certificate}}"/>
                <div id="name_ar" style="transform: translate({{$certificate->name_ar_x}}px,{{$certificate->name_ar_y-390}}px)">
-                    {{$student->name}}
-                    {{-- الاسم بالعربية --}}
+                    {{$student->subject->name}}
+                   
                </div>
                <div id="name_en" style="transform: translate({{$certificate->name_en_x}}px,{{$certificate->name_en_y-230}}px)">
                     {{$student->name_en}}
