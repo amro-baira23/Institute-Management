@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CertificateRequest;
 use App\Models\Certificate;
+use App\Models\Course;
 use App\Models\Student;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Spatie\Browsershot\Browsershot;
@@ -89,10 +90,9 @@ class CertificateController extends Controller
     }
 
     //Create Students Certificates Function
-    public function createStudentCertificate(Certificate $certificate, Request $request)
+    public function createStudentCertificate(Certificate $certificate, Course $course, Request $request)
     {
-        $students = explode(',', $request->students);
-        $students = Student::whereIn('id', explode(',', $request->students))->get();
+        $students = $course->students;
 
         foreach ($students as $student) {
             $file_name = time() . '.pdf';
