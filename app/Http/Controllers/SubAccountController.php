@@ -64,8 +64,11 @@ class SubAccountController extends Controller
         $subAccount->load(["accountable" => function($query){
             return $query->withTrashed();
         },"transactions" => function($query){
-            return $query->orderBy("created_at","desc");
+            $query = $query->orderBy("created_at","desc")->paginate(20);
+            return $query;
         }]);
+        
+        $subAccount->last_page = $subAccount->transactions()->paginate(20)->lastPage();
         
         $subAccount->balance =  $subAccount->transactions()
         ->selectRaw("SUM(IF(type='E',amount,0)) - SUM(IF(type='P',amount,0)) as balance")
