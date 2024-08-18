@@ -27,12 +27,13 @@ class ReportController extends Controller
         foreach ($subAccounts as $subAccount) {
             if ($subAccount->main_account === 'الأساتذة') {
                 $teacher = $subAccount->accountable_type::with('courses')->find($subAccount->accountable_id);
-                foreach ($teacher->courses as $course) {
-                    $course = Course::where('created_at', 'LIKE', $request . "%")->where('id', $course->id)->first();
-                    if ($course) {
-                        $teachers += $course->salary_amount;
+                if ($teacher->courses != '[]')
+                    foreach ($teacher->courses as $course) {
+                        $course = Course::where('created_at', 'LIKE', $request . "%")->where('id', $course->id)->first();
+                        if ($course) {
+                            $teachers += $course->salary_amount;
+                        }
                     }
-                }
             } else if ($subAccount->main_account === 'الطلاب') {
                 $transactions = Transaction::where('created_at', 'LIKE', $request . "%")->where('subaccount_id', $subAccount->id)->get();
                 foreach ($transactions as $transaction) {

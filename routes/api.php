@@ -226,7 +226,9 @@ Route::middleware('user-auth')->group(function () {
         Route::post('/backup', [BackupController::class, 'createBackup']);
         Route::post('/restore', [BackupController::class, 'restoreBackup']);
     });
-    Route::get('/dashboard',[DashboardController::class, 'getEarnings']);
+    Route::middleware('admin-auth')->prefix('dashboard')->group(function(){
+        Route::get('/',[DashboardController::class, 'Dashboard']);
+    });
 });
 
 // Route::prefix('employee')->group(function () {

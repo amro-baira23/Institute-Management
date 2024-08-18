@@ -91,38 +91,29 @@ class CertificateController extends Controller
     //Create Students Certificates Function
     public function createStudentCertificate(Certificate $certificate, Request $request)
     {
-        // $students = explode(',', $request->students);
+        $students = explode(',', $request->students);
         $students = Student::whereIn('id', explode(',', $request->students))->get();
 
         foreach ($students as $student) {
             $file_name = time() . '.pdf';
             $pdf = PDF::loadView('certificate', ['student' => $student, 'certificate' => $certificate]);
             $pdf->save(storage_path('app/public/StudentsCertificates') . '/' . $file_name);
-        }   
+        }
 
-        // $headers = [
-        //     'Content-Type' => 'application/octet-stream',
-        //     'Content-Disposition' => 'attachment; filename="images.zip"',
-        // ];
-        // $files = Storage::disk('public')->allFiles('StudentsCertificates');
-        // if (!is_array($files)) {
-        //     // return $files;
-        //     $files = [];
-        // }
-        
-        // $options = new ZipArchive();
-        // $zip = new ZipStream('example.zip');
-        // // return $files;
-        // foreach ($files as $file) {
-        //     $zip->addFileFromPath($file, public_path($file));
-        // }
+        $zip = new ZipArchive;
 
-        // $zip->finish();
-        // return 1;
-        // return response()->streamDownload(function () use ($zip) {
-        //     $zip->finish();
-        // }, 'certificates.zip', $headers);
+        $fileName = 'certificates';
+        if ($zip->open($fileName, ZipArchive::CREATE)) {
+            $files = File::files(public_path('storage/StudentsCertificates'));
 
-        return success(null, 'this certificates created successfully');
+            foreach ($files as $file) {
+                $nameInZipFile = basename($file);
+
+                $zip->addFile($file, $nameInZipFile);
+            }
+            $zip->close();
+        }
+
+        return response()->download($fileName);
     }
 }
