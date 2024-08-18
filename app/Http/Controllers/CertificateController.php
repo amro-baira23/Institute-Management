@@ -102,7 +102,7 @@ class CertificateController extends Controller
 
         $zip = new ZipArchive;
 
-        $fileName = 'certificates';
+        $fileName = 'certificates.zip';
         if ($zip->open($fileName, ZipArchive::CREATE)) {
             $files = File::files(public_path('storage/StudentsCertificates'));
 
