@@ -63,27 +63,33 @@ class DashboardController extends Controller
         $data = [
             [
                 'date' => explode('-', $dates[0])[1],
-                'earnings' => $this->calc($earnings[0]),
+                'earnings' => $earnings[0],
+                'percent' => $this->calc($earnings[0]),
             ],
             [
                 'date' => explode('-', $dates[1])[1],
-                'earnings' => $this->calc($earnings[1]),
+                'earnings' => $earnings[1],
+                'percent' => $this->calc($earnings[1]),
             ],
             [
                 'date' => explode('-', $dates[2])[1],
                 'earnings' => $earnings[2],
+                'percent' => $earnings[2],
             ],
             [
                 'date' => explode('-', $dates[3])[1],
                 'earnings' => $earnings[3],
+                'percent' => $earnings[3],
             ],
             [
                 'date' => explode('-', $dates[4])[1],
                 'earnings' => $earnings[4],
+                'percent' => $earnings[4],
             ],
             [
                 'date' => explode('-', $dates[5])[1],
                 'earnings' => $earnings[5],
+                'percent' => $earnings[5],
             ],
         ];
 
@@ -102,7 +108,7 @@ class DashboardController extends Controller
         $i = 0;
         foreach ($subjects as $subject) {
             $courses = Course::where('subject_id', $subject->id)->where('created_at', 'LIKE', explode('-', Carbon::now())[0] . "%")->get();
-            // return success($courses,null);
+            // return $courses;
             $count = 0;
             if ($courses != '[]') {
                 foreach ($courses as $course) {
@@ -260,30 +266,42 @@ class DashboardController extends Controller
             $counts[$i] = count($courses);
         }
 
+        $max = max($counts);
+        $min = min($counts);
+
+        $this->setMinMax($min, $max);
+        $this->domain();
+
         $data = [
             [
                 'date' => explode('-', $dates[0])[1],
                 'count' => $counts[0],
+                'percent' => $this->calc($counts[0]),
             ],
             [
                 'date' => explode('-', $dates[1])[1],
                 'count' => $counts[1],
+                'percent' => $this->calc($counts[1]),
             ],
             [
                 'date' => explode('-', $dates[2])[1],
                 'count' => $counts[2],
+                'percent' => $this->calc($counts[2]),
             ],
             [
                 'date' => explode('-', $dates[3])[1],
                 'count' => $counts[3],
+                'percent' => $this->calc($counts[3]),
             ],
             [
                 'date' => explode('-', $dates[4])[1],
                 'count' => $counts[4],
+                'percent' => $this->calc($counts[4]),
             ],
             [
                 'date' => explode('-', $dates[5])[1],
                 'count' => $counts[5],
+                'percent' => $this->calc($counts[5]),
             ],
         ];
 
@@ -301,54 +319,73 @@ class DashboardController extends Controller
             $counts[$i] = count($students);
         }
 
+        $max = max($counts);
+        $min = min($counts);
+
+        $this->setMinMax($min, $max);
+        $this->domain();
+
         $data = [
             [
                 'date' => explode('-', $dates[0])[1],
                 'count' => $counts[0],
+                'percent' => $this->calc($counts[0]),
             ],
             [
                 'date' => explode('-', $dates[1])[1],
                 'count' => $counts[1],
+                'percent' => $this->calc($counts[1]),
+
             ],
             [
                 'date' => explode('-', $dates[2])[1],
                 'count' => $counts[2],
+                'percent' => $this->calc($counts[2]),
             ],
             [
                 'date' => explode('-', $dates[3])[1],
                 'count' => $counts[3],
+                'percent' => $this->calc($counts[3]),
             ],
             [
                 'date' => explode('-', $dates[4])[1],
                 'count' => $counts[4],
+                'percent' => $this->calc($counts[4]),
             ],
             [
                 'date' => explode('-', $dates[5])[1],
                 'count' => $counts[5],
+                'percent' => $this->calc($counts[5]),
             ],
             [
                 'date' => explode('-', $dates[6])[1],
                 'count' => $counts[6],
+                'percent' => $this->calc($counts[6]),
             ],
             [
                 'date' => explode('-', $dates[7])[1],
                 'count' => $counts[7],
+                'percent' => $this->calc($counts[7]),
             ],
             [
                 'date' => explode('-', $dates[8])[1],
                 'count' => $counts[8],
+                'percent' => $this->calc($counts[8]),
             ],
             [
                 'date' => explode('-', $dates[9])[1],
                 'count' => $counts[9],
+                'percent' => $this->calc($counts[9]),
             ],
             [
                 'date' => explode('-', $dates[10])[1],
                 'count' => $counts[10],
+                'percent' => $this->calc($counts[10]),
             ],
             [
                 'date' => explode('-', $dates[11])[1],
                 'count' => $counts[11],
+                'percent' => $this->calc($counts[11]),
             ],
         ];
 
