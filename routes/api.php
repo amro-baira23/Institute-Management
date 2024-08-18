@@ -215,7 +215,7 @@ Route::middleware('user-auth')->group(function () {
     Route::middleware('manage-certificate')->prefix('certificates')->group(function () {
         Route::get('/', [CertificateController::class, 'getCertificates']);
         Route::get('/{certificate}', [CertificateController::class, 'getCertificateInformation']);
-        Route::get('/create/{certificate}/{course}', [CertificateController::class, 'createStudentCertificate']);
+        Route::post('/create/{certificate}/{course}', [CertificateController::class, 'createStudentCertificate']);
         Route::delete('/{certificate}', [CertificateController::class, 'deleteCertificate']);
     });
 
