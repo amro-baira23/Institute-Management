@@ -23,21 +23,24 @@ class CourseFactory extends Factory
     public function definition()
     {
         $subjects = Subject::all()->pluck('id');
-        $rooms = Room::all()->pluck("id");
         $teachers = Teacher::all()->pluck('id');
         
-        $schedules = Schedule::factory()->create();
-        DayOfWeek::factory()->count(4)
-        ->create([
-            "schedule_id" => $schedules["id"]
-             ]);
+        $schedules = Schedule::all()->pluck('id')->toArray();
+        $rooms = Room::all()->pluck("id")->toArray();
+
+        static $index = 0;
+
+        $pair = array_map(null,$schedules,$rooms);
+
+        $pair = $pair[$index++ % count($pair)];
+     
         $dates = [Carbon::today(),Carbon::today()->addMonth(),Carbon::today()->addMonths(2)];
         $date = fake()->randomElement($dates);
         return [
-            "schedule_id" => $schedules["id"],
+            "schedule_id" => $pair[0],
             'subject_id' => fake()->randomElement($subjects->toArray()),
             'teacher_id' => fake()->randomElement($teachers->toArray()),
-            'room_id' => fake()->randomElement($rooms->toArray()),
+            'room_id' => $pair[1],
             'start_at' => $date,
             'end_at' =>  $date->addMonth(),
             'minimum_students' => fake()->numberBetween(14,18),

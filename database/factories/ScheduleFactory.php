@@ -20,10 +20,10 @@ class ScheduleFactory extends Factory
         $time = Carbon::now();
         $time = $time->setTime(8,0);
         $times = [$time,$time->addHours(2),$time->addHours(4),$time->addHours(6),$time->addHours(8),$time->addHours(10)];
-        $time = fake()->randomElement($times);
-
+        
+        static $index = 0;
         return [
-            "start" => $time,
+            "start" => $times[$index++ %count($times)],
             "end" => $time->addHours(2)
         ];
     }

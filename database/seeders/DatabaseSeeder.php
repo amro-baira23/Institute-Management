@@ -80,9 +80,9 @@ class DatabaseSeeder extends Seeder
         Teacher::factory()->count(20)->create();
 
         Student::factory()->count(20)->create();
+        Schedule::factory()->count(4)->create();
 
-
-
+        DayOfWeek::factory()->count(30)->create();
         Course::factory()->count(8)->create();
         Stock::factory()->count(20)->create();
 

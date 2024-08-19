@@ -19,14 +19,10 @@ class ShiftFactory extends Factory
     public function definition()
     {
         $names = ["صباحي", "مسائي"];
-        $schedules = Schedule::factory()->create();
-        $days = DayOfWeek::factory()->count(4)
-        ->create([
-            "schedule_id" => $schedules["id"]
-             ]);
+
         return [
             "name" =>  fake()->randomElement($names),
-            "schedule_id" => $schedules["id"]
+            "schedule_id" => Schedule::inRandomOrder()->first()
         ];
     }
 }

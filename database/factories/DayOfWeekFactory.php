@@ -17,7 +17,10 @@ class DayOfWeekFactory extends Factory
      */
     public function definition()
     {
+        $schedules = Schedule::get()->pluck("id");
+
         return [
+            "schedule_id" => fake()->randomElement($schedules->toArray()),
             "day" => (string) fake()->numberBetween(0,6),
         ];
     }
