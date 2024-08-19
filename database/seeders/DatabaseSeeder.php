@@ -69,18 +69,16 @@ class DatabaseSeeder extends Seeder
                 'name' => $permission
             ]);
 
-
         $admin->permissions()->attach(Permission::all());
-
+        
+        Schedule::factory()->count(4)->create();
         Category::factory()->count(5)->create();
         Subject::factory()->count(20)->create();
-        Room::factory()->count(10)->create();
-
+        Room::factory()->count(4)->create();
 
         Teacher::factory()->count(20)->create();
 
         Student::factory()->count(20)->create();
-        Schedule::factory()->count(4)->create();
 
         DayOfWeek::factory()->count(30)->create();
         Course::factory()->count(8)->create();
@@ -89,17 +87,6 @@ class DatabaseSeeder extends Seeder
         JobTitle::factory()->count(4)->create();
         Employee::factory()->count(20)->create();
         Transaction::factory()->count(50)->create();
-        SubAccount::create([
-            'main_account'=>'المصاريف',
-        ]);
-        SubAccount::create([
-            'main_account'=>'الإيرادات',
-        ]);
-        SubAccount::create([
-            'main_account'=>'رأس المال',
-        ]);
-        SubAccount::create([
-            'main_account'=>'الصندوق',
-        ]);
+
     }
 }
