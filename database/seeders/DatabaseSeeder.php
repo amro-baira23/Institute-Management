@@ -72,7 +72,7 @@ class DatabaseSeeder extends Seeder
 
         $admin->permissions()->attach(Permission::all());
 
-        Category::factory()->count(6)->create();
+        Category::factory()->count(5)->create();
         Subject::factory()->count(20)->create();
         Room::factory()->count(10)->create();
 

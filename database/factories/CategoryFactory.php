@@ -17,7 +17,7 @@ class CategoryFactory extends Factory
     public function definition()
     {
         return [
-            'name' => fake()->unique()->randomElement(["انكليزي","فرنسي","لغة عربية","حلاقة","اكسل","ICDL","تجميل"]),
+            'name' => fake()->unique()->randomElement(["English","French","ICDL","Make Up Artistery","Programming"]),
         ];
     }
 }
