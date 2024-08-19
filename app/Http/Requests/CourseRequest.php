@@ -50,7 +50,6 @@ class CourseRequest extends FormRequest
 
 
     public function scheduleIsInvalid($validator) {
-        return;
         $data = $this->validated();
         $data["days"] =  explode(',', $data["days"]);
         $course = Course::whereNot("id",$this->route("course")?->id)->where("room_id",$data["room_id"])

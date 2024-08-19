@@ -18,7 +18,7 @@ class Transaction extends Model
             if ($value == "E")
                 return "قبض";
             if ($value == "P")
-                return "دفغ";
+                return "دفع";
         });
     }
 
