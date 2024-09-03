@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\Course;
 use App\Models\DayOfWeek;
 use App\Models\Employee;
+use App\Models\Enrollment;
 use App\Models\JobTitle;
 use App\Models\MainAccount;
 use App\Models\Role;
@@ -83,7 +84,7 @@ class DatabaseSeeder extends Seeder
         DayOfWeek::factory()->count(30)->create();
         Course::factory()->count(8)->create();
         Stock::factory()->count(20)->create();
-
+        Enrollment::factory()->count(50)->create();
         JobTitle::factory()->count(4)->create();
         Employee::factory()->count(20)->create();
         Transaction::factory()->count(50)->create();

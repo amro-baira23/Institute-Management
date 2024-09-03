@@ -25,6 +25,7 @@ class TransactionFactory extends Factory
             "course_id" => Course::inRandomOrder()->first()->id,
             "note" => "note",
             'amount' => fake()->randomElement(["200","300"]),
+            "created_at" => fake()->dateTimeBetween('-6 month',"-1 month" ),
             'type' => fake()->randomElement(["P","E"]),
         ];
     }

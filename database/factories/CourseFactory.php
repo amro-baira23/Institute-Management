@@ -33,7 +33,6 @@ class CourseFactory extends Factory
         $pair = array_map(null,$schedules,$rooms);
 
         $pair = $pair[$index++ % count($pair)];
-     
         $dates = [Carbon::today(),Carbon::today()->addMonth(),Carbon::today()->addMonths(2)];
         $date = fake()->randomElement($dates);
         return [

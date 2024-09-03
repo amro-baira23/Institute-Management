@@ -23,7 +23,7 @@ class Transaction extends Model
     }
 
     public function subaccount()
-    {
+    {   
         return $this->belongsTo(SubAccount::class, 'subaccount_id', 'id');
     }
 
