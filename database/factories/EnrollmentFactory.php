@@ -18,16 +18,14 @@ class EnrollmentFactory extends Factory
      */
     public function definition()
     {
-        $students = Student::all()->pluck('id')->toArray();
-        $courses = Course::all()->pluck('id')->toArray();
-        
+        $students = Student::all()->pluck('id');
+        $courses = Course::all()->pluck('id');
+        $pair = $students->crossJoin($courses)->toArray();
         static $index = 0;
-
-        $pair = array_map(null,$students,$courses);
         $pair = $pair[$index++ %count($pair)];
         return [
             "student_id" => $pair[0] ,
-            "course_id" => $pair[1]?? Course::inRandomOrder()->first()->id,
+            "course_id" => $pair[1],
             "created_at" => fake()->dateTimeBetween('-6 month',"-1 month" ),
         ];
     }
