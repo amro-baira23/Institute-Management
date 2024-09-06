@@ -22,6 +22,7 @@ class EnrollmentFactory extends Factory
         $courses = Course::all()->pluck('id');
         $pair = $students->crossJoin($courses)->toArray();
         static $index = 0;
+        
         $pair = $pair[$index++ %count($pair)];
         return [
             "student_id" => $pair[0] ,

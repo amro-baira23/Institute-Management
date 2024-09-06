@@ -7,6 +7,7 @@ use App\Http\Requests\PasswordRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -30,7 +31,7 @@ class AuthController extends Controller
             $data["user"] = new UserResource($user);
             return success($token, 'login successfully');
         }
-
+        Collection
         return error('incorrect password', null, 422);
     }
 
