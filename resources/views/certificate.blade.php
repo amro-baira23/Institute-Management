@@ -5,7 +5,7 @@
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
      {{-- <meta http-equiv="X-UA-Compatible" content="ie=edge"> --}}
      {{-- <link rel="stylesheet" href="{{asset('CSS/certificate.css')}}"/> --}}
-     <title> شهادة الطالب {{$student->person->name}}</title>
+     <title> شهادة الطالب {{$student->name}}</title>
      <style>
           *{
      margin: 0;
@@ -49,8 +49,8 @@
           <div class="image-cover-section">
                <img id="cover" src="{{$certificate->certificate}}"/>
                <div id="name_ar" style="transform: translate({{$certificate->name_ar_x}}px,{{$certificate->name_ar_y-390}}px)">
-                    {{$student->person->name}}
-                    {{-- الاسم بالعربية --}}
+                    {{$course->subject->name}}
+                   
                </div>
                <div id="name_en" style="transform: translate({{$certificate->name_en_x}}px,{{$certificate->name_en_y-230}}px)">
                     {{$student->name_en}}

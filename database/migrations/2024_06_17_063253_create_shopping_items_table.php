@@ -15,9 +15,13 @@ return new class extends Migration
     {
         Schema::create('shopping_items', function (Blueprint $table) {
             $table->id();
-            $table->integer("amount",unsigned: true);
             $table->foreignId("item_id")->constrained(table: "stocks");
+            $table->foreignId("course_id")->nullable()->constrained(table: "courses");
+            $table->string('list_name')->nullable();
+            $table->integer('bought')->default(0);
+            $table->integer("amount", unsigned: true);
             $table->boolean("per_student")->default(false);
+            $table->boolean('is_bought')->default(false);
             $table->timestamps();
         });
     }

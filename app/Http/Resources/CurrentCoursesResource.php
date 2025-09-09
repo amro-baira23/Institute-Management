@@ -16,7 +16,7 @@ class CurrentCoursesResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "subject" =>new SimpleListResource($this->subject),
+            "subject" => new SimpleListResource($this->subject),
             "room" => new SimpleListResource($this->room),
             "teacher" => new SimpleListResource($this->teacher),
             "minimum_students" => $this->minimum_students,
@@ -33,9 +33,11 @@ class CurrentCoursesResource extends JsonResource
             "salary_amount" => $this->salary_amount,
             "start_at" => $this->start_at,
             "end_at" => $this->end_at,
+            "shopping_items" => $this->whenLoaded("shoppingItems",ShoppingItemResource::collection($this->shoppingItems)),
             $this->mergeWhen(
                 $request->route()->getName() == "schedule",
-                ["dates" => $this->dates
+                [
+                    "dates" => $this->dates
                 ]
             ),
         ];

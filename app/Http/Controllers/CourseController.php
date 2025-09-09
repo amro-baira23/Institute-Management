@@ -17,7 +17,7 @@ use App\Http\Resources\EnrollmentResource;
 use App\Http\Resources\StudentCourseCollection;
 use App\Http\Resources\StudentCourseResource;
 use App\Http\Resources\StudentEnrolled;
-use App\Models\Enrollment;
+use App\Models\ShoppingItem;
 use App\Models\Student;
 use Illuminate\Validation\Rule;
 
@@ -26,6 +26,8 @@ class CourseController extends Controller
     //Add Course Function
     public function addCourse(CourseRequest $request)
     {
+  
+
         $schedule = Schedule::create([
             'start' => $request->start,
             'end' => $request->end,
@@ -39,7 +41,7 @@ class CourseController extends Controller
                 'day' => $day,
             ]);
 
-        Course::create([
+        $course = Course::create([
             'subject_id' => $request->subject_id,
             'schedule_id' => $schedule->id,
             'teacher_id' => $request->teacher_id,
@@ -54,7 +56,17 @@ class CourseController extends Controller
             'status' => $request->status,
         ]);
 
-        return success(null, 'this course added successfully', 201);
+        $lists = $request->lists ?? [];
+        foreach($lists as $list){
+            ShoppingItem::create([
+                "item_id" => $list["item_id"],
+                "amount" => $list["amount"],
+                "per_student" => $list["per_student"],
+                "course_id" => $course->id
+            ]);
+        }
+
+        return success($list, 'this course added successfully', 201);
     }
 
 
@@ -92,6 +104,16 @@ class CourseController extends Controller
             'status' => $request->status,
         ]);
 
+        $course->shoppingItems()->delete();
+        $lists = $request->lists ?? [];
+        foreach($lists as $list){
+            ShoppingItem::create([
+                "item_id" => $list["item_id"],
+                "amount" => $list["amount"],
+                "per_student" => $list["per_student"],
+                "course_id" => $course->id
+            ]);
+        }
         return success(null, 'this course updated successfully');
     }
 
@@ -129,7 +151,7 @@ class CourseController extends Controller
             ->when(request("end_at"), function ($query, $value) {
                 return $query->where("end_at", '<', $value);
             })
-            ->paginate(20);
+            ->orderBy("created_at","desc")->paginate(20);
         return CurrentCoursesResource::collection($courses);
     }
 
@@ -145,6 +167,7 @@ class CourseController extends Controller
     //Get Course Information Function
     public function getCourseInformation(Course $course)
     {
+        $course->load("shoppingItems.course");
         return success(new CurrentCoursesResource($course), null);
     }
 

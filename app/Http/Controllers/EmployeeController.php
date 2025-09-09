@@ -84,6 +84,7 @@ class EmployeeController extends Controller
     //Get Employees Function
     public function getEmployees()
     {
+        
         $employees = Employee::when(request("name"),function($query,$var){
                 return $query->where("name","LIKE", '%'.$var.'%');
         })->when(request("phone_number"),function($query,$var){
@@ -93,9 +94,11 @@ class EmployeeController extends Controller
                 return $query->where("name","LIKE", '%'.$var.'%');
             });
         })->when(request("job_title"),function($query,$var){
-            return $query->whereHas("job_title",function($query,) use($var){
+            return $query->whereHas("jobTitle",function($query,) use($var){
                 return $query->where("name","LIKE", '%'.$var.'%');
             });
+        })->when(request("trashed"), function ($query, $var) {
+            return $query->onlyTrashed();
         })->with('shift', 'user',"jobTitle")->paginate(20);
         return (new EmployeeCollection($employees));
     }
@@ -110,12 +113,14 @@ class EmployeeController extends Controller
     //Get Employee Information Function
     public function getEmployeeInformation(Employee $employee)
     {
-        $employee = $employee->with([ 'user','shift'])->find($employee->id);
+        $employee->load([ 'user','shift',"jobTitle"]);
         return success(new EmployeeResource($employee), null);
     }
     public function getNames(){
-        $employees = Employee::with('shift', 'user',"jobTitle")->get();
-        return $employees;
+        $employees = Employee::when(request("name"), function ($query, $name) {
+            return $query->where("name", "LIKE", '%' . $name . '%');
+        })->paginate(20);
+        return success(SimpleListResource::collection($employees), null);
     }
 
     //Delete Employee Function
@@ -126,5 +131,10 @@ class EmployeeController extends Controller
         return success(null, 'this employee deleted successfully',204);
     }
 
-  
+    public function restoreEmployee(Employee $employee)
+    {
+        $employee->restore();
+        return success(null, 'this employee been restored successfully');
+    }
+
 }

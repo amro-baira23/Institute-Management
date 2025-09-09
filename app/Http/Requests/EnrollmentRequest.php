@@ -26,7 +26,7 @@ class EnrollmentRequest extends FormRequest
     public function rules()
     {
         return [
-           // "student_id" => ["required",Rule::exists("students","id")->withoutTrashed(),Rule::unique("enrollments","student_id")->where("course_id",$this->course_id)],
+           "student_id" => ["required",Rule::exists("students","id")->withoutTrashed(),Rule::unique("enrollments","student_id")->where("course_id",$this->course_id)],
             "with_certificate" => ["required","bool"],
             "course_id" => ["required",Rule::exists("courses","id")],
             "initial_payment" => ["required","integer","gte:0"]

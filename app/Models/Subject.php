@@ -15,7 +15,13 @@ class Subject extends Model
         'name'
     ];
 
-    public function category(){
-        return $this->belongsTo(Category::class,'category_id','id');
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id', 'id');
+    }
+
+    public function courses()
+    {
+        return $this->hasMany(Course::class, 'subject_id', 'id');
     }
 }

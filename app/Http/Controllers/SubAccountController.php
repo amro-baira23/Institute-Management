@@ -29,35 +29,30 @@ class SubAccountController extends Controller
     }
 
     //Edit Sub Account Function
-    public function editSubAccount(SubAccount $subAccount, SubAccountRequest $request)
+    public function editSubAccount(SubAccount $subaccount, SubAccountRequest $request)
     {
-        $subAccount->update([
-            'main_account' => $request->name,
+        $subaccount->update([
+            'main_account' => $request->main_account,
         ]);
-        $subAccount->subaccount->update([
-            "main_account" => $request->main_account,
+        $subaccount->accountable()->update([
+            "name" => $request->name,
         ]);
         return success(null, 'this subaccount updated successfully');
     }
 
-    public function getAddedSubAccounts()
-    {
+    public function index(){
         $subAccounts = SubAccount::when(request("name"), function ($query, $name) {
             return $query->whereHas("accountable",function($query) use($name) {
                 return $query->where("name", "LIKE", "%" . $name . "%");
             });
-        })->where("accountable_type",AdditionalSubAccount::class)
-        ->with("accountable")->paginate(20);
-        return SubAccountResource::collection($subAccounts);
-    }
-    public function getEmployeeSubAccounts()
-    {
-        $subAccounts = SubAccount::when(request("name"), function ($query, $name) {
-            return $query->whereHas("accountable",function($query) use($name) {
-                return $query->where("name", "LIKE", "%" . $name . "%");
-            });
-        })->where("accountable_type",Employee::class)
-        ->with("accountable")->paginate(20);
+        })->when(request("main_account"),function($query,$value){
+                return $query->where("main_account",$value);
+        })->when(request("trashed"),function($query,$value){
+            return $query->onlyTrashed();
+        })
+        ->with(["accountable" => function($query){
+            return $query->withTrashed();
+        }])->paginate(20);
         return SubAccountResource::collection($subAccounts);
     }
 
@@ -66,7 +61,19 @@ class SubAccountController extends Controller
     //Get Sub Account Information Function
     public function getSubAccountInformation(SubAccount $subAccount)
     {
-        $subAccount->load("accountable");
+        $subAccount->load(["accountable" => function($query){
+            return $query->withTrashed();
+        },"transactions" => function($query){
+            $query = $query->orderBy("created_at","desc")->paginate(20);
+            return $query;
+        }]);
+        
+        $subAccount->last_page = $subAccount->transactions()->paginate(20)->lastPage();
+        
+        $subAccount->balance =  $subAccount->transactions()
+        ->selectRaw("SUM(IF(type='E',amount,0)) - SUM(IF(type='P',amount,0)) as balance")
+        ->groupBy("type")->get()[0]["balance"] ?? '0';
+        
         return new SubAccountResource($subAccount);
     }
 
@@ -74,8 +81,12 @@ class SubAccountController extends Controller
     public function deleteSubAccount(SubAccount $subAccount)
     {
       
-        $subAccount->accountable?->delete();
         $subAccount->delete();
         return success(null, 'this subaccount deleted successfully', 204);
+    }
+    public function restoreSubAccount(SubAccount $subAccount)
+    {
+        $subAccount->restore();
+        return success(null, 'this subaccount been restored successfully');
     }
 }

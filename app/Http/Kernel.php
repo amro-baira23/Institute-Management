@@ -64,6 +64,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'user-auth' => \App\Http\Middleware\UserAuthentication::class,
+        'admin-auth' => \App\Http\Middleware\AdminAuthentication::class,
         'employee-auth' => \App\Http\Middleware\EmployeeAuthentication::class,
         'manage-student' => \App\Http\Middleware\ManageStudentAuthentication::class,
         'manage-stock' => \App\Http\Middleware\ManageStockAuthentication::class,
@@ -74,5 +75,6 @@ class Kernel extends HttpKernel
         'manage-employee' => \App\Http\Middleware\ManageEmployeeAuthentication::class,
         'manage-certificate' => \App\Http\Middleware\ManageCertificateAuthentication::class,
         'manage-transaction' => \App\Http\Middleware\ManageTransactionAuthentication::class,
+        'manage-import-export' => \App\Http\Middleware\ManageImportExportAuthentication::class,
     ];
 }

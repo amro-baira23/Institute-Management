@@ -49,7 +49,7 @@ class TeacherController extends Controller
         $teachers = Teacher::when(request("name"), function ($query, $name) {
             return $query->where("name", "LIKE", '%' . $name . '%');
         })->get();
-        
+
         return success(SimpleListResource::collection($teachers), null);
     }
 
@@ -58,9 +58,11 @@ class TeacherController extends Controller
     {
 
         $teachers = Teacher::query()->when(request("name"), function ($query, $name) {
-                return $query->where("name", "LIKE", '%' . $name . '%');
+            return $query->where("name", "LIKE", '%' . $name . '%');
         })->when(request("phone_number"), function ($query, $name) {
-                return $query->where("phone_number", "LIKE", '%' . $name . '%');
+            return $query->where("phone_number", "LIKE", '%' . $name . '%');
+        })->when(request("trashed"), function ($query, $var) {
+            return $query->onlyTrashed();
         })->paginate(20);
 
 
@@ -82,5 +84,11 @@ class TeacherController extends Controller
         $teacher->delete();
 
         return success(null, 'this teacher deleted successfully');
+    }
+
+    public function restoreTeacher(Teacher $teacher)
+    {
+        $teacher->restore();
+        return success(null, 'this teacher been restored successfully');
     }
 }

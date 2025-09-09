@@ -2,11 +2,14 @@
 
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BackupController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\DebtController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EnrollmentController;
+use App\Http\Controllers\ImportExportController;
 use App\Http\Controllers\JobTitleController;
 use App\Http\Controllers\MainAccountController;
 use App\Http\Controllers\PermissionController;
@@ -19,8 +22,12 @@ use App\Http\Controllers\SubAccountController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\ShoppingItemController;
 use App\Http\Controllers\UserController;
-use App\Models\Enrollment;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ShareCapitalController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DashBoardV2Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -35,16 +42,11 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
+Route::get("/attempt",[DashBoardV2Controller::class,'show']);
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get("/attempt",function(){
-    $subjects = DB::table("subjects")->select(["id","name"]);
-    $data = DB::table("shifts")->select(["id","name"])->union($subjects)->orderBy("id")->paginate(20);
-    return $data;
-});
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('user-auth')->group(function () {
     Route::prefix('/')->group(function () {
@@ -60,11 +62,6 @@ Route::middleware('user-auth')->group(function () {
         Route::get('/unattached', [UserController::class, 'indexUnattached'])->name("unattached");
         Route::get('/{user}', [UserController::class, 'get']);
         Route::delete('/{user}', [UserController::class, 'delete']);
-        Route::post('/{user}/restore', [UserController::class, 'restore'])->withTrashed();
-    });
-
-    Route::middleware('manage-user')->prefix('activities')->group(function () {
-        Route::get('/', [ActivityController::class,"index"]);
     });
 
     Route::middleware('manage-user')->prefix('roles')->group(function () {
@@ -79,6 +76,9 @@ Route::middleware('user-auth')->group(function () {
         Route::get('/', [PermissionController::class, 'getPermissions']);
         Route::get('/{permission}', [PermissionController::class, 'getPermissionInformation']);
     });
+    Route::middleware("manage-user")->prefix('activities')->group(function () {
+        Route::get('/', [ActivityController::class, 'index']);
+    });
 
     Route::middleware('manage-student')->prefix('students')->group(function () {
         Route::post('/', [StudentController::class, 'addStudent']);
@@ -87,7 +87,6 @@ Route::middleware('user-auth')->group(function () {
         Route::get('/names', [StudentController::class, 'getNames']);
         Route::get('/{student}', [StudentController::class, 'getStudentInformation'])->name("get");
         Route::delete('/{student}', [StudentController::class, 'deleteStudent']);
-        Route::get('/{student}/courses', [StudentController::class, 'getCourses']);
     });
 
     Route::middleware('manage-stock')->prefix('stocks')->group(function () {
@@ -101,15 +100,22 @@ Route::middleware('user-auth')->group(function () {
 
     Route::middleware("manage-accounting")->prefix('main-accounts')->group(function () {
         Route::get('/', [MainAccountController::class, 'getMainAccounts']);
+        Route::get('/{mainAccount}', [MainAccountController::class, 'getMainAccountInformation']);
     });
+
     Route::middleware('manage-accounting')->prefix('sub-accounts')->group(function () {
         Route::post('/', [SubAccountController::class, 'addSubAccount']);
-        Route::post('/{subAccount}', [SubAccountController::class, 'editSubAccount']);
-        Route::get('/additionals', [SubAccountController::class, 'getAddedSubAccounts']);
-        Route::get('/employees', [SubAccountController::class, 'getEmployeeSubAccounts']);
-        Route::get('/names', [SubAccountController::class, 'getNames']);
+        Route::post('/{subaccount}', [SubAccountController::class, 'editSubAccount']);
+        Route::get('/', [SubAccountController::class, 'index']);
         Route::get('/{subAccount}', [SubAccountController::class, 'getSubAccountInformation']);
         Route::delete('/{subAccount}', [SubAccountController::class, 'deleteSubAccount']);
+        Route::post('/{subAccount}/restore', [SubAccountController::class, 'restoreSubAccount'])->withTrashed();
+    });
+    Route::middleware('manage-accounting')->prefix('debts')->group(function () {
+        Route::post('/pay_student', [DebtController::class, 'payStudent']);
+        Route::post('/pay_teacher', [DebtController::class, 'payTeacher']);
+        Route::get('/teachers', [DebtController::class, 'indexTeachers']);
+        Route::get('/students', [DebtController::class, 'indexStudents']);
     });
     Route::middleware('manage-teacher')->prefix('teachers')->group(function () {
         Route::post('/', [TeacherController::class, 'addTeacher']);
@@ -118,13 +124,14 @@ Route::middleware('user-auth')->group(function () {
         Route::get('/names', [TeacherController::class, 'getNames']);
         Route::get('/{teacher}', [TeacherController::class, 'getTeacherInformation']);
         Route::delete('/{teacher}', [TeacherController::class, 'deleteTeacher']);
+        Route::post('/{teacher}/restore', [TeacherController::class, 'restoreTeacher'])->withTrashed();
     });
 
     Route::middleware('manage-course')->prefix('courses')->group(function () {
         Route::post('/', [CourseController::class, 'addCourse']);
         Route::post('/{course}', [CourseController::class, 'editCourse']);
         Route::get('/', [CourseController::class, 'getCourses'])->name("schedule");
-        Route::get('/index', [CourseController::class, 'indexCourses'])->name("index");
+        Route::get('/index', [CourseController::class, 'indexCourses']);
         Route::get('/{course}', [CourseController::class, 'getCourseInformation']);
         Route::delete('/{course}', [CourseController::class, 'deleteCourse']);
         Route::get('/{course}/students', [CourseController::class, 'getStudents']);
@@ -161,13 +168,24 @@ Route::middleware('user-auth')->group(function () {
         Route::delete('/{enrollment}', [EnrollmentController::class, 'destroy']);
     });
 
+    Route::middleware('manage-course')->prefix('shopping-items')->group(function () {
+        Route::post('/', [ShoppingItemController::class, 'addShoppingItem']);
+        Route::post('/{shoppingItem}', [ShoppingItemController::class, 'editShoppingItem']);
+        Route::get('/', [ShoppingItemController::class, 'getShoppingItems']);
+        Route::get('/{shoppingItem}', [ShoppingItemController::class, 'getShoppingItemInformation']);
+        Route::get('/course/{course}', [ShoppingItemController::class, 'getCourseShoppingItems']);
+        Route::delete('/{shoppingItem}', [ShoppingItemController::class, 'deleteShoppingItem']);
+    });
+
     Route::middleware('manage-employee')->prefix('employees')->group(function () {
         Route::post('/', [EmployeeController::class, 'addEmployee']);
         Route::post('/{employee}', [EmployeeController::class, 'editEmployee']);
         Route::get('/', [EmployeeController::class, 'getEmployees'])->name("list");
+        // Route::get('/names', [EmployeeController::class, 'getNames'])->name("list");
         Route::get('/unattached', [EmployeeController::class, 'getUnattached']);
         Route::get('/{employee}', [EmployeeController::class, 'getEmployeeInformation']);
         Route::delete('/{employee}', [EmployeeController::class, 'deleteEmployee']);
+        Route::post('/{employee}/restore', [EmployeeController::class, 'restoreEmployee'])->withTrashed();
     });
     Route::middleware('manage-employee')->prefix('shifts')->group(function () {
         Route::post('/', [ShiftController::class, 'storeShift']);
@@ -184,10 +202,21 @@ Route::middleware('user-auth')->group(function () {
         Route::get('/{jobTitle}', [JobTitleController::class, 'show']);
         Route::delete('/{jobTitle}', [JobTitleController::class, 'destroy']);
     });
+
+    Route::prefix('imports')->group(function () {
+        Route::post('/teachers', [ImportExportController::class, 'importTeachers']);
+        Route::post('/employees', [ImportExportController::class, 'importEmployees']);
+        Route::post('/students', [ImportExportController::class, 'importStudents']);
+    });
+    Route::prefix('exports')->group(function () {
+        Route::post('/teachers', [ImportExportController::class, 'exportTeachers']);
+        Route::post('/employees', [ImportExportController::class, 'exportEmployees']);
+        Route::post('/students', [ImportExportController::class, 'exportStudents']);
+    });
     Route::middleware('manage-certificate')->prefix('certificates')->group(function () {
         Route::get('/', [CertificateController::class, 'getCertificates']);
         Route::get('/{certificate}', [CertificateController::class, 'getCertificateInformation']);
-        Route::get('/create/{certificate}', [CertificateController::class, 'createStudentCertificate']);
+        Route::post('/create/{certificate}/{course}', [CertificateController::class, 'createStudentCertificate']);
         Route::delete('/{certificate}', [CertificateController::class, 'deleteCertificate']);
     });
 
@@ -198,5 +227,34 @@ Route::middleware('user-auth')->group(function () {
         Route::get('/', [TransactionController::class, 'getTransactions']);
         Route::get('/{transaction}', [TransactionController::class, 'getTransactionInformation']);
     });
+
+    Route::middleware('manage-accounting')->group(function () {
+        Route::post('/capital', [ShareCapitalController::class, 'addShareCapital']);
+        Route::post('/revenues', [ShareCapitalController::class, 'addRevenues']);
+        Route::post('/expenses', [ShareCapitalController::class, 'addExpenses']);
+        Route::post('/box', [ShareCapitalController::class, 'addBox']);
+    });
+    
+    Route::prefix('reports')->group(function () {
+        Route::get('/main-report',[ReportController::class, 'mainReport']);
+        Route::get('/', [ReportController::class, 'report']);
+        Route::get('/expenses_revenues', [ReportController::class, 'expensesRevenuesReport']);
+        Route::get('/budget', [ReportController::class, 'budgetReport']);
+    });
+
+    Route::prefix('/backup-restore')->group(function () {
+        Route::post('/backup', [BackupController::class, 'createBackup']);
+        Route::post('/restore', [BackupController::class, 'restoreBackup']);
+    });
+    Route::middleware('admin-auth')->prefix('dashboard')->group(function(){
+        Route::get('/',[DashboardController::class, 'Dashboard']);
+    });
 });
 
+// Route::prefix('employee')->group(function () {
+//     Route::post('/login', [EmployeeController::class, 'login']);
+//     Route::middleware('employee-auth')->group(function () {
+//         Route::get('/', [EmployeeController::class, 'profile']);
+//     });
+// });
+// });

@@ -4,11 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CertificateRequest;
 use App\Models\Certificate;
+use App\Models\Course;
+use App\Models\Enrollment;
 use App\Models\Student;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Spatie\Browsershot\Browsershot;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use ZipArchive;
+use ZipStream\ZipStream;
 
 class CertificateController extends Controller
 {
@@ -86,19 +91,41 @@ class CertificateController extends Controller
     }
 
     //Create Students Certificates Function
-    public function createStudentCertificate(Certificate $certificate, Request $request)
+    public function createStudentCertificate(Certificate $certificate, Course $course, Request $request)
     {
-        // $students = explode(',', $request->students);
-        $students = Student::with('person')->whereIn('id', explode(',', $request->students))->get();
-
-
-
+        $students = $course->students;
+        // return response()->json([
+        //     'msg'=>$students
+        // ]);
         foreach ($students as $student) {
             $file_name = time() . '.pdf';
-            $pdf = PDF::loadView('certificate', ['student' => $student, 'certificate' => $certificate]);
-            $pdf->save(storage_path('app/public/StudentsCertificates') . '/' . $file_name);
+            if (Enrollment::where(['student_id' => $student->id, 'course_id' => $course->id, 'with_certificate' => 1])->first()) {
+                $pdf = PDF::loadView('certificate', ['student' => $student, 'certificate' => $certificate, 'course' => $course]);
+                $pdf->save(storage_path('app/public/StudentsCertificates') . '/' . $file_name);
+            }
         }
 
-        return success(null, 'this certificates created successfully');
+        $zip = new ZipArchive;
+        if (File::exists(public_path('certificates.zip'))) {
+            File::delete(public_path('certificates.zip'));
+        }
+        $fileName = 'certificates.zip';
+        if ($zip->open($fileName, ZipArchive::CREATE)) {
+            $files = File::files(public_path('storage/StudentsCertificates'));
+            $count = 0;
+            foreach ($files as $file) {
+                $nameInZipFile = basename($file);
+
+                $zip->addFile($file, $nameInZipFile);
+            }
+            $zip->close();
+            foreach ($files as $file) {
+                File::delete($file);
+            }
+            $response = response()->download($fileName);
+            return $response;
+        }
+        // return count($students);
+
     }
 }

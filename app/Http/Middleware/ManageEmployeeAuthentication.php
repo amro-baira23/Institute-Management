@@ -26,6 +26,7 @@ class ManageEmployeeAuthentication
             }
         }
 
+        return error('حدث خطأ في الصلاحيات', 'المتسخدم الحالي لا يمتلك الصلاحيات اللازمة لاتمام العملية', 422);
         return error('some thing went wrong', 'you dont have authentication to do it', 422);
     }
 }

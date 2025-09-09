@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\Course;
 use App\Models\DayOfWeek;
 use App\Models\Employee;
+use App\Models\Enrollment;
 use App\Models\JobTitle;
 use App\Models\MainAccount;
 use App\Models\Role;
@@ -18,8 +19,10 @@ use App\Models\Room;
 use App\Models\Schedule;
 use App\Models\Stock;
 use App\Models\Student;
+use App\Models\SubAccount;
 use App\Models\Subject;
 use App\Models\Teacher;
+use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -40,7 +43,7 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        $permissions = ['إدارة الطلاب', 'إدارة المستودع', "إدارة الحسابات", 'إدارة المحاسبة', 'إدارة الأساتذة', 'إدارة الدورات', 'إدارة الموظفين', "إدارة الشهادات", "إدارة الصندوق"];
+        $permissions = ['إدارة الطلاب', 'إدارة المستودع', "إدارة الحسابات", 'إدارة المحاسبة', 'إدارة الأساتذة', 'إدارة الدورات', 'إدارة الموظفين', "إدارة الشهادات", "إدارة الصندوق", 'تصدير واستيرات ملفات إكسل'];
         $roles = ["مدير", "ضيف"];
 
         $person = Person::create([
@@ -49,6 +52,7 @@ class DatabaseSeeder extends Seeder
             'birth_date' => '1990-06-02',
             'type' => 'S',
         ]);
+
 
         $admin = Role::create(["name" => "مدير"]);
         Role::create(["name" => "ضيف"]);
@@ -66,25 +70,24 @@ class DatabaseSeeder extends Seeder
                 'name' => $permission
             ]);
 
-
         $admin->permissions()->attach(Permission::all());
-
-        Category::factory()->count(6)->create();
+        
+        Schedule::factory()->count(4)->create();
+        Category::factory()->count(5)->create();
         Subject::factory()->count(20)->create();
-        Room::factory()->count(10)->create();
-
+        Room::factory()->count(4)->create();
 
         Teacher::factory()->count(20)->create();
 
         Student::factory()->count(20)->create();
 
-
-
+        DayOfWeek::factory()->count(30)->create();
         Course::factory()->count(8)->create();
         Stock::factory()->count(20)->create();
-
+        Enrollment::factory()->count(50)->create();
         JobTitle::factory()->count(4)->create();
         Employee::factory()->count(20)->create();
+        Transaction::factory()->count(50)->create();
 
     }
 }

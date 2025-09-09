@@ -20,21 +20,22 @@ class Course extends Model
         "students.pivot.with_diploma" => "boolean"
     ];
 
-    public function dates() : Attribute{
+    public function dates(): Attribute
+    {
         return Attribute::make(
-            function(mixed $value,array $attributes){
+            function (mixed $value, array $attributes) {
                 $days = $this->schedule->days->pluck("day");
                 $array = array();
                 $range = new DatePeriod(
                     new DateTime(today()->format("Y-m-d")),
                     new DateInterval("P1D"),
-                   new DateTime(date("Y-m-d",strtotime($attributes["end_at"]. "+1day")))
-                );      
-                foreach ($range as $date){
+                    new DateTime(date("Y-m-d", strtotime($attributes["end_at"] . "+1day")))
+                );
+                foreach ($range as $date) {
                     if ($days->contains($date->format('w')))
                         $array[] = $date->format("Y-m-d");
                 }
-                return $array   ;
+                return $array;
             }
         );
     }
@@ -44,20 +45,20 @@ class Course extends Model
         return $date->format('Y-m-d H:i');
     }
 
-    
-    public function status() : Attribute{
-        return Attribute::make(function($value,array $attributes) {
+
+    public function status(): Attribute
+    {
+        return Attribute::make(function ($value, array $attributes) {
             if ($value == "C")
                 return "ملغي";
-            else if($value == "P")
+            else if ($value == "P")
                 return "معلق";
             else {
                 $now = new DateTime();
                 $end = new DateTime($attributes["end_at"]);
-                if($end < $now){
+                if ($end < $now) {
                     return "منتهي";
-                }
-                else
+                } else
                     return "قيد العمل";
             }
         });
@@ -82,7 +83,13 @@ class Course extends Model
         return $this->belongsTo(Room::class, 'room_id', 'id');
     }
 
-    public function students(){
-        return $this->belongsToMany(Student::class,"enrollments","course_id","student_id")->withPivot(["with_certificate","created_at"]);
+    public function students()
+    {
+        return $this->belongsToMany(Student::class, "enrollments", "course_id", "student_id")->withPivot(["with_certificate", "created_at"]);
+    }
+
+    public function shoppingItems()
+    {
+        return $this->hasMany(ShoppingItem::class, 'course_id', 'id');
     }
 }
